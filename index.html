@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Happy Colors</title>
+  <base href="/">
+  <style>
+    html {
+      --color-font: #ddd;
+      --color-background: #111;
+      --color-highlight: #e6a729;
+      --height-rainbow: 6px;
+    }
+
+    body {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      color: var(--color-font);
+      font: 22px/1.5 'Barlow Semi Condensed', sans-serif;
+      background-color: var(--color-background);
+    }
+
+    .rainbow {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      display: flex;
+      height: var(--height-rainbow);
+      z-index: 2;
+    }
+
+    .rainbow > * {
+      flex: 1 1 auto;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="rainbow">
+    <div style="background-color: #de3f23"></div>
+    <div style="background-color: #e6aa29"></div>
+    <div style="background-color: #8ee629"></div>
+    <div style="background-color: #29d0e6"></div>
+    <div style="background-color: #7b29e6"></div>
+    <div style="background-color: #e629b3"></div>
+  </div>
+
+  <app-happy-colors></app-happy-colors>
+
+  <script type="module" src="./components/app-happy-colors/app-happy-colors.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:400,700&display=swap" rel="stylesheet">
+</body>
+</html>
