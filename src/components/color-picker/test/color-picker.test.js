@@ -6,7 +6,9 @@ describe('color-picker component', () => {
   let element;
 
   async function wait(ms = 0) {
-    return new Promise(resolve => setTimeout(() => requestAnimationFrame(resolve), ms));
+    return new Promise(resolve =>
+      setTimeout(() => requestAnimationFrame(resolve), ms)
+    );
   }
 
   async function simulateMouseEvent(event, el, x, y) {
@@ -21,7 +23,7 @@ describe('color-picker component', () => {
         composed: true,
         clientX: x + left,
         clientY: y + top,
-      }),
+      })
     );
     await wait();
   }
@@ -31,22 +33,14 @@ describe('color-picker component', () => {
   });
 
   it('should instantiate the component', async () => {
-    element = await fixture(
-      html`
-        <color-picker></color-picker>
-      `,
-    );
+    element = await fixture(html`<color-picker></color-picker>`);
     expect(element.localName).to.equal('color-picker');
     expect(element.isConnected).to.equal(true);
   });
 
   describe('initial color value', () => {
     beforeEach(async () => {
-      element = await fixture(
-        html`
-          <color-picker></color-picker>
-        `,
-      );
+      element = await fixture(html`<color-picker></color-picker>`);
     });
 
     it('should set a property holding the initial HSV color', () => {
@@ -55,24 +49,28 @@ describe('color-picker component', () => {
 
     it('should pass the markup snapshot', () => {
       expect(element).shadowDom.to.equalSnapshot();
-      expect(element.shadowRoot.querySelector('color-palette')).shadowDom.to.equalSnapshot();
-      expect(element.shadowRoot.querySelector('color-slider')).shadowDom.to.equalSnapshot();
+      expect(
+        element.shadowRoot.querySelector('color-palette')
+      ).shadowDom.to.equalSnapshot();
+      expect(
+        element.shadowRoot.querySelector('color-slider')
+      ).shadowDom.to.equalSnapshot();
     });
 
     it('should pass the a11y audit', async () => {
       await expect(element).shadowDom.to.be.accessible();
-      await expect(element.shadowRoot.querySelector('color-palette')).shadowDom.to.be.accessible();
-      await expect(element.shadowRoot.querySelector('color-slider')).shadowDom.to.be.accessible();
+      await expect(
+        element.shadowRoot.querySelector('color-palette')
+      ).shadowDom.to.be.accessible();
+      await expect(
+        element.shadowRoot.querySelector('color-slider')
+      ).shadowDom.to.be.accessible();
     });
   });
 
   describe('dragging', () => {
     beforeEach(async () => {
-      element = await fixture(
-        html`
-          <color-picker></color-picker>
-        `,
-      );
+      element = await fixture(html`<color-picker></color-picker>`);
     });
 
     context('palette', () => {
@@ -233,18 +231,30 @@ describe('color-picker component', () => {
 
         await simulateMouseEvent('mousemove', slider, 0, 40);
         expect(element._colors.rgb).to.deep.equal([255, 0, 174.84]);
-        expect(paletteCanvas.style.backgroundColor).to.deep.equal('rgb(255, 0, 175)');
-        expect(paletteHandle.style.backgroundColor).to.deep.equal('rgb(255, 0, 175)');
+        expect(paletteCanvas.style.backgroundColor).to.deep.equal(
+          'rgb(255, 0, 175)'
+        );
+        expect(paletteHandle.style.backgroundColor).to.deep.equal(
+          'rgb(255, 0, 175)'
+        );
 
         await simulateMouseEvent('mousemove', slider, 0, 163);
         expect(element._colors.rgb).to.deep.equal([0, 202.56, 255]);
-        expect(paletteCanvas.style.backgroundColor).to.deep.equal('rgb(0, 203, 255)');
-        expect(paletteHandle.style.backgroundColor).to.deep.equal('rgb(0, 203, 255)');
+        expect(paletteCanvas.style.backgroundColor).to.deep.equal(
+          'rgb(0, 203, 255)'
+        );
+        expect(paletteHandle.style.backgroundColor).to.deep.equal(
+          'rgb(0, 203, 255)'
+        );
 
         await simulateMouseEvent('mousemove', slider, 0, 360);
         expect(element._colors.rgb).to.deep.equal([255, 0, 0]);
-        expect(paletteCanvas.style.backgroundColor).to.deep.equal('rgb(255, 0, 0)');
-        expect(paletteHandle.style.backgroundColor).to.deep.equal('rgb(255, 0, 0)');
+        expect(paletteCanvas.style.backgroundColor).to.deep.equal(
+          'rgb(255, 0, 0)'
+        );
+        expect(paletteHandle.style.backgroundColor).to.deep.equal(
+          'rgb(255, 0, 0)'
+        );
       });
     });
   });

@@ -30,7 +30,11 @@ export function getMonochromaticColorScheme(hsv) {
 
   for (let n = 1; n < amount + 1; n += 1) {
     result.push(
-      validateHsv([h, 100 - Math.abs((200 / (amount + 1)) * n - 100), (100 / (amount + 1)) * n]),
+      validateHsv([
+        h,
+        100 - Math.abs((200 / (amount + 1)) * n - 100),
+        (100 / (amount + 1)) * n,
+      ])
     );
   }
 

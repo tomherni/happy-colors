@@ -10,11 +10,7 @@ describe('draggable mixin', () => {
   window.customElements.define('test-component', TestClass);
 
   beforeEach(async () => {
-    element = await fixture(
-      html`
-        <test-component></test-component>
-      `,
-    );
+    element = await fixture(html`<test-component></test-component>`);
   });
 
   afterEach(() => {
@@ -48,7 +44,12 @@ describe('draggable mixin', () => {
     });
 
     it('should create a private property containing dragging configuration', () => {
-      element.createDraggableElement({ canvas, draggable, foo: true, bar: true });
+      element.createDraggableElement({
+        canvas,
+        draggable,
+        foo: true,
+        bar: true,
+      });
       expect(element.elements).to.deep.equal({ canvas, draggable }); // ONLY elements
       expect(element._dragConfig).to.deep.equal({ foo: true, bar: true }); // ONLY remaining properties
     });

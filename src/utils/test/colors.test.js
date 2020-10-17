@@ -22,13 +22,21 @@ describe('colors utils', () => {
     it('should validate an HSV', () => {
       expect(colors.validateHsv([-1, -1, -1])).to.deep.equal([0, 0, 0]);
       expect(colors.validateHsv([123, 45, 67])).to.deep.equal([123, 45, 67]);
-      expect(colors.validateHsv([360.4, 100.5, 101])).to.deep.equal([360, 100, 100]);
+      expect(colors.validateHsv([360.4, 100.5, 101])).to.deep.equal([
+        360,
+        100,
+        100,
+      ]);
     });
 
     it('should validate an RGB', () => {
       expect(colors.validateRgb([-1, -1, -1])).to.deep.equal([0, 0, 0]);
       expect(colors.validateRgb([123, 45, 67])).to.deep.equal([123, 45, 67]);
-      expect(colors.validateRgb([255.4, 255.5, 256])).to.deep.equal([255, 255, 255]);
+      expect(colors.validateRgb([255.4, 255.5, 256])).to.deep.equal([
+        255,
+        255,
+        255,
+      ]);
     });
   });
 
@@ -56,18 +64,42 @@ describe('colors utils', () => {
       // Mixed
       expect(colors.hsvToRgb([123, 0, 0])).to.deep.equal([0, 0, 0]);
       expect(colors.hsvToRgb([1, 1, 1])).to.deep.equal([2.55, 2.52, 2.52]);
-      expect(colors.hsvToRgb([24, 2, 89])).to.deep.equal([226.95, 224.23, 222.41]);
+      expect(colors.hsvToRgb([24, 2, 89])).to.deep.equal([
+        226.95,
+        224.23,
+        222.41,
+      ]);
       expect(colors.hsvToRgb([88, 61, 0])).to.deep.equal([0, 0, 0]);
       expect(colors.hsvToRgb([109, 100, 60])).to.deep.equal([28.05, 153, 0]);
-      expect(colors.hsvToRgb([123, 45, 67])).to.deep.equal([93.97, 170.85, 97.81]);
+      expect(colors.hsvToRgb([123, 45, 67])).to.deep.equal([
+        93.97,
+        170.85,
+        97.81,
+      ]);
       expect(colors.hsvToRgb([144, 100, 33])).to.deep.equal([0, 84.15, 33.66]);
-      expect(colors.hsvToRgb([199, 12, 100])).to.deep.equal([224.4, 245.31, 255]);
+      expect(colors.hsvToRgb([199, 12, 100])).to.deep.equal([
+        224.4,
+        245.31,
+        255,
+      ]);
       expect(colors.hsvToRgb([217, 100, 54])).to.deep.equal([0, 52.79, 137.7]);
-      expect(colors.hsvToRgb([241, 31, 28])).to.deep.equal([49.63, 49.27, 71.4]);
+      expect(colors.hsvToRgb([241, 31, 28])).to.deep.equal([
+        49.63,
+        49.27,
+        71.4,
+      ]);
       expect(colors.hsvToRgb([275, 0, 28])).to.deep.equal([71.4, 71.4, 71.4]);
       expect(colors.hsvToRgb([313, 99, 12])).to.deep.equal([30.6, 0.31, 24.04]);
-      expect(colors.hsvToRgb([345, 0, 43])).to.deep.equal([109.65, 109.65, 109.65]);
-      expect(colors.hsvToRgb([350, 71, 100])).to.deep.equal([255, 73.95, 104.13]);
+      expect(colors.hsvToRgb([345, 0, 43])).to.deep.equal([
+        109.65,
+        109.65,
+        109.65,
+      ]);
+      expect(colors.hsvToRgb([350, 71, 100])).to.deep.equal([
+        255,
+        73.95,
+        104.13,
+      ]);
     });
 
     it('should convert HSV to HSL', () => {

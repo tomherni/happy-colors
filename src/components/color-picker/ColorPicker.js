@@ -1,5 +1,11 @@
 import { LitElement, html, css } from 'lit-element';
-import { hsvToHsl, hsvToRgb, rgbToCssString, rgbToHex, validateHsv } from '../../utils/colors.js';
+import {
+  hsvToHsl,
+  hsvToRgb,
+  rgbToCssString,
+  rgbToHex,
+  validateHsv,
+} from '../../utils/colors.js';
 import { debounce } from '../../utils/debounce.js';
 import { round as roundUtil } from '../../utils/numbers.js';
 import '../color-palette/color-palette.js';
@@ -132,7 +138,10 @@ export class ColorPicker extends LitElement {
         </div>
 
         <div class="panel">
-          <div class="color" style="background-color: ${rgbToCssString(this._colors.rgb)}"></div>
+          <div
+            class="color"
+            style="background-color: ${rgbToCssString(this._colors.rgb)}"
+          ></div>
 
           <dl>
             <div>

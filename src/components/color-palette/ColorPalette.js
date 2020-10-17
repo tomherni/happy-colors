@@ -67,7 +67,8 @@ export class ColorPalette extends DraggableMixin(LitElement) {
         background-color: inherit;
         border: 3px solid #fff;
         border-radius: 50%;
-        box-shadow: 1px 1px 1px inset rgba(0, 0, 0, 0.3), 1px 1px 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 1px 1px 1px inset rgba(0, 0, 0, 0.3),
+          1px 1px 2px rgba(0, 0, 0, 0.3);
       }
     `;
   }
@@ -144,7 +145,11 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   }
 
   _updateColorStyling(hsv) {
-    this.elements.canvas.style.backgroundColor = rgbToCssString(hsvToRgb([hsv[0], 100, 100]));
-    this.elements.draggable.style.backgroundColor = rgbToCssString(hsvToRgb(hsv));
+    this.elements.canvas.style.backgroundColor = rgbToCssString(
+      hsvToRgb([hsv[0], 100, 100])
+    );
+    this.elements.draggable.style.backgroundColor = rgbToCssString(
+      hsvToRgb(hsv)
+    );
   }
 }

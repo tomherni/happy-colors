@@ -1,3 +1,13 @@
-import { createDefaultConfig } from '@open-wc/building-rollup';
+import merge from 'deepmerge';
+import { createSpaConfig } from '@open-wc/building-rollup';
 
-export default createDefaultConfig({ input: './index.html' });
+const baseConfig = createSpaConfig({
+  outputDir: 'dist',
+  legacyBuild: true,
+  developmentMode: process.env.ROLLUP_WATCH === 'true',
+  injectServiceWorker: false,
+});
+
+export default merge(baseConfig, {
+  input: './index.html',
+});

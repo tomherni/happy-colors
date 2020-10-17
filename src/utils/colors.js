@@ -17,7 +17,11 @@ export function validateHue(hue) {
  * @returns {Number[]}
  */
 export function validateHsv([h, s, v]) {
-  return [validateHue(h), minMax(round(s, 2), 0, 100), minMax(round(v, 2), 0, 100)];
+  return [
+    validateHue(h),
+    minMax(round(s, 2), 0, 100),
+    minMax(round(v, 2), 0, 100),
+  ];
 }
 
 /**
@@ -26,7 +30,10 @@ export function validateHsv([h, s, v]) {
  * @returns {Number[]}
  */
 export function validateRgb(rgb) {
-  return rgb.reduce((all, value) => [...all, minMax(round(value, 2), 0, 255)], []);
+  return rgb.reduce(
+    (all, value) => [...all, minMax(round(value, 2), 0, 255)],
+    []
+  );
 }
 
 /**

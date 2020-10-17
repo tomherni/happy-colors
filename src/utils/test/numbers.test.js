@@ -4,7 +4,9 @@ import { minMax, round } from '../numbers.js';
 describe('numbers utils', () => {
   describe('function minMax()', () => {
     it('should return a value that does not exceed a minimum or maximum', () => {
-      [-1.1, -1, 0, 0.1, 0.9, 1].forEach(value => expect(minMax(value, 1, 5)).to.equal(1));
+      [-1.1, -1, 0, 0.1, 0.9, 1].forEach(value =>
+        expect(minMax(value, 1, 5)).to.equal(1)
+      );
       [5, 5.1, 6].forEach(value => expect(minMax(value, 1, 5)).to.equal(5));
     });
 

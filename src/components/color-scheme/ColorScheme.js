@@ -101,9 +101,7 @@ export class ColorScheme extends LitElement {
     if (this.scheme === 'monochromatic') {
       return html`
         <div class="color-scheme sub-scheme">
-          <div>
-            ${this._colorBlockTemplate(this._colors[0])}
-          </div>
+          <div>${this._colorBlockTemplate(this._colors[0])}</div>
 
           <div>
             ${this._colors[1].map(color => this._colorBlockTemplate(color))}
@@ -149,7 +147,7 @@ export class ColorScheme extends LitElement {
               <span>#${hsvToHex(color)}</span>
               &nbsp;
             </div>
-          `,
+          `
         )}
       </div>
     `;

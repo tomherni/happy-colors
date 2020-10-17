@@ -1,7 +1,13 @@
 import { LitElement, html, css } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { hsvToHsl, hsvToRgb, hsvToHex, rgbToHex, validateHsv } from '../utils/colors.js';
+import {
+  hsvToHsl,
+  hsvToRgb,
+  hsvToHex,
+  rgbToHex,
+  validateHsv,
+} from '../utils/colors.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
@@ -304,7 +310,7 @@ export class AppHappyColors extends LitElement {
               </button>
             </div>
           </div>
-        `,
+        `
       )}
 
       <div class="content">
@@ -329,7 +335,7 @@ export class AppHappyColors extends LitElement {
                   ></div>
                   <span>${hex ? `#${hex}` : ''}&nbsp;</span>
                 </div>
-              `,
+              `
             )}
           </div>
 
@@ -337,15 +343,18 @@ export class AppHappyColors extends LitElement {
             this._savedScheme.some(hex => !!hex),
             () => html`
               <div class="reset-custom-scheme">
-                <button @click=${this._clearCustomScheme}>Reset color scheme</button>
+                <button @click=${this._clearCustomScheme}>
+                  Reset color scheme
+                </button>
               </div>
-            `,
+            `
           )}
         </section>
 
         <section>
           <h2>
-            <span>Generated Schemes</span><span><span class="highlight">&</span> Inspiration</span>
+            <span>Generated Schemes</span>
+            <span><span class="highlight">&</span> Inspiration</span>
           </h2>
 
           <div>
@@ -353,8 +362,8 @@ export class AppHappyColors extends LitElement {
               <div>
                 <h3>Monochromatic color scheme<span class="dot">.</span></h3>
                 <p>
-                  The monochromatic color scheme consists of a base color, and a range of its
-                  shades.
+                  The monochromatic color scheme consists of a base color, and a
+                  range of its shades.
                 </p>
               </div>
               <color-scheme
@@ -368,8 +377,9 @@ export class AppHappyColors extends LitElement {
               <div>
                 <h3>Analogous color scheme<span class="dot">.</span></h3>
                 <p>
-                  The analogous color scheme adds two additional colors on the color wheel: one on
-                  either side of the base color, distributed evenly.
+                  The analogous color scheme adds two additional colors on the
+                  color wheel: one on either side of the base color, distributed
+                  evenly.
                 </p>
               </div>
               <color-scheme
@@ -384,8 +394,9 @@ export class AppHappyColors extends LitElement {
               <div>
                 <h3>Complementary color scheme<span class="dot">.</span></h3>
                 <p>
-                  The complementary color scheme adds one opposite (complement) color. This color is
-                  on the exact opposite side of the color wheel.
+                  The complementary color scheme adds one opposite (complement)
+                  color. This color is on the exact opposite side of the color
+                  wheel.
                 </p>
               </div>
               <color-scheme
@@ -400,8 +411,8 @@ export class AppHappyColors extends LitElement {
               <div>
                 <h3>Triadic color scheme<span class="dot">.</span></h3>
                 <p>
-                  The triadic color scheme adds two additional colors. All three colors are
-                  distributed evenly around the color wheel.
+                  The triadic color scheme adds two additional colors. All three
+                  colors are distributed evenly around the color wheel.
                 </p>
               </div>
               <color-scheme
@@ -474,7 +485,8 @@ export class AppHappyColors extends LitElement {
   _getHsvFromStorage() {
     const { data, error } = hsvStorage.get();
     if (error) {
-      this._error = 'There was a problem with the saved color, and it had to be reset.';
+      this._error =
+        'There was a problem with the saved color, and it had to be reset.';
     }
     return data;
   }
@@ -489,7 +501,8 @@ export class AppHappyColors extends LitElement {
   _getColorSchemeFromStorage() {
     const { data, error } = colorSchemeStorage.get();
     if (error) {
-      this._error = 'There was a problem with the saved color scheme, and it had to be reset.';
+      this._error =
+        'There was a problem with the saved color scheme, and it had to be reset.';
     }
     return data;
   }

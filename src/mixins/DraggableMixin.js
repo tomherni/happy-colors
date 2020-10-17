@@ -78,13 +78,17 @@ export const DraggableMixin = Base =>
       this.elements = { canvas, draggable };
       this._dragConfig = dragConfig;
 
-      events.dragStart.forEach(e => window.addEventListener(e, this._dragStart, options));
+      events.dragStart.forEach(e =>
+        window.addEventListener(e, this._dragStart, options)
+      );
       events.drag.forEach(e => window.addEventListener(e, this._drag, options));
       events.dragEnd.forEach(e => window.addEventListener(e, this._dragEnd));
     }
 
     _teardown() {
-      events.dragStart.forEach(e => window.removeEventListener(e, this._dragStart));
+      events.dragStart.forEach(e =>
+        window.removeEventListener(e, this._dragStart)
+      );
       events.drag.forEach(e => window.removeEventListener(e, this._drag));
       events.dragEnd.forEach(e => window.removeEventListener(e, this._dragEnd));
     }
@@ -94,7 +98,10 @@ export const DraggableMixin = Base =>
      * @param {MouseEvent | TouchEvent} event
      */
     _dragStart(event) {
-      if (this.elements && event.composedPath().includes(this.elements.canvas)) {
+      if (
+        this.elements &&
+        event.composedPath().includes(this.elements.canvas)
+      ) {
         event.preventDefault();
 
         const canvasRect = this.elements.canvas.getBoundingClientRect();

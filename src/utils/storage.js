@@ -10,11 +10,17 @@ export const storageManager = {
 };
 
 function isValidStorageHsv(hsv) {
-  return Array.isArray(hsv) && hsv.length === 3 && hsv.every(color => typeof color === 'number');
+  return (
+    Array.isArray(hsv) &&
+    hsv.length === 3 &&
+    hsv.every(color => typeof color === 'number')
+  );
 }
 
 function isValidStorageColorScheme(scheme) {
-  return Array.isArray(scheme) && scheme.every(color => !color || color.length === 6);
+  return (
+    Array.isArray(scheme) && scheme.every(color => !color || color.length === 6)
+  );
 }
 
 const storageValidators = {
