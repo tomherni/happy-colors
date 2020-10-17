@@ -1,10 +1,10 @@
 import { LitElement, html, css } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { hsvToHsl, hsvToRgb, hsvToHex, rgbToHex, validateHsv } from '../../../utils/colors.js';
-import { hsvStorage, colorSchemeStorage } from './storage-utils.js';
-import '../../color-picker/color-picker.js';
-import '../../color-scheme/color-scheme.js';
+import { hsvToHsl, hsvToRgb, hsvToHex, rgbToHex, validateHsv } from '../utils/colors.js';
+import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
+import '../components/color-picker/color-picker.js';
+import '../components/color-scheme/color-scheme.js';
 
 function when(condition, template) {
   return condition ? template() : undefined;

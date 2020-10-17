@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { storageManager, getStorageInterface } from '../src/storage-utils.js';
+import { storageManager, getStorageInterface } from '../storage.js';
 
 describe('storage utils', () => {
   const storageItem = getStorageInterface('picked-hsv');

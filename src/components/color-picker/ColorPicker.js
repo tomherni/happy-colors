@@ -1,15 +1,9 @@
 import { LitElement, html, css } from 'lit-element';
-import {
-  hsvToHsl,
-  hsvToRgb,
-  rgbToCssString,
-  rgbToHex,
-  validateHsv,
-} from '../../../utils/colors.js';
-import './color-palette.js';
-import './color-slider.js';
-import { debounce } from '../../../utils/debounce.js';
-import { round as roundUtil } from '../../../utils/numbers.js';
+import { hsvToHsl, hsvToRgb, rgbToCssString, rgbToHex, validateHsv } from '../../utils/colors.js';
+import { debounce } from '../../utils/debounce.js';
+import { round as roundUtil } from '../../utils/numbers.js';
+import '../color-palette/color-palette.js';
+import '../color-slider/color-slider.js';
 
 const round = value => value.map(v => roundUtil(v));
 

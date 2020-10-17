@@ -1,9 +1,9 @@
 import { LitElement, html, css } from 'lit-element';
-import { hsvToRgb, rgbToCssString, validateHue } from '../../../utils/colors.js';
-import { minMax, round } from '../../../utils/numbers.js';
-import { DraggableMixin } from './draggable-mixin.js';
+import { DraggableMixin } from '../../mixins/DraggableMixin.js';
+import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
+import { minMax, round } from '../../utils/numbers.js';
 
-class ColorSlider extends DraggableMixin(LitElement) {
+export class ColorSlider extends DraggableMixin(LitElement) {
   static get properties() {
     return {
       ...super.properties,
@@ -136,5 +136,3 @@ class ColorSlider extends DraggableMixin(LitElement) {
     this.elements.draggable.style.backgroundColor = rgbToCssString(hsvToRgb([hue, 100, 100]));
   }
 }
-
-window.customElements.define('color-slider', ColorSlider);

@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
-import { hsvToRgb, rgbToCssString, hsvToHex } from '../../../utils/colors.js';
-import { debounce } from '../../../utils/debounce.js';
-import * as schemes from './schemes.js';
+import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
+import { debounce } from '../../utils/debounce.js';
+import * as schemes from './schemes/schemes.js';
 
 function when(condition, template) {
   return condition ? template() : undefined;

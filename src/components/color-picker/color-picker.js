@@ -1,3 +1,3 @@
-import { ColorPicker } from './src/color-picker.js';
+import { ColorPicker } from './ColorPicker.js';
 
 window.customElements.define('color-picker', ColorPicker);

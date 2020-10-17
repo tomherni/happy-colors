@@ -1,5 +1,5 @@
-import { debounce } from '../../../utils/debounce.js';
-import { minMax } from '../../../utils/numbers.js';
+import { debounce } from '../utils/debounce.js';
+import { minMax } from '../utils/numbers.js';
 
 const events = {
   dragStart: ['mousedown', 'touchstart'],

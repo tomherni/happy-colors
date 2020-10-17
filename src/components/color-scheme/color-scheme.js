@@ -1,3 +1,3 @@
-import { ColorScheme } from './src/color-scheme.js';
+import { ColorScheme } from './ColorScheme.js';
 
 window.customElements.define('color-scheme', ColorScheme);

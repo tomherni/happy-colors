@@ -5,10 +5,7 @@ const merge = require('webpack-merge');
 module.exports = config => {
   config.set(
     merge(createDefaultConfig(config), {
-      files: [
-        { pattern: config.grep || 'components/*/test/**/*.test.js', type: 'module' },
-        { pattern: config.grep || 'utils/test/*.test.js', type: 'module' },
-      ],
+      files: [{ pattern: config.grep || 'src/**/test/*.test.js', type: 'module' }],
       esm: {
         nodeResolve: true,
       },

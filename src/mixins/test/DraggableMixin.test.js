@@ -1,7 +1,7 @@
 import { expect, fixture, fixtureCleanup } from '@open-wc/testing';
 import { LitElement, html } from 'lit-element';
 
-import { DraggableMixin } from '../src/draggable-mixin.js';
+import { DraggableMixin } from '../DraggableMixin.js';
 
 describe('draggable mixin', () => {
   let element;
