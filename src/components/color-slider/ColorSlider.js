@@ -77,6 +77,12 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     `;
   }
 
+  constructor() {
+    super();
+    this.addEventListener('update-hue', e => this._updateHue(e.detail));
+    this.addEventListener('update-handle-position', this._updateHandlePosition);
+  }
+
   firstUpdated() {
     this.createDraggableElement({
       canvas: this.shadowRoot.querySelector('.slider'),
@@ -97,19 +103,13 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     }
   }
 
-  /**
-   * @public
-   */
-  updateHue(hue) {
+  _updateHue(hue) {
     this.hue = hue;
-    this.updateHandlePosition();
+    this._updateHandlePosition();
     this._updateColorStyling(this.hue);
   }
 
-  /**
-   * @public
-   */
-  updateHandlePosition() {
+  _updateHandlePosition() {
     const { offsetHeight } = this.elements.canvas;
     const rawY = offsetHeight - this.hue / (360 / offsetHeight);
 
@@ -119,7 +119,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
   _initialize(initialHue) {
     if (!this.hue) {
-      this.updateHue(initialHue);
+      this._updateHue(initialHue);
     }
   }
 

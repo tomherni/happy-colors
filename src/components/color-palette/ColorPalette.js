@@ -82,6 +82,12 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     `;
   }
 
+  constructor() {
+    super();
+    this.addEventListener('update-hsv', e => this._updateHsv(e.detail));
+    this.addEventListener('update-handle-position', this._updateHandlePosition);
+  }
+
   firstUpdated() {
     this.createDraggableElement({
       canvas: this.shadowRoot.querySelector('.palette'),
@@ -101,19 +107,13 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     }
   }
 
-  /**
-   * @public
-   */
-  updateHsv(hsv) {
+  _updateHsv(hsv) {
     this.hsv = hsv;
-    this.updateHandlePosition();
+    this._updateHandlePosition();
     this._updateColorStyling(this.hsv);
   }
 
-  /**
-   * @public
-   */
-  updateHandlePosition() {
+  _updateHandlePosition() {
     const { offsetHeight, offsetWidth } = this.elements.canvas;
     const rawX = this.hsv[1] / (100 / offsetWidth);
     const rawY = offsetHeight - this.hsv[2] / (100 / offsetHeight);
@@ -125,7 +125,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
   _initialize(initialHsv) {
     if (!this.hsv) {
-      this.updateHsv(initialHsv);
+      this._updateHsv(initialHsv);
     }
   }
 

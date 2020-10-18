@@ -170,6 +170,7 @@ export class ColorPicker extends LitElement {
     super();
     this.initialHsv = [360, 255, 255];
     this._onWindowResize = debounce(this._onWindowResize).bind(this);
+    this.addEventListener('set-new-hsv', e => this._setNewHsv(e.detail));
   }
 
   connectedCallback() {
@@ -191,13 +192,14 @@ export class ColorPicker extends LitElement {
     return this.shadowRoot.querySelector('color-slider');
   }
 
-  /**
-   * @public
-   */
-  setNewHsv(hsv) {
+  _setNewHsv(hsv) {
     this._updateColors(hsv);
-    this.paletteElement.updateHsv(this._colors.hsv);
-    this.sliderElement.updateHue(this._colors.hsv[0]);
+    this.paletteElement.dispatchEvent(
+      new CustomEvent('update-hsv', { detail: this._colors.hsv })
+    );
+    this.sliderElement.dispatchEvent(
+      new CustomEvent('update-hue', { detail: this._colors.hsv[0] })
+    );
   }
 
   _initialize(initialHsv) {
@@ -228,11 +230,13 @@ export class ColorPicker extends LitElement {
   _onSliderChanged({ detail: hue }) {
     const [, s, v] = this._colors.hsv;
     this._updateColors([hue, s, v]);
-    this.paletteElement.updateHsv(this._colors.hsv);
+    this.paletteElement.dispatchEvent(
+      new CustomEvent('update-hsv', { detail: this._colors.hsv })
+    );
   }
 
   _onWindowResize() {
-    this.paletteElement.updateHandlePosition();
-    this.sliderElement.updateHandlePosition();
+    this.paletteElement.dispatchEvent(new Event('update-handle-position'));
+    this.sliderElement.dispatchEvent(new Event('update-handle-position'));
   }
 }

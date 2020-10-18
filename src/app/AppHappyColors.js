@@ -450,7 +450,9 @@ export class AppHappyColors extends LitElement {
 
   _onColorSchemeSelected(e) {
     const hsv = e.detail.split(',').map(Number);
-    this.shadowRoot.querySelector('color-picker').setNewHsv(hsv);
+    this.shadowRoot
+      .querySelector('color-picker')
+      .dispatchEvent(new CustomEvent('set-new-hsv', { detail: hsv }));
   }
 
   /**
