@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
-import { minMax, round } from '../../utils/numbers.js';
 
 export class ColorPalette extends DraggableMixin(LitElement) {
   static get properties() {
@@ -89,9 +88,13 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   }
 
   firstUpdated() {
-    this.createDraggableElement({
-      canvas: this.shadowRoot.querySelector('.palette'),
-      draggable: this.shadowRoot.querySelector('.handle'),
+    this._canvasElement = this.shadowRoot.querySelector('.palette');
+    this._handleElement = this.shadowRoot.querySelector('.handle');
+
+    this.registerDraggableElement({
+      canvas: this._canvasElement,
+      draggable: this._handleElement,
+      initial: this._getHandleAxisPercentages(),
     });
   }
 
@@ -114,13 +117,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   }
 
   _updateHandlePosition() {
-    const { offsetHeight, offsetWidth } = this.elements.canvas;
-    const rawX = this.hsv[1] / (100 / offsetWidth);
-    const rawY = offsetHeight - this.hsv[2] / (100 / offsetHeight);
-
-    const x = minMax(round(rawX, 1), 0, offsetWidth);
-    const y = minMax(round(rawY, 1), 0, offsetHeight);
-    this.elements.draggable.style.transform = `translate(${x}px, ${y}px)`;
+    this.updateDraggablePosition(this._getHandleAxisPercentages());
   }
 
   _initialize(initialHsv) {
@@ -129,27 +126,28 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     }
   }
 
-  _onHandleDragged(position) {
-    const { x, y } = position;
+  _getHandleAxisPercentages() {
+    return {
+      x: this.hsv[1],
+      y: 100 - (this.hsv[2]),
+    };
+  }
 
+  _onHandleDragged({ x, y }) {
     // Calculate the new color based on the handle position.
-    const { offsetHeight, offsetWidth } = this.elements.canvas;
     const [hue] = this.hsv;
-    const saturation = (x / offsetWidth) * 100;
-    const value = ((offsetHeight - y) / offsetHeight) * 100;
+    const saturation = x;
+    const value = 100 - y;
     this.hsv = validateHsv([hue, saturation, value]);
 
     this._updateColorStyling(this.hsv);
-    this.elements.draggable.style.transform = `translate(${x}px, ${y}px)`;
     this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
   }
 
   _updateColorStyling(hsv) {
-    this.elements.canvas.style.backgroundColor = rgbToCssString(
+    this._canvasElement.style.backgroundColor = rgbToCssString(
       hsvToRgb([hsv[0], 100, 100])
     );
-    this.elements.draggable.style.backgroundColor = rgbToCssString(
-      hsvToRgb(hsv)
-    );
+    this._handleElement.style.backgroundColor = rgbToCssString(hsvToRgb(hsv));
   }
 }

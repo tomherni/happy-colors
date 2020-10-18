@@ -1,7 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
-import { minMax, round } from '../../utils/numbers.js';
 
 export class ColorSlider extends DraggableMixin(LitElement) {
   static get properties() {
@@ -49,7 +48,6 @@ export class ColorSlider extends DraggableMixin(LitElement) {
         position: relative;
         height: 1px;
         width: 1px;
-        margin: auto;
       }
 
       .handle::after {
@@ -57,7 +55,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
         display: block;
         position: absolute;
         top: calc(var(--handle-size) / 2 * -1);
-        left: calc(var(--handle-size) / 2 * -1);
+        left: calc((var(--handle-size) - 10px) / 2 * -1);
         height: var(--handle-size);
         width: var(--handle-size);
         background-color: inherit;
@@ -84,9 +82,12 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   }
 
   firstUpdated() {
-    this.createDraggableElement({
+    this._handleElement = this.shadowRoot.querySelector('.handle');
+
+    this.registerDraggableElement({
       canvas: this.shadowRoot.querySelector('.slider'),
-      draggable: this.shadowRoot.querySelector('.handle'),
+      draggable: this._handleElement,
+      initial: this._getHandleAxisPercentage(),
       lockX: true,
     });
   }
@@ -110,11 +111,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   }
 
   _updateHandlePosition() {
-    const { offsetHeight } = this.elements.canvas;
-    const rawY = offsetHeight - this.hue / (360 / offsetHeight);
-
-    const y = minMax(round(rawY, 1), 0, offsetHeight);
-    this.elements.draggable.style.transform = `translate(0px, ${y}px)`;
+    this.updateDraggablePosition(this._getHandleAxisPercentage());
   }
 
   _initialize(initialHue) {
@@ -123,18 +120,22 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     }
   }
 
-  _onHandleDragged(position) {
+  _getHandleAxisPercentage() {
+    return {
+      y: 100 - (this.hue / 360) * 100,
+    };
+  }
+
+  _onHandleDragged({ y }) {
     // Calculate the new color based on the handle position.
-    const { offsetHeight } = this.elements.canvas;
-    this.hue = validateHue(360 - (position.y / offsetHeight) * 360);
+    this.hue = validateHue(360 - (360 / 100) * y);
 
     this._updateColorStyling(this.hue);
-    this.elements.draggable.style.transform = `translate(0px, ${position.y}px)`;
     this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
   }
 
   _updateColorStyling(hue) {
-    this.elements.draggable.style.backgroundColor = rgbToCssString(
+    this._handleElement.style.backgroundColor = rgbToCssString(
       hsvToRgb([hue, 100, 100])
     );
   }

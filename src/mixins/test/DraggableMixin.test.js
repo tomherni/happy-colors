@@ -38,13 +38,13 @@ describe('draggable mixin', () => {
     });
 
     it('should create a public property containing the elements', () => {
-      element.createDraggableElement({ canvas, draggable });
+      element.registerDraggableElement({ canvas, draggable });
       expect(element.elements).to.deep.equal({ canvas, draggable });
       expect(element._dragConfig).to.be.an('object').that.is.empty;
     });
 
     it('should create a private property containing dragging configuration', () => {
-      element.createDraggableElement({
+      element.registerDraggableElement({
         canvas,
         draggable,
         foo: true,

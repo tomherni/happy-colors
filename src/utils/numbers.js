@@ -19,3 +19,5 @@ export function minMax(number, min, max) {
 export function round(number, maxDecimals = 0) {
   return Number(number.toFixed(maxDecimals));
 }
+
+export const isNumber = value => typeof value === 'number';
