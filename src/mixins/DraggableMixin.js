@@ -1,12 +1,6 @@
 import { debounce } from '../utils/debounce.js';
 import { minMax, round, isNumber } from '../utils/numbers.js';
 
-const events = {
-  dragStart: ['mousedown', 'touchstart'],
-  drag: ['mousemove', 'touchmove'],
-  dragEnd: ['mouseup', 'touchend'],
-};
-
 const validatePercentage = value => round(minMax(value, 0, 100), 2);
 
 /**
@@ -91,6 +85,7 @@ export const DraggableMixin = Base =>
       this.__startDrag = this.__startDrag.bind(this);
       this.__drag = debounce(this.__drag).bind(this);
       this.__stopDrag = this.__stopDrag.bind(this);
+      this.__onWindowResize = debounce(this.__onWindowResize).bind(this);
     }
 
     disconnectedCallback() {
@@ -112,21 +107,29 @@ export const DraggableMixin = Base =>
       this.__initialize(config);
       const options = { passive: false };
 
-      events.dragStart.forEach(e =>
-        window.addEventListener(e, this.__startDrag, options)
-      );
-      events.drag.forEach(e => window.addEventListener(e, this.__drag, options));
-      events.dragEnd.forEach(e => window.addEventListener(e, this.__stopDrag));
+      window.addEventListener('mousedown', this.__startDrag, options);
+      window.addEventListener('mousemove', this.__drag, options);
+      window.addEventListener('mouseup', this.__stopDrag);
+
+      window.addEventListener('touchstart', this.__startDrag, options);
+      window.addEventListener('touchmove', this.__drag, options);
+      window.addEventListener('touchend', this.__stopDrag);
+
+      window.addEventListener('resize', this.__onWindowResize);
     }
 
     deregisterDraggableElement() {
       this.__registered = false;
 
-      events.dragStart.forEach(e =>
-        window.removeEventListener(e, this.__startDrag)
-      );
-      events.drag.forEach(e => window.removeEventListener(e, this.__drag));
-      events.dragEnd.forEach(e => window.removeEventListener(e, this.__stopDrag));
+      window.removeEventListener('mousedown', this.__startDrag);
+      window.removeEventListener('mousemove', this.__drag);
+      window.removeEventListener('mouseup', this.__stopDrag);
+
+      window.removeEventListener('touchstart', this.__startDrag);
+      window.removeEventListener('touchmove', this.__drag);
+      window.removeEventListener('touchend', this.__stopDrag);
+
+      window.removeEventListener('resize', this.__onWindowResize);
     }
 
     /**
@@ -225,5 +228,10 @@ export const DraggableMixin = Base =>
       };
 
       this.__elements.draggable.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    __onWindowResize() {
+      // TODO: look into replacing this with a resize observer
+      this.updateDraggablePosition();
     }
   };

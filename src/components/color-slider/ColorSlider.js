@@ -78,7 +78,6 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   constructor() {
     super();
     this.addEventListener('update-hue', e => this._updateHue(e.detail));
-    this.addEventListener('update-handle-position', this._updateHandlePosition);
   }
 
   firstUpdated() {
@@ -106,12 +105,8 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
   _updateHue(hue) {
     this.hue = hue;
-    this._updateHandlePosition();
-    this._updateColorStyling(this.hue);
-  }
-
-  _updateHandlePosition() {
     this.updateDraggablePosition(this._getHandleAxisPercentage());
+    this._updateColorStyling(this.hue);
   }
 
   _initialize(initialHue) {

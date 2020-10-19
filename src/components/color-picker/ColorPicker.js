@@ -6,7 +6,6 @@ import {
   rgbToHex,
   validateHsv,
 } from '../../utils/colors.js';
-import { debounce } from '../../utils/debounce.js';
 import { round as roundUtil } from '../../utils/numbers.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
@@ -169,19 +168,12 @@ export class ColorPicker extends LitElement {
   constructor() {
     super();
     this.initialHsv = [360, 255, 255];
-    this._onWindowResize = debounce(this._onWindowResize).bind(this);
     this.addEventListener('set-new-hsv', e => this._setNewHsv(e.detail));
   }
 
   connectedCallback() {
     super.connectedCallback();
     this._initialize(this.initialHsv);
-    window.addEventListener('resize', this._onWindowResize);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('resize', this._onWindowResize);
   }
 
   get paletteElement() {
@@ -233,10 +225,5 @@ export class ColorPicker extends LitElement {
     this.paletteElement.dispatchEvent(
       new CustomEvent('update-hsv', { detail: this._colors.hsv })
     );
-  }
-
-  _onWindowResize() {
-    this.paletteElement.dispatchEvent(new Event('update-handle-position'));
-    this.sliderElement.dispatchEvent(new Event('update-handle-position'));
   }
 }

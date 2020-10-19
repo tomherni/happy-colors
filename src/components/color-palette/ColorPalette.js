@@ -84,7 +84,6 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   constructor() {
     super();
     this.addEventListener('update-hsv', e => this._updateHsv(e.detail));
-    this.addEventListener('update-handle-position', this._updateHandlePosition);
   }
 
   firstUpdated() {
@@ -112,12 +111,8 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
   _updateHsv(hsv) {
     this.hsv = hsv;
-    this._updateHandlePosition();
-    this._updateColorStyling(this.hsv);
-  }
-
-  _updateHandlePosition() {
     this.updateDraggablePosition(this._getHandleAxisPercentages());
+    this._updateColorStyling(this.hsv);
   }
 
   _initialize(initialHsv) {
