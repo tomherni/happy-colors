@@ -1,17 +1,16 @@
 import { LitElement, html, css } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
+import { hasColorChanged } from '../color-picker/utils.js';
 
 export class ColorPalette extends DraggableMixin(LitElement) {
   static get properties() {
     return {
-      ...super.properties,
-
-      /** Initial HSV value to initialize with. */
-      initial: { type: Array },
-
-      /** Current HSV value picked in the palette canvas. */
-      hsv: { type: Array },
+      /** The current color in HSV format. */
+      hsv: {
+        type: Array,
+        hasChanged: hasColorChanged,
+      },
     };
   }
 
@@ -81,11 +80,6 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     `;
   }
 
-  constructor() {
-    super();
-    this.addEventListener('update-hsv', e => this._updateHsv(e.detail));
-  }
-
   firstUpdated() {
     this._canvasElement = this.shadowRoot.querySelector('.palette');
     this._handleElement = this.shadowRoot.querySelector('.handle');
@@ -93,56 +87,53 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this.registerDraggableElement({
       canvas: this._canvasElement,
       draggable: this._handleElement,
-      initial: this._getHandleAxisPercentages(),
+      initial: this._convertHsvToHandlePosition(),
     });
   }
 
   updated(props) {
     super.updated(props);
 
-    if (props.has('initial') && this.initial) {
-      this._initialize(this.initial);
+    if (props.has('hsv') && this.hsv) {
+      this._onHsvChanged();
     }
-
     if (props.has('position') && this.position) {
-      this._onHandleDragged(this.position);
+      this._onHandlePositionChanged();
     }
   }
 
-  _updateHsv(hsv) {
-    this.hsv = hsv;
-    this.updateDraggablePosition(this._getHandleAxisPercentages());
-    this._updateColorStyling(this.hsv);
+  _onHsvChanged() {
+    const newHandlePosition = this._convertHsvToHandlePosition();
+    this.updateDraggablePosition(newHandlePosition);
+    this._updateColorStyling();
   }
 
-  _initialize(initialHsv) {
-    if (!this.hsv) {
-      this._updateHsv(initialHsv);
-    }
-  }
-
-  _getHandleAxisPercentages() {
-    return {
-      x: this.hsv[1],
-      y: 100 - (this.hsv[2]),
-    };
-  }
-
-  _onHandleDragged({ x, y }) {
-    // Calculate the new color based on the handle position.
-    const [hue] = this.hsv;
-    const saturation = x;
-    const value = 100 - y;
-    this.hsv = validateHsv([hue, saturation, value]);
-
-    this._updateColorStyling(this.hsv);
+  _onHandlePositionChanged() {
+    this.hsv = this._convertHandlePositionToHsv();
+    this._updateColorStyling();
     this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
   }
 
-  _updateColorStyling(hsv) {
+  _convertHsvToHandlePosition() {
+    return {
+      x: this.hsv[1],
+      y: 100 - this.hsv[2],
+    };
+  }
+
+  _convertHandlePositionToHsv() {
+    const [hue] = this.hsv;
+    const saturation = this.position.x;
+    const value = 100 - this.position.y;
+    return validateHsv([hue, saturation, value]);
+  }
+
+  _updateColorStyling() {
     this._canvasElement.style.backgroundColor = rgbToCssString(
-      hsvToRgb([hsv[0], 100, 100])
+      hsvToRgb([this.hsv[0], 100, 100])
     );
-    this._handleElement.style.backgroundColor = rgbToCssString(hsvToRgb(hsv));
+    this._handleElement.style.backgroundColor = rgbToCssString(
+      hsvToRgb(this.hsv)
+    );
   }
 }

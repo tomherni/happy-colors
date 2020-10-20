@@ -3,10 +3,11 @@ import {
   hsvToHsl,
   hsvToRgb,
   rgbToCssString,
-  rgbToHex,
+  hsvToHex,
   validateHsv,
 } from '../../utils/colors.js';
 import { round as roundUtil } from '../../utils/numbers.js';
+import { hasColorChanged } from './utils.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
 
@@ -15,13 +16,14 @@ const round = value => value.map(v => roundUtil(v));
 export class ColorPicker extends LitElement {
   static get properties() {
     return {
-      /** The HSV color to initialize with. */
-      initialHsv: { type: Array },
+      /** The currently picked color in HSV format. */
+      hsv: {
+        type: Array,
+        hasChanged: hasColorChanged,
+      },
 
       /** The currently picked color in different color models. */
       _colors: { type: Object },
-
-      _initialPickerHsv: { type: Array },
     };
   }
 
@@ -126,12 +128,12 @@ export class ColorPicker extends LitElement {
       <div class="container">
         <div class="picker">
           <color-palette
-            .initial=${this._initialPickerHsv}
+            .hsv=${this._colors.hsv}
             @changed=${this._onPaletteChanged}
           ></color-palette>
 
           <color-slider
-            .initial=${this._initialPickerHsv[0]}
+            .hue=${this._colors.hsv[0]}
             @changed=${this._onSliderChanged}
           ></color-slider>
         </div>
@@ -165,54 +167,35 @@ export class ColorPicker extends LitElement {
     `;
   }
 
-  constructor() {
-    super();
-    this.initialHsv = [360, 255, 255];
-    this.addEventListener('set-new-hsv', e => this._setNewHsv(e.detail));
-  }
-
   connectedCallback() {
     super.connectedCallback();
-    this._initialize(this.initialHsv);
+    this._initialize();
   }
 
-  get paletteElement() {
-    return this.shadowRoot.querySelector('color-palette');
+  updated(props) {
+    super.updated(props);
+
+    if (props.has('hsv') && this.hsv) {
+      this._updateColors(this.hsv);
+    }
   }
 
-  get sliderElement() {
-    return this.shadowRoot.querySelector('color-slider');
+  _initialize() {
+    const fallbackHsv = [360, 255, 255];
+    this._updateColors(this.hsv || fallbackHsv);
   }
 
-  _setNewHsv(hsv) {
-    this._updateColors(hsv);
-    this.paletteElement.dispatchEvent(
-      new CustomEvent('update-hsv', { detail: this._colors.hsv })
-    );
-    this.sliderElement.dispatchEvent(
-      new CustomEvent('update-hue', { detail: this._colors.hsv[0] })
-    );
-  }
-
-  _initialize(initialHsv) {
-    this._updateColors(initialHsv, false);
-    this._initialPickerHsv = this._colors.hsv;
-  }
-
-  _updateColors(newHsv, sendEvent = true) {
-    const hsv = validateHsv(newHsv);
-    const rgb = hsvToRgb(hsv);
+  _updateColors(hsv) {
+    this.hsv = validateHsv(hsv);
 
     this._colors = {
-      hsv,
-      rgb,
-      hsl: hsvToHsl(hsv),
-      hex: rgbToHex(rgb),
+      hsv: this.hsv,
+      rgb: hsvToRgb(this.hsv),
+      hsl: hsvToHsl(this.hsv),
+      hex: hsvToHex(this.hsv),
     };
 
-    if (sendEvent) {
-      this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
-    }
+    this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
   }
 
   _onPaletteChanged({ detail: hsv }) {
@@ -220,10 +203,7 @@ export class ColorPicker extends LitElement {
   }
 
   _onSliderChanged({ detail: hue }) {
-    const [, s, v] = this._colors.hsv;
+    const [, s, v] = this.hsv;
     this._updateColors([hue, s, v]);
-    this.paletteElement.dispatchEvent(
-      new CustomEvent('update-hsv', { detail: this._colors.hsv })
-    );
   }
 }

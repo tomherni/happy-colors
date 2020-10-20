@@ -5,11 +5,6 @@ import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
 export class ColorSlider extends DraggableMixin(LitElement) {
   static get properties() {
     return {
-      ...super.properties,
-
-      /** Initial hue value to initialize with. */
-      initial: { type: Number },
-
       /** Current hue value picked in the slider canvas. */
       hue: { type: Number },
     };
@@ -75,18 +70,13 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     `;
   }
 
-  constructor() {
-    super();
-    this.addEventListener('update-hue', e => this._updateHue(e.detail));
-  }
-
   firstUpdated() {
     this._handleElement = this.shadowRoot.querySelector('.handle');
 
     this.registerDraggableElement({
       canvas: this.shadowRoot.querySelector('.slider'),
       draggable: this._handleElement,
-      initial: this._getHandleAxisPercentage(),
+      initial: this._convertHueToHandlePosition(),
       lockX: true,
     });
   }
@@ -94,44 +84,33 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   updated(props) {
     super.updated(props);
 
-    if (props.has('initial') && typeof this.initial === 'number') {
-      this._initialize(this.initial);
+    if (props.has('hue') && this.hue) {
+      this._onHueChanged();
     }
-
     if (props.has('position') && this.position) {
-      this._onHandleDragged(this.position);
+      this._onHandlePositionChanged();
     }
   }
 
-  _updateHue(hue) {
-    this.hue = hue;
-    this.updateDraggablePosition(this._getHandleAxisPercentage());
-    this._updateColorStyling(this.hue);
+  _onHueChanged() {
+    const newHandlePosition = this._convertHueToHandlePosition();
+    this.updateDraggablePosition(newHandlePosition);
+    this._updateColorStyling();
   }
 
-  _initialize(initialHue) {
-    if (!this.hue) {
-      this._updateHue(initialHue);
-    }
-  }
-
-  _getHandleAxisPercentage() {
-    return {
-      y: 100 - (this.hue / 360) * 100,
-    };
-  }
-
-  _onHandleDragged({ y }) {
-    // Calculate the new color based on the handle position.
-    this.hue = validateHue(360 - (360 / 100) * y);
-
-    this._updateColorStyling(this.hue);
+  _onHandlePositionChanged() {
+    this.hue = validateHue(360 - (360 / 100) * this.position.y);
+    this._updateColorStyling();
     this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
   }
 
-  _updateColorStyling(hue) {
+  _convertHueToHandlePosition() {
+    return { y: 100 - (this.hue / 360) * 100 };
+  }
+
+  _updateColorStyling() {
     this._handleElement.style.backgroundColor = rgbToCssString(
-      hsvToRgb([hue, 100, 100])
+      hsvToRgb([this.hue, 100, 100])
     );
   }
 }

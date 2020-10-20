@@ -320,7 +320,7 @@ export class AppHappyColors extends LitElement {
 
           <div class="color-picker">
             <color-picker
-              .initialHsv=${this.colors.hsv}
+              .hsv=${this.colors.hsv}
               @changed=${this._onColorPickerChanged}
             ></color-picker>
           </div>
@@ -435,7 +435,8 @@ export class AppHappyColors extends LitElement {
   }
 
   _initializeColors() {
-    const hsv = this._getHsvFromStorage() || [279, 82, 90];
+    const initialHsv = [279, 82, 90];
+    const hsv = this._getHsvFromStorage() || initialHsv;
     this._updateColors({ hsv });
   }
 
@@ -450,9 +451,7 @@ export class AppHappyColors extends LitElement {
 
   _onColorSchemeSelected(e) {
     const hsv = e.detail.split(',').map(Number);
-    this.shadowRoot
-      .querySelector('color-picker')
-      .dispatchEvent(new CustomEvent('set-new-hsv', { detail: hsv }));
+    this._updateColors({ hsv });
   }
 
   /**
