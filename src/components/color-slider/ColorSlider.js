@@ -86,10 +86,15 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
     if (props.has('hue') && this.hue) {
       this._onHueChanged();
+      this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
     }
     if (props.has('position') && this.position) {
       this._onHandlePositionChanged();
     }
+  }
+
+  _setHue(hue) {
+    this.hue = validateHue(hue);
   }
 
   _onHueChanged() {
@@ -99,9 +104,8 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   }
 
   _onHandlePositionChanged() {
-    this.hue = validateHue(360 - (360 / 100) * this.position.y);
+    this._setHue(360 - (360 / 100) * this.position.y);
     this._updateColorStyling();
-    this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
   }
 
   _convertHueToHandlePosition() {

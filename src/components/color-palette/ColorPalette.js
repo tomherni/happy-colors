@@ -96,10 +96,15 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
     if (props.has('hsv') && this.hsv) {
       this._onHsvChanged();
+      this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
     }
     if (props.has('position') && this.position) {
       this._onHandlePositionChanged();
     }
+  }
+
+  _setHsv(hsv) {
+    this.hsv = validateHsv(hsv);
   }
 
   _onHsvChanged() {
@@ -109,9 +114,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   }
 
   _onHandlePositionChanged() {
-    this.hsv = this._convertHandlePositionToHsv();
+    const hsv = this._convertHandlePositionToHsv();
+    this._setHsv(hsv);
     this._updateColorStyling();
-    this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
   }
 
   _convertHsvToHandlePosition() {

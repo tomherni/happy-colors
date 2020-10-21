@@ -182,28 +182,31 @@ export class ColorPicker extends LitElement {
 
   _initialize() {
     const fallbackHsv = [360, 255, 255];
-    this._updateColors(this.hsv || fallbackHsv);
+    this._setHsv(this.hsv || fallbackHsv);
+    this._updateColors(this.hsv);
+  }
+
+  _setHsv(hsv) {
+    this.hsv = validateHsv(hsv);
   }
 
   _updateColors(hsv) {
-    this.hsv = validateHsv(hsv);
-
     this._colors = {
-      hsv: this.hsv,
-      rgb: hsvToRgb(this.hsv),
-      hsl: hsvToHsl(this.hsv),
-      hex: hsvToHex(this.hsv),
+      hsv,
+      rgb: hsvToRgb(hsv),
+      hsl: hsvToHsl(hsv),
+      hex: hsvToHex(hsv),
     };
 
     this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
   }
 
   _onPaletteChanged({ detail: hsv }) {
-    this._updateColors(hsv);
+    this._setHsv(hsv);
   }
 
   _onSliderChanged({ detail: hue }) {
     const [, s, v] = this.hsv;
-    this._updateColors([hue, s, v]);
+    this._setHsv([hue, s, v]);
   }
 }
