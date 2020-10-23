@@ -166,7 +166,7 @@ export class ColorPicker extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this._initialize();
+    this._setHsv(this.hsv || [360, 255, 255]);
   }
 
   update(props) {
@@ -181,12 +181,6 @@ export class ColorPicker extends LitElement {
     if (props.has('hsv') && this.hsv) {
       this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
     }
-  }
-
-  _initialize() {
-    const fallbackHsv = [360, 255, 255];
-    this._setHsv(this.hsv || fallbackHsv);
-    this._updateColors(this.hsv);
   }
 
   _setHsv(hsv) {
