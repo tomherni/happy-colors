@@ -21,9 +21,6 @@ export class ColorPicker extends LitElement {
         type: Array,
         hasChanged: hasColorChanged,
       },
-
-      /** The currently picked color in different color models. */
-      _colors: { type: Object },
     };
   }
 
@@ -172,11 +169,17 @@ export class ColorPicker extends LitElement {
     this._initialize();
   }
 
+  update(props) {
+    if (props.has('hsv') && this.hsv) {
+      this._setColors(this.hsv);
+    }
+    super.update(props);
+  }
+
   updated(props) {
     super.updated(props);
-
     if (props.has('hsv') && this.hsv) {
-      this._updateColors(this.hsv);
+      this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
     }
   }
 
@@ -190,15 +193,13 @@ export class ColorPicker extends LitElement {
     this.hsv = validateHsv(hsv);
   }
 
-  _updateColors(hsv) {
+  _setColors(hsv) {
     this._colors = {
       hsv,
       rgb: hsvToRgb(hsv),
       hsl: hsvToHsl(hsv),
       hex: hsvToHex(hsv),
     };
-
-    this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
   }
 
   _onPaletteChanged({ detail: hsv }) {
