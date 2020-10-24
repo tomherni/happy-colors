@@ -87,24 +87,23 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this.registerDraggableElement({
       canvas: this._canvasElement,
       draggable: this._handleElement,
+      callback: this._onHandlePositionChanged.bind(this),
       initial: this._convertHsvToHandlePosition(),
     });
   }
 
   updated(props) {
     super.updated(props);
-
     if (props.has('hsv') && this.hsv) {
       this._onHsvChanged();
       this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
     }
-    if (props.has('position') && this.position) {
-      this._onHandlePositionChanged();
-    }
   }
 
   _setHsv(hsv) {
-    this.hsv = validateHsv(hsv);
+    if (hasColorChanged(hsv, this.hsv)) {
+      this.hsv = validateHsv(hsv);
+    }
   }
 
   _onHsvChanged() {
@@ -113,8 +112,8 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this._updateColorStyling();
   }
 
-  _onHandlePositionChanged() {
-    const hsv = this._convertHandlePositionToHsv();
+  _onHandlePositionChanged(position) {
+    const hsv = this._convertHandlePositionToHsv(position);
     this._setHsv(hsv);
     this._updateColorStyling();
   }
@@ -126,11 +125,11 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     };
   }
 
-  _convertHandlePositionToHsv() {
+  _convertHandlePositionToHsv(position) {
     const [hue] = this.hsv;
-    const saturation = this.position.x;
-    const value = 100 - this.position.y;
-    return validateHsv([hue, saturation, value]);
+    const saturation = position.x;
+    const value = 100 - position.y;
+    return [hue, saturation, value];
   }
 
   _updateColorStyling() {

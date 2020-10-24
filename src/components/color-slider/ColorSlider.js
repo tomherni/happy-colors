@@ -77,19 +77,16 @@ export class ColorSlider extends DraggableMixin(LitElement) {
       canvas: this.shadowRoot.querySelector('.slider'),
       draggable: this._handleElement,
       initial: this._convertHueToHandlePosition(),
+      callback: this._onHandlePositionChanged.bind(this),
       lockX: true,
     });
   }
 
   updated(props) {
     super.updated(props);
-
     if (props.has('hue') && this.hue) {
       this._onHueChanged();
       this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
-    }
-    if (props.has('position') && this.position) {
-      this._onHandlePositionChanged();
     }
   }
 
@@ -103,8 +100,8 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     this._updateColorStyling();
   }
 
-  _onHandlePositionChanged() {
-    this._setHue(360 - (360 / 100) * this.position.y);
+  _onHandlePositionChanged(position) {
+    this._setHue(360 - (360 / 100) * position.y);
     this._updateColorStyling();
   }
 

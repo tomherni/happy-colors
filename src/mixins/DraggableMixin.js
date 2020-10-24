@@ -64,18 +64,18 @@ function calculateDraggableCoords(canvas, x, y) {
   };
 }
 
+/**
+ * Check whether any axes changed by comparing new axes with previous values.
+ * @param {Object} axes
+ * @param {Object} previous
+ * @returns {Boolean}
+ */
+function haveAxesChanged(axes, previous) {
+  return axes?.x !== previous?.x || axes?.y !== previous?.y;
+}
+
 export const DraggableMixin = Base =>
   class extends Base {
-    static get properties() {
-      return {
-        /**
-         * The draggable's position along the x/y axis of the canvas, expressed
-         * in percentages.
-         */
-        position: { type: Object },
-      };
-    }
-
     constructor() {
       super();
 
@@ -135,10 +135,10 @@ export const DraggableMixin = Base =>
     /**
      * @param {Object} position
      */
-    updateDraggablePosition(position = this.position) {
+    updateDraggablePosition(position = this.__position) {
       const { canvas } = this.__elements;
-      const { x, y } = convertPositionToCoords(canvas, position);
-      this.__updateDraggablePositionByCoords(x, y);
+      const coords = convertPositionToCoords(canvas, position);
+      this.__updateDraggablePositionByCoords(coords);
     }
 
     /**
@@ -202,32 +202,37 @@ export const DraggableMixin = Base =>
      */
     __updateDraggablePositionByEvent(event) {
       if (this.__dragging) {
-        const { canvas, draggable, config } = this.__context;
+        const { canvas, draggable: prevCoords, config } = this.__context;
 
         // Calculate the new X and Y coordinates.
         const cursor = getCursorCoordsInViewport(event);
         const newCoords = calculateDraggableCoords(canvas, cursor.x, cursor.y);
-        const x = config.lockX ? draggable.x : newCoords.x;
-        const y = config.lockY ? draggable.y : newCoords.y;
+        const coords = {
+          x: config.lockX ? prevCoords.x : newCoords.x,
+          y: config.lockY ? prevCoords.y : newCoords.y,
+        };
 
         // Update only if the position actually changed.
-        if (x !== draggable.x || y !== draggable.y) {
-          this.__context.draggable.x = x;
-          this.__context.draggable.y = y;
-          this.__updateDraggablePositionByCoords(x, y);
+        if (haveAxesChanged(coords, prevCoords)) {
+          this.__context.draggable = coords;
+          this.__updateDraggablePositionByCoords(coords);
         }
       }
     }
 
-    __updateDraggablePositionByCoords(x, y) {
+    __updateDraggablePositionByCoords({ x, y }) {
       const { offsetWidth, offsetHeight } = this.__elements.canvas;
 
-      this.position = {
+      const position = {
         x: validatePercentage((x / offsetWidth) * 100),
         y: validatePercentage((y / offsetHeight) * 100),
       };
 
-      this.__elements.draggable.style.transform = `translate(${x}px, ${y}px)`;
+      if (haveAxesChanged(position, this.__position)) {
+        this.__position = position;
+        this.__elements.draggable.style.transform = `translate(${x}px, ${y}px)`;
+        this.__dragConfig.callback(this.__position);
+      }
     }
 
     __onWindowResize() {
