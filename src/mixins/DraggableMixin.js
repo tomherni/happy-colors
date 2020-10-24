@@ -103,33 +103,25 @@ export const DraggableMixin = Base =>
         this.deregisterDraggableElement();
       }
       this.__registered = true;
-
+      this.__manageEventListeners(window.addEventListener);
       this.__initialize(config);
-      const options = { passive: false };
-
-      window.addEventListener('mousedown', this.__startDrag, options);
-      window.addEventListener('mousemove', this.__drag, options);
-      window.addEventListener('mouseup', this.__stopDrag);
-
-      window.addEventListener('touchstart', this.__startDrag, options);
-      window.addEventListener('touchmove', this.__drag, options);
-      window.addEventListener('touchend', this.__stopDrag);
-
-      window.addEventListener('resize', this.__onWindowResize);
     }
 
     deregisterDraggableElement() {
       this.__registered = false;
+      this.__manageEventListeners(window.removeEventListener);
+    }
 
-      window.removeEventListener('mousedown', this.__startDrag);
-      window.removeEventListener('mousemove', this.__drag);
-      window.removeEventListener('mouseup', this.__stopDrag);
+    __manageEventListeners(handler) {
+      handler('mousedown', this.__startDrag, { passive: false });
+      handler('mousemove', this.__drag, { passive: false });
+      handler('mouseup', this.__stopDrag);
 
-      window.removeEventListener('touchstart', this.__startDrag);
-      window.removeEventListener('touchmove', this.__drag);
-      window.removeEventListener('touchend', this.__stopDrag);
+      handler('touchstart', this.__startDrag, { passive: false });
+      handler('touchmove', this.__drag, { passive: false });
+      handler('touchend', this.__stopDrag);
 
-      window.removeEventListener('resize', this.__onWindowResize);
+      handler('resize', this.__onWindowResize);
     }
 
     /**
