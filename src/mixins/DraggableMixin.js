@@ -4,16 +4,22 @@ import { minMax, round, isNumber } from '../utils/numbers.js';
 const validatePercentage = value => round(minMax(value, 0, 100), 2);
 
 /**
- * Pixel coordinates along the x/y axis on a canvas.
- * @typedef {Object} Coords
- * @property {Number} [x]
- * @property {Number} [y]
+ * Coordinates along the X and Y axes on a canvas expressed in pixels. These
+ * coords are used to correctly position a draggable element via CSS.
+ * @typedef {import('./../types').PixelCoords} PixelCoords
+ */
+
+/**
+ * Coordinates along the X and Y axes on a canvas expressed in percentages.
+ * These coords are used to translate a draggable element's position to the
+ * value that they represent.
+ * @typedef {import('./../types').PositionCoords} PositionCoords
  */
 
 /**
  * Get the cursor coordinates within the viewport. For touch devices we get the first contact.
  * @param {MouseEvent | TouchEvent} event
- * @returns {Coords}
+ * @returns {PixelCoords}
  */
 function getCursorCoordsInViewport(event) {
   let source = event;
@@ -31,8 +37,8 @@ function getCursorCoordsInViewport(event) {
 
 /**
  * @param {HTMLElement} canvas
- * @param {Object} position
- * @returns {Coords}
+ * @param {PositionCoords} position
+ * @returns {PixelCoords}
  */
 function convertPositionToCoords(canvas, position) {
   const { offsetWidth, offsetHeight } = canvas;
@@ -54,7 +60,7 @@ function convertPositionToCoords(canvas, position) {
  * @param {DOMRect} canvas - Canvas in which the coordinates must be placed.
  * @param {Number} x - Client coordinates along the x-axis.
  * @param {Number} y - Client coordinates along the y-axis.
- * @returns {Coords}
+ * @returns {PixelCoords}
  */
 function calculateDraggableCoords(canvas, x, y) {
   const { top, left, width, height } = canvas;
@@ -66,8 +72,8 @@ function calculateDraggableCoords(canvas, x, y) {
 
 /**
  * Check whether any axes changed by comparing new axes with previous values.
- * @param {Object} axes
- * @param {Object} previous
+ * @param {PixelCoords | PositionCoords} axes
+ * @param {PixelCoords | PositionCoords} previous
  * @returns {Boolean}
  */
 function haveAxesChanged(axes, previous) {
@@ -125,7 +131,7 @@ export const DraggableMixin = Base =>
     }
 
     /**
-     * @param {Object} position
+     * @param {PositionCoords} [position]
      */
     updateDraggablePosition(position = this.__position) {
       const { canvas } = this.__elements;
@@ -212,6 +218,9 @@ export const DraggableMixin = Base =>
       }
     }
 
+    /**
+     * @param {PixelCoords} coords
+     */
     __updateDraggablePositionByCoords({ x, y }) {
       const { offsetWidth, offsetHeight } = this.__elements.canvas;
 

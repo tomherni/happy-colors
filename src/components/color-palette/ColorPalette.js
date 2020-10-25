@@ -112,6 +112,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this._updateColorStyling();
   }
 
+  /**
+   * @param {PositionCoords} position
+   */
   _onHandlePositionChanged(position) {
     const hsv = this._convertHandlePositionToHsv(position);
     this._setHsv(hsv);
@@ -125,6 +128,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     };
   }
 
+  /**
+   * @param {PositionCoords} position
+   */
   _convertHandlePositionToHsv(position) {
     const [hue] = this.hsv;
     const saturation = position.x;

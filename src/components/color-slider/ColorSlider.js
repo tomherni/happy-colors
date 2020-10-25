@@ -100,6 +100,9 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     this._updateColorStyling();
   }
 
+  /**
+   * @param {PositionCoords} position
+   */
   _onHandlePositionChanged(position) {
     this._setHue(360 - (360 / 100) * position.y);
     this._updateColorStyling();
