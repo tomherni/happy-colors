@@ -184,7 +184,9 @@ export class ColorPicker extends LitElement {
   }
 
   _setHsv(hsv) {
-    this.hsv = validateHsv(hsv);
+    if (hasColorChanged(hsv, this.hsv)) {
+      this.hsv = validateHsv(hsv);
+    }
   }
 
   _setColors(hsv) {
