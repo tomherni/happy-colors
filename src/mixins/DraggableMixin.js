@@ -4,6 +4,11 @@ import { minMax, round, isNumber } from '../utils/numbers.js';
 const validatePercentage = value => round(minMax(value, 0, 100), 2);
 
 /**
+ * Configuration to set up a draggable element.
+ * @typedef {import('./../types').DraggableConfig} DraggableConfig
+ */
+
+/**
  * Coordinates along the X and Y axes on a canvas expressed in pixels. These
  * coords are used to correctly position a draggable element via CSS.
  * @typedef {import('./../types').PixelCoords} PixelCoords
@@ -102,7 +107,7 @@ export const DraggableMixin = Base =>
     }
 
     /**
-     * @param {Object} config
+     * @param {DraggableConfig} config
      */
     registerDraggableElement(config) {
       if (this.__registered) {
@@ -134,21 +139,17 @@ export const DraggableMixin = Base =>
      * @param {PositionCoords} [position]
      */
     updateDraggablePosition(position = this.__position) {
-      const { canvas } = this.__elements;
-      const coords = convertPositionToCoords(canvas, position);
+      const coords = convertPositionToCoords(this.__config.canvas, position);
       this.__updateDraggablePositionByCoords(coords);
     }
 
     /**
      * Set up our state and the initial value for the draggable element.
-     * @param {Object} config
+     * @param {DraggableConfig} config
      */
     __initialize(config) {
-      const { canvas, draggable, ...dragConfig } = config;
-      this.__elements = { canvas, draggable };
-      this.__dragConfig = dragConfig;
-
-      this.updateDraggablePosition(this.__dragConfig.initial);
+      this.__config = config;
+      this.updateDraggablePosition(this.__config.initial);
     }
 
     /**
@@ -156,16 +157,13 @@ export const DraggableMixin = Base =>
      * @param {MouseEvent | TouchEvent} event
      */
     __startDrag(event) {
-      const { canvas, draggable } = this.__elements;
-
-      if (event.composedPath().includes(canvas)) {
+      if (event.composedPath().includes(this.__config.canvas)) {
         event.preventDefault();
 
-        const canvasRect = canvas.getBoundingClientRect();
-        const { x, y } = draggable.getBoundingClientRect();
+        const canvasRect = this.__config.canvas.getBoundingClientRect();
+        const { x, y } = this.__config.draggable.getBoundingClientRect();
 
         this.__context = {
-          config: this.__dragConfig,
           canvas: canvasRect,
           draggable: calculateDraggableCoords(canvasRect, x, y),
         };
@@ -200,14 +198,14 @@ export const DraggableMixin = Base =>
      */
     __updateDraggablePositionByEvent(event) {
       if (this.__dragging) {
-        const { canvas, draggable: prevCoords, config } = this.__context;
+        const { canvas, draggable: prevCoords } = this.__context;
 
         // Calculate the new X and Y coordinates.
         const cursor = getCursorCoordsInViewport(event);
         const newCoords = calculateDraggableCoords(canvas, cursor.x, cursor.y);
         const coords = {
-          x: config.lockX ? prevCoords.x : newCoords.x,
-          y: config.lockY ? prevCoords.y : newCoords.y,
+          x: this.__config.lockX ? prevCoords.x : newCoords.x,
+          y: this.__config.lockY ? prevCoords.y : newCoords.y,
         };
 
         // Update only if the position actually changed.
@@ -222,17 +220,15 @@ export const DraggableMixin = Base =>
      * @param {PixelCoords} coords
      */
     __updateDraggablePositionByCoords({ x, y }) {
-      const { offsetWidth, offsetHeight } = this.__elements.canvas;
-
       const position = {
-        x: validatePercentage((x / offsetWidth) * 100),
-        y: validatePercentage((y / offsetHeight) * 100),
+        x: validatePercentage((x / this.__config.canvas.offsetWidth) * 100),
+        y: validatePercentage((y / this.__config.canvas.offsetHeight) * 100),
       };
 
       if (haveAxesChanged(position, this.__position)) {
         this.__position = position;
-        this.__elements.draggable.style.transform = `translate(${x}px, ${y}px)`;
-        this.__dragConfig.callback(this.__position);
+        this.__config.draggable.style.transform = `translate(${x}px, ${y}px)`;
+        this.__config.callback(this.__position);
       }
     }
 
