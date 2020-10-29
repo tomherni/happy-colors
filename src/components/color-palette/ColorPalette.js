@@ -85,8 +85,8 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this._handleElement = this.shadowRoot.querySelector('.handle');
 
     this.registerDraggableElement({
-      canvas: this._canvasElement,
       draggable: this._handleElement,
+      canvas: this._canvasElement,
       callback: this._onHandlePositionChanged.bind(this),
       initial: this._convertHsvToHandlePosition(),
     });
@@ -107,9 +107,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   }
 
   _onHsvChanged() {
-    const newHandlePosition = this._convertHsvToHandlePosition();
-    this.updateDraggablePosition(newHandlePosition);
-    this._updateColorStyling();
+    const handlePosition = this._convertHsvToHandlePosition();
+    this.updateDraggablePosition(handlePosition);
+    this._updatePaletteStyling();
   }
 
   /**
@@ -118,7 +118,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   _onHandlePositionChanged(position) {
     const hsv = this._convertHandlePositionToHsv(position);
     this._setHsv(hsv);
-    this._updateColorStyling();
+    this._updatePaletteStyling();
   }
 
   _convertHsvToHandlePosition() {
@@ -138,7 +138,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     return [hue, saturation, value];
   }
 
-  _updateColorStyling() {
+  _updatePaletteStyling() {
     this._canvasElement.style.backgroundColor = rgbToCssString(
       hsvToRgb([this.hsv[0], 100, 100])
     );

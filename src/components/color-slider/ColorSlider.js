@@ -74,10 +74,10 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     this._handleElement = this.shadowRoot.querySelector('.handle');
 
     this.registerDraggableElement({
-      canvas: this.shadowRoot.querySelector('.slider'),
       draggable: this._handleElement,
-      initial: this._convertHueToHandlePosition(),
+      canvas: this.shadowRoot.querySelector('.slider'),
       callback: this._onHandlePositionChanged.bind(this),
+      initial: this._convertHueToHandlePosition(),
       lockX: true,
     });
   }
@@ -95,9 +95,9 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   }
 
   _onHueChanged() {
-    const newHandlePosition = this._convertHueToHandlePosition();
-    this.updateDraggablePosition(newHandlePosition);
-    this._updateColorStyling();
+    const handlePosition = this._convertHueToHandlePosition();
+    this.updateDraggablePosition(handlePosition);
+    this._updateSliderStyling();
   }
 
   /**
@@ -105,14 +105,17 @@ export class ColorSlider extends DraggableMixin(LitElement) {
    */
   _onHandlePositionChanged(position) {
     this._setHue(360 - (360 / 100) * position.y);
-    this._updateColorStyling();
+    this._updateSliderStyling();
   }
 
   _convertHueToHandlePosition() {
-    return { y: 100 - (this.hue / 360) * 100 };
+    return {
+      x: 0,
+      y: 100 - (this.hue / 360) * 100,
+    };
   }
 
-  _updateColorStyling() {
+  _updateSliderStyling() {
     this._handleElement.style.backgroundColor = rgbToCssString(
       hsvToRgb([this.hue, 100, 100])
     );

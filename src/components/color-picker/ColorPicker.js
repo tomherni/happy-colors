@@ -131,7 +131,7 @@ export class ColorPicker extends LitElement {
 
           <color-slider
             .hue=${this._colors.hsv[0]}
-            @changed=${this._onSliderChanged}
+            @changed=${this._onHueSliderChanged}
           ></color-slider>
         </div>
 
@@ -202,7 +202,7 @@ export class ColorPicker extends LitElement {
     this._setHsv(hsv);
   }
 
-  _onSliderChanged({ detail: hue }) {
+  _onHueSliderChanged({ detail: hue }) {
     const [, s, v] = this.hsv;
     this._setHsv([hue, s, v]);
   }
