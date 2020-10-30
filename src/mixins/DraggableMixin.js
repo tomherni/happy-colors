@@ -90,7 +90,6 @@ export const DraggableMixin = Base =>
     constructor() {
       super();
 
-      this.__dragging = false;
       this.__registered = false;
 
       this.__startDrag = this.__startDrag.bind(this);
@@ -163,12 +162,11 @@ export const DraggableMixin = Base =>
         const canvasRect = this.__config.canvas.getBoundingClientRect();
         const { x, y } = this.__config.draggable.getBoundingClientRect();
 
-        this.__context = {
+        this.__dragState = {
           canvas: canvasRect,
           draggable: calculateDraggableCoords(canvasRect, x, y),
         };
 
-        this.__dragging = true;
         this.__updateDraggablePositionByEvent(event);
       }
     }
@@ -178,18 +176,17 @@ export const DraggableMixin = Base =>
      * @param {MouseEvent | TouchEvent} event
      */
     __drag(event) {
-      if (this.__dragging) {
+      if (this.__dragState) {
         event.preventDefault();
         this.__updateDraggablePositionByEvent(event);
       }
     }
 
     /**
-     * Clean up state when the dragging stops.
+     * Clean up the dragging state when dragging stops.
      */
     __stopDrag() {
-      this.__dragging = false;
-      this.__context = undefined;
+      this.__dragState = undefined;
     }
 
     /**
@@ -197,22 +194,20 @@ export const DraggableMixin = Base =>
      * @param {MouseEvent | TouchEvent} event
      */
     __updateDraggablePositionByEvent(event) {
-      if (this.__dragging) {
-        const { canvas, draggable: prevCoords } = this.__context;
+      const { canvas, draggable: prevCoords } = this.__dragState;
 
-        // Calculate the new X and Y coordinates.
-        const cursor = getCursorCoordsInViewport(event);
-        const newCoords = calculateDraggableCoords(canvas, cursor.x, cursor.y);
-        const coords = {
-          x: this.__config.lockX ? prevCoords.x : newCoords.x,
-          y: this.__config.lockY ? prevCoords.y : newCoords.y,
-        };
+      // Calculate the new X and Y coordinates.
+      const cursor = getCursorCoordsInViewport(event);
+      const newCoords = calculateDraggableCoords(canvas, cursor.x, cursor.y);
+      const coords = {
+        x: this.__config.lockX ? prevCoords.x : newCoords.x,
+        y: this.__config.lockY ? prevCoords.y : newCoords.y,
+      };
 
-        // Update only if the position actually changed.
-        if (haveAxesChanged(coords, prevCoords)) {
-          this.__context.draggable = coords;
-          this.__updateDraggablePositionByCoords(coords);
-        }
+      // Update only if the position actually changed.
+      if (haveAxesChanged(coords, prevCoords)) {
+        this.__dragState.draggable = coords;
+        this.__updateDraggablePositionByCoords(coords);
       }
     }
 
