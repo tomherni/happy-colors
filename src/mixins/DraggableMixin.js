@@ -96,6 +96,7 @@ export const DraggableMixin = Base =>
       this.__drag = debounce(this.__drag).bind(this);
       this.__stopDrag = this.__stopDrag.bind(this);
       this.__onWindowResize = debounce(this.__onWindowResize).bind(this);
+      this.__onContextMenu = this.__onContextMenu.bind(this);
     }
 
     disconnectedCallback() {
@@ -137,6 +138,7 @@ export const DraggableMixin = Base =>
       handler('touchend', this.__stopDrag);
 
       handler('resize', this.__onWindowResize);
+      handler('contextmenu', this.__onContextMenu);
     }
 
     /**
@@ -201,7 +203,9 @@ export const DraggableMixin = Base =>
      * Clean up the dragging state when dragging stops.
      */
     __stopDrag() {
-      this.__dragState = undefined;
+      if (this.__dragState) {
+        this.__dragState = undefined;
+      }
     }
 
     /**
@@ -247,5 +251,13 @@ export const DraggableMixin = Base =>
     __onWindowResize() {
       // TODO: look into replacing this with a resize observer
       this.updateDraggablePosition();
+    }
+
+    /**
+     * Chromium won't send the "mouseup" event after a right-click. So dragging
+     * needs to be stopped or else the mouse will continue to drag on hover.
+     */
+    __onContextMenu() {
+      this.__stopDrag();
     }
   };
