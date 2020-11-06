@@ -16,7 +16,7 @@ const round = value => value.map(v => roundUtil(v));
 export class ColorPicker extends LitElement {
   static get properties() {
     return {
-      /** The currently picked color in HSV format. */
+      /** The currently picked color represented in the HSV color model. */
       hsv: {
         type: Array,
         hasChanged: hasColorChanged,

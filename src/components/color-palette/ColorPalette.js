@@ -6,7 +6,7 @@ import { hasColorChanged } from '../color-picker/utils.js';
 export class ColorPalette extends DraggableMixin(LitElement) {
   static get properties() {
     return {
-      /** The current color in HSV format. */
+      /** The current color represented in the HSV color model. */
       hsv: {
         type: Array,
         hasChanged: hasColorChanged,

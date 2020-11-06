@@ -22,7 +22,8 @@ const validatePercentage = value => round(minMax(value, 0, 100), 2);
  */
 
 /**
- * Get the cursor coordinates within the viewport. For touch devices we get the first contact.
+ * Get the relative cursor coordinates in the viewport. For touch devices we get
+ * the first contact point.
  * @param {MouseEvent | TouchEvent} event
  * @returns {PixelCoords}
  */
@@ -41,6 +42,7 @@ function getCursorCoords(event) {
 }
 
 /**
+ * Translate percentage coordinates to pixel coordinates on a canvas.
  * @param {PositionCoords} position
  * @param {HTMLElement} canvas
  * @returns {PixelCoords}
@@ -60,10 +62,10 @@ function convertPositionToCoords(position, canvas) {
 }
 
 /**
- * Calculate the coordinates for a draggable element within a canvas. This is calculated based on
- * data in the client area (position of the canvas and target coordinates).
+ * Translate pixel coordinates provided by an event (typically viewport coords)
+ * to the coords on a canvas.
  * @param {PixelCoords} coords
- * @param {DOMRect} canvas
+ * @param {DOMRect} canvas - Canvas on which the coordinates must be placed.
  * @returns {PixelCoords}
  */
 function convertEventCoordsToCanvasCoords(coords, canvas) {
@@ -104,6 +106,7 @@ export const DraggableMixin = Base =>
     }
 
     /**
+     * Register an HTML element as a draggable element.
      * @param {DraggableConfig} config
      */
     registerDraggableElement(config) {
@@ -115,6 +118,10 @@ export const DraggableMixin = Base =>
       this.__initialize(config);
     }
 
+    /**
+     * Deregister the draggable element by no longer acting upon drag events
+     * initiated by the user, or on position update requests.
+     */
     deregisterDraggableElement() {
       this.__registered = false;
       this.__manageEventListeners(window.removeEventListener);
@@ -133,6 +140,7 @@ export const DraggableMixin = Base =>
     }
 
     /**
+     * Update the draggable's CSS position based on the current position coords.
      * @param {PositionCoords} [position]
      */
     updateDraggablePosition(position = this.__position) {
@@ -143,7 +151,8 @@ export const DraggableMixin = Base =>
     }
 
     /**
-     * Set up our state and the initial value for the draggable element.
+     * Initialize the draggable element by setting its initial value and by
+     * setting up its configuration.
      * @param {DraggableConfig} config
      */
     __initialize(config) {
@@ -152,7 +161,8 @@ export const DraggableMixin = Base =>
     }
 
     /**
-     * Create the drag context and initiate the dragging if it occurred within the canvas.
+     * Enter a dragging state and start dragging the draggable element when
+     * dragging is initiated by the user.
      * @param {MouseEvent | TouchEvent} event
      */
     __startDrag(event) {
@@ -195,7 +205,7 @@ export const DraggableMixin = Base =>
     }
 
     /**
-     * Calculate and update the draggable's new position on the canvas based on client coordinates.
+     * Determine the new position for the draggable based on a drag event.
      * @param {MouseEvent | TouchEvent} event
      */
     __onDragEvent(event) {
@@ -215,6 +225,7 @@ export const DraggableMixin = Base =>
     }
 
     /**
+     * Update the draggable element's position and trigger the callback.
      * @param {PixelCoords} coords
      */
     __updateDraggablePosition({ x, y }) {
@@ -230,6 +241,9 @@ export const DraggableMixin = Base =>
       }
     }
 
+    /**
+     * Ensure the draggable position is correct when the viewport changes.
+     */
     __onWindowResize() {
       // TODO: look into replacing this with a resize observer
       this.updateDraggablePosition();
