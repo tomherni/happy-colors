@@ -1,4 +1,14 @@
 /**
+ * A specific color represented in different color models.
+ */
+export interface Colors {
+  hsv: [number, number, number];
+  rgb: [number, number, number];
+  hsl: [number, number, number];
+  hex: string;
+}
+
+/**
  * Coordinates along X and Y axes in pixels.
  */
 export interface PixelCoords {

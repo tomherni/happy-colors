@@ -13,6 +13,11 @@ import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
 
+/**
+ * A specific color represented in different color models.
+ * @typedef {import('../types').Colors} Colors
+ */
+
 function createCustomScheme(storage = []) {
   const scheme = [];
   for (let i = 0; i < 4; i += 1) {
@@ -452,7 +457,7 @@ export class AppHappyColors extends LitElement {
   }
 
   /**
-   * @param {Object} colors
+   * @param {Object|Colors} colors
    */
   _updateColors(colors) {
     const hsv = validateHsv(colors.hsv);
