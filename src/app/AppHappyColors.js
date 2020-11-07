@@ -8,13 +8,10 @@ import {
   rgbToHex,
   validateHsv,
 } from '../utils/colors.js';
+import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
-
-function when(condition, template) {
-  return condition ? template() : undefined;
-}
 
 function createCustomScheme(storage = []) {
   const scheme = [];

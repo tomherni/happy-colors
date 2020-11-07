@@ -1,11 +1,8 @@
 import { LitElement, html, css } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
 import { debounce } from '../../utils/debounce.js';
+import { when } from '../../utils/lit-html.js';
 import * as schemes from './schemes/schemes.js';
-
-function when(condition, template) {
-  return condition ? template() : undefined;
-}
 
 const schemeMapping = {
   complementary: schemes.getComplementaryColorScheme,
