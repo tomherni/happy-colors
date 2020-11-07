@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
-import { DraggableMixin } from '../../mixins/DraggableMixin.js';
+import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
 
 export class ColorSlider extends DraggableMixin(LitElement) {

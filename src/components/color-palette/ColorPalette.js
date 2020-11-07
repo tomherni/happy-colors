@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
-import { DraggableMixin } from '../../mixins/DraggableMixin.js';
+import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
 import { hasColorChanged } from '../color-picker/utils.js';
 

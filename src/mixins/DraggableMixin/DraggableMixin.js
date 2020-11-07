@@ -1,90 +1,36 @@
-import { debounce } from '../utils/debounce.js';
-import { minMax, round, isNumber } from '../utils/numbers.js';
-
-const validatePercentage = value => round(minMax(value, 0, 100), 2);
-
 /**
  * Configuration to set up a draggable element.
- * @typedef {import('../types').DraggableConfig} DraggableConfig
+ * @typedef {import('../../types').DraggableConfig} DraggableConfig
  */
 
 /**
  * Coordinates along the X and Y axes on a canvas expressed in pixels. These
  * coords are used to correctly position a draggable element via CSS.
- * @typedef {import('../types').PixelCoords} PixelCoords
+ * @typedef {import('../../types').PixelCoords} PixelCoords
  */
 
 /**
  * Coordinates along the X and Y axes on a canvas expressed in percentages.
  * These coords are used to translate a draggable element's position to the
  * value that they represent.
- * @typedef {import('../types').PositionCoords} PositionCoords
+ * @typedef {import('../../types').PositionCoords} PositionCoords
  */
+
+import { debounce } from '../../utils/debounce.js';
+import {
+  getCursorCoords,
+  positionToCoords,
+  eventCoordsToCanvasCoords,
+  haveAxesChanged,
+  validatePercentage,
+} from './utils.js';
 
 /**
- * Get the relative cursor coordinates in the viewport. For touch devices we get
- * the first contact point.
- * @param {MouseEvent | TouchEvent} event
- * @returns {PixelCoords}
+ * Mixin that allows a component to register an element as a draggable element.
+ *
+ * The draggable can be dragged by the user within the bounds of a specified
+ * canvas element.
  */
-function getCursorCoords(event) {
-  let source = event;
-
-  if (event.type === 'touchstart' || event.type === 'touchmove') {
-    const touchEvent = event.originalEvent || event;
-    [source] = touchEvent.touches || touchEvent.changedTouches;
-  }
-
-  return {
-    x: source.clientX,
-    y: source.clientY,
-  };
-}
-
-/**
- * Translate percentage coordinates to pixel coordinates on a canvas.
- * @param {PositionCoords} position
- * @param {HTMLElement} canvas
- * @returns {PixelCoords}
- */
-function convertPositionToCoords(position, canvas) {
-  const { offsetWidth, offsetHeight } = canvas;
-
-  const x = isNumber(position?.x)
-    ? round(minMax((offsetWidth / 100) * position.x, 0, offsetWidth), 1)
-    : 0;
-
-  const y = isNumber(position?.y)
-    ? round(minMax((offsetHeight / 100) * position.y, 0, offsetHeight), 1)
-    : 0;
-
-  return { x, y };
-}
-
-/**
- * Translate pixel coordinates provided by an event (typically viewport coords)
- * to the coords on a canvas.
- * @param {PixelCoords} coords
- * @param {DOMRect} canvas - Canvas on which the coordinates must be placed.
- * @returns {PixelCoords}
- */
-function convertEventCoordsToCanvasCoords(coords, canvas) {
-  return {
-    x: minMax(coords.x - canvas.left, 0, canvas.width),
-    y: minMax(coords.y - canvas.top, 0, canvas.height),
-  };
-}
-
-/**
- * Check whether any axes changed by comparing new axes with previous values.
- * @param {PixelCoords | PositionCoords} axes
- * @param {PixelCoords | PositionCoords} previous
- * @returns {Boolean}
- */
-function haveAxesChanged(axes, previous) {
-  return axes?.x !== previous?.x || axes?.y !== previous?.y;
-}
-
 export const DraggableMixin = Base =>
   class extends Base {
     constructor() {
@@ -147,7 +93,7 @@ export const DraggableMixin = Base =>
      */
     updateDraggablePosition(position = this.__position) {
       if (this.__registered) {
-        const coords = convertPositionToCoords(position, this.__config.canvas);
+        const coords = positionToCoords(position, this.__config.canvas);
         this.__updateDraggablePosition(coords);
       }
     }
@@ -179,10 +125,7 @@ export const DraggableMixin = Base =>
 
       this.__dragState = {
         canvasRect,
-        draggableCoords: convertEventCoordsToCanvasCoords(
-          draggableCoords,
-          canvasRect
-        ),
+        draggableCoords: eventCoordsToCanvasCoords(draggableCoords, canvasRect),
       };
 
       this.__onDragEvent(event);
@@ -216,7 +159,7 @@ export const DraggableMixin = Base =>
       const { canvasRect, draggableCoords: prevCoords } = this.__dragState;
 
       const cursor = getCursorCoords(event);
-      const newCoords = convertEventCoordsToCanvasCoords(cursor, canvasRect);
+      const newCoords = eventCoordsToCanvasCoords(cursor, canvasRect);
       const coords = {
         x: this.__config.lockX ? prevCoords.x : newCoords.x,
         y: this.__config.lockY ? prevCoords.y : newCoords.y,
