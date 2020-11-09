@@ -114,19 +114,32 @@ export const DraggableMixin = Base =>
      * @param {MouseEvent | TouchEvent} event
      */
     __startDrag(event) {
-      if (!event.composedPath().includes(this.__config.canvas)) {
+      const composedPath = event.composedPath();
+      if (!composedPath.includes(this.__config.canvas)) {
         return;
       }
-
       event.preventDefault();
+
       const canvasRect = this.__config.canvas.getBoundingClientRect();
-      const draggableRect = this.__config.draggable.getBoundingClientRect();
-      const draggableCoords = { x: draggableRect.x, y: draggableRect.y };
+      const { x, y } = this.__config.draggable.getBoundingClientRect();
 
       this.__dragState = {
         canvasRect,
-        draggableCoords: eventCoordsToCanvasCoords(draggableCoords, canvasRect),
+        draggableCoords: eventCoordsToCanvasCoords({ x, y }, canvasRect),
       };
+
+      // A click anywhere on the draggable should not make it jump to that spot.
+      // Instead, ignore the click position vs. draggable position difference.
+      if (composedPath.includes(this.__config.draggable)) {
+        const cursor = getCursorCoords(event);
+        const coords = eventCoordsToCanvasCoords(cursor, canvasRect, {
+          noMinMax: true,
+        });
+        this.__dragState.cursorOffset = {
+          x: coords.x - this.__dragState.draggableCoords.x,
+          y: coords.y - this.__dragState.draggableCoords.y,
+        };
+      }
 
       this.__onDragEvent(event);
     }
@@ -157,8 +170,13 @@ export const DraggableMixin = Base =>
      */
     __onDragEvent(event) {
       const { canvasRect, draggableCoords: prevCoords } = this.__dragState;
-
       const cursor = getCursorCoords(event);
+
+      if (this.__dragState.cursorOffset) {
+        cursor.x -= this.__dragState.cursorOffset.x;
+        cursor.y -= this.__dragState.cursorOffset.y;
+      }
+
       const newCoords = eventCoordsToCanvasCoords(cursor, canvasRect);
       const coords = {
         x: this.__config.lockX ? prevCoords.x : newCoords.x,
