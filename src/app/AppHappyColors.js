@@ -481,8 +481,8 @@ export class AppHappyColors extends LitElement {
   }
 
   _clearCustomScheme() {
-    window.localStorage.removeItem('custom-scheme');
     this._savedScheme = createCustomScheme();
+    colorSchemeStorage.remove();
   }
 
   _getHsvFromStorage() {

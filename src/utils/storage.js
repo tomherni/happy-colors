@@ -60,6 +60,10 @@ function save(storageKey, value) {
   return { data };
 }
 
+function remove(storageKey) {
+  storageManager.storage.removeItem(storageKey);
+}
+
 /**
  * Register methods to retrieve and save data for a specific storage key. This keeps the logic
  * out of other components.
@@ -74,6 +78,9 @@ export function getStorageInterface(_storageKey) {
     },
     save(value) {
       return save(this._storageKey, value);
+    },
+    remove() {
+      return remove(this._storageKey);
     },
   };
 }
