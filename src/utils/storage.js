@@ -3,6 +3,11 @@
  * E.g. avoid saving invalid values that can break functionality.
  */
 
+const STORAGE_KEYS = {
+  hsv: 'picked-hsv',
+  scheme: 'custom-scheme',
+};
+
 // For testing purposes that allows for easy local storage mocking.
 export const storageManager = {
   originalStorage: window.localStorage,
@@ -24,8 +29,8 @@ function isValidStorageColorScheme(scheme) {
 }
 
 const storageValidators = {
-  'picked-hsv': isValidStorageHsv,
-  'custom-scheme': isValidStorageColorScheme,
+  [STORAGE_KEYS.hsv]: isValidStorageHsv,
+  [STORAGE_KEYS.scheme]: isValidStorageColorScheme,
 };
 
 function removeAndErrorOut(storageKey) {
@@ -85,5 +90,5 @@ export function getStorageInterface(_storageKey) {
   };
 }
 
-export const hsvStorage = getStorageInterface('picked-hsv');
-export const colorSchemeStorage = getStorageInterface('custom-scheme');
+export const hsvStorage = getStorageInterface(STORAGE_KEYS.hsv);
+export const colorSchemeStorage = getStorageInterface(STORAGE_KEYS.scheme);

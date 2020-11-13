@@ -18,6 +18,14 @@ import '../components/color-scheme/color-scheme.js';
  * @typedef {import('../types').Colors} Colors
  */
 
+const ERROR_MESSAGES = {
+  getColor: 'There was a problem with the saved color, and it had to be reset.',
+  setColor: 'There was a problem saving your latest color.',
+  getScheme:
+    'There was a problem with the saved color scheme, and it had to be reset.',
+  setScheme: 'There was a problem saving your color scheme.',
+};
+
 function createCustomScheme(storage = []) {
   const scheme = [];
   for (let i = 0; i < 4; i += 1) {
@@ -488,8 +496,7 @@ export class AppHappyColors extends LitElement {
   _getHsvFromStorage() {
     const { data, error } = hsvStorage.get();
     if (error) {
-      this._error =
-        'There was a problem with the saved color, and it had to be reset.';
+      this._error = ERROR_MESSAGES.getColor;
     }
     return data;
   }
@@ -497,15 +504,14 @@ export class AppHappyColors extends LitElement {
   _saveHsvToStorage(hsv) {
     const result = hsvStorage.save(hsv);
     if (result.error) {
-      this._error = 'There was a problem saving your latest color.';
+      this._error = ERROR_MESSAGES.setColor;
     }
   }
 
   _getColorSchemeFromStorage() {
     const { data, error } = colorSchemeStorage.get();
     if (error) {
-      this._error =
-        'There was a problem with the saved color scheme, and it had to be reset.';
+      this._error = ERROR_MESSAGES.getScheme;
     }
     return data;
   }
@@ -516,7 +522,7 @@ export class AppHappyColors extends LitElement {
 
     const result = colorSchemeStorage.save(scheme);
     if (result.error) {
-      this._error = 'There was a problem saving your color scheme.';
+      this._error = ERROR_MESSAGES.setScheme;
     }
   }
 }
