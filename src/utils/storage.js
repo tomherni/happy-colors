@@ -10,7 +10,7 @@ const STORAGE_KEYS = {
 
 // For testing purposes that allows for easy local storage mocking.
 export const storageManager = {
-  originalStorage: window.localStorage,
+  _originalStorage: window.localStorage,
   storage: window.localStorage,
 };
 
@@ -70,25 +70,17 @@ function remove(storageKey) {
 }
 
 /**
- * Register methods to retrieve and save data for a specific storage key. This keeps the logic
- * out of other components.
- * @param {String} _storageKey
+ * Create an interface to manage a specific key in the client's Local Storage.
+ * @param {String} storageKey
  * @returns {Object}
  */
-export function getStorageInterface(_storageKey) {
+export function createStorageInterface(storageKey) {
   return {
-    _storageKey,
-    get() {
-      return get(this._storageKey);
-    },
-    save(value) {
-      return save(this._storageKey, value);
-    },
-    remove() {
-      return remove(this._storageKey);
-    },
+    get: () => get(storageKey),
+    set: value => save(storageKey, value),
+    remove: () => remove(storageKey),
   };
 }
 
-export const hsvStorage = getStorageInterface(STORAGE_KEYS.hsv);
-export const colorSchemeStorage = getStorageInterface(STORAGE_KEYS.scheme);
+export const hsvStorage = createStorageInterface(STORAGE_KEYS.hsv);
+export const colorSchemeStorage = createStorageInterface(STORAGE_KEYS.scheme);

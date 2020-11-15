@@ -1,19 +1,20 @@
 import { expect } from '@open-wc/testing';
 
-import { storageManager, getStorageInterface } from '../storage.js';
+import { storageManager, createStorageInterface } from '../storage.js';
 
 describe('storage utils', () => {
-  const storageItem = getStorageInterface('picked-hsv');
+  const storageItem = createStorageInterface('picked-hsv');
   storageManager.storage = {};
 
   after(() => {
-    storageManager.storage = storageManager.originalStorage;
+    storageManager.storage = storageManager._originalStorage;
   });
 
   describe('storage item interface', () => {
-    it('should expose a "get" and "save" method for a storage item', () => {
+    it('should expose methods for a storage item', () => {
       expect(storageItem.get).to.be.a('function');
-      expect(storageItem.save).to.be.a('function');
+      expect(storageItem.set).to.be.a('function');
+      expect(storageItem.remove).to.be.a('function');
     });
 
     it('should contain a private property containing the storage key', () => {
@@ -34,7 +35,7 @@ describe('storage utils', () => {
       expect(result.error).to.equal(undefined);
     });
 
-    it('should return an error when the saved value is invalid', () => {
+    it('should return an error when the set value is invalid', () => {
       let removed = false;
       storageManager.storage.removeItem = () => {
         removed = true;
@@ -70,41 +71,41 @@ describe('storage utils', () => {
   });
 
   describe('saving value to storage', () => {
-    it('should save a value to the storage', () => {
-      let saved;
+    it('should set a value in the storage', () => {
+      let set;
       storageManager.storage.setItem = (...args) => {
-        saved = args;
+        set = args;
       };
 
-      const result = storageItem.save([12, 34, 56]);
-      expect(saved).to.deep.equal(['picked-hsv', '[12,34,56]']);
+      const result = storageItem.set([12, 34, 56]);
+      expect(set).to.deep.equal(['picked-hsv', '[12,34,56]']);
       expect(result.data).to.deep.equal('[12,34,56]');
       expect(result.error).to.equal(undefined);
     });
 
-    it('should return an error when the saved value is invalid', () => {
-      let saved = false;
+    it('should return an error when the set value is invalid', () => {
+      let set;
       storageManager.storage.setItem = () => {
-        saved = true;
+        set = true;
       };
 
-      let result = storageItem.save([]);
-      expect(saved).to.deep.equal(false);
+      let result = storageItem.set([]);
+      expect(set).to.deep.equal(false);
       expect(result.data).to.equal(undefined);
       expect(result.error).to.deep.equal(true);
 
-      result = storageItem.save([1, 2]);
-      expect(saved).to.deep.equal(false);
+      result = storageItem.set([1, 2]);
+      expect(set).to.deep.equal(false);
       expect(result.data).to.equal(undefined);
       expect(result.error).to.deep.equal(true);
 
-      result = storageItem.save([1, null, 3]);
-      expect(saved).to.deep.equal(false);
+      result = storageItem.set([1, null, 3]);
+      expect(set).to.deep.equal(false);
       expect(result.data).to.equal(undefined);
       expect(result.error).to.deep.equal(true);
 
-      result = storageItem.save('foo');
-      expect(saved).to.deep.equal(false);
+      result = storageItem.set('foo');
+      expect(set).to.deep.equal(false);
       expect(result.data).to.equal(undefined);
       expect(result.error).to.deep.equal(true);
     });

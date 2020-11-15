@@ -502,7 +502,7 @@ export class AppHappyColors extends LitElement {
   }
 
   _saveHsvToStorage(hsv) {
-    const result = hsvStorage.save(hsv);
+    const result = hsvStorage.set(hsv);
     if (result.error) {
       this._error = ERROR_MESSAGES.setColor;
     }
@@ -520,7 +520,7 @@ export class AppHappyColors extends LitElement {
     const scheme = this._getColorSchemeFromStorage() || createCustomScheme();
     scheme[index] = hex;
 
-    const result = colorSchemeStorage.save(scheme);
+    const result = colorSchemeStorage.set(scheme);
     if (result.error) {
       this._error = ERROR_MESSAGES.setScheme;
     }
