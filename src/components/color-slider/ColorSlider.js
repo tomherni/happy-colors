@@ -14,6 +14,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     return css`
       :host {
         display: block;
+        --slider-width: 11px;
         --handle-size: 21px;
       }
 
@@ -24,7 +25,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
       .slider {
         position: relative;
-        width: 10px;
+        width: var(--slider-width);
         height: 100%;
         background-image: linear-gradient(
           to bottom,
@@ -36,7 +37,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
           rgb(255, 255, 0),
           rgb(255, 0, 0)
         );
-        border-radius: 5px;
+        border-radius: calc(var(--slider-width) / 2);
       }
 
       .handle {
