@@ -1,11 +1,11 @@
-import { validateHsv } from '../../../utils/colors.js';
+import { validateHsv } from '../../utils/colors.js';
 
-export function getComplementaryColorScheme(hsv) {
+function createComplementaryColorScheme(hsv) {
   const [h, s, v] = hsv;
   return [validateHsv(hsv), validateHsv([Math.abs((h + 180) % 360), s, v])];
 }
 
-export function getTriadicColorScheme(hsv) {
+function createTriadicColorScheme(hsv) {
   const [h, s, v] = hsv;
   return [
     validateHsv(hsv),
@@ -14,7 +14,7 @@ export function getTriadicColorScheme(hsv) {
   ];
 }
 
-export function getAnalogousColorScheme(hsv) {
+function createAnalogousColorScheme(hsv) {
   const [h, s, v] = hsv;
   return [
     validateHsv([Math.abs((h + 25) % 360), s, v]),
@@ -23,7 +23,7 @@ export function getAnalogousColorScheme(hsv) {
   ];
 }
 
-export function getMonochromaticColorScheme(hsv) {
+function createMonochromaticColorScheme(hsv) {
   const [h] = hsv;
   const amount = 8;
   const result = [];
@@ -40,3 +40,10 @@ export function getMonochromaticColorScheme(hsv) {
 
   return [validateHsv([h, 100, 100]), result];
 }
+
+export const schemes = {
+  complementary: createComplementaryColorScheme,
+  triadic: createTriadicColorScheme,
+  analogous: createAnalogousColorScheme,
+  monochromatic: createMonochromaticColorScheme,
+};
