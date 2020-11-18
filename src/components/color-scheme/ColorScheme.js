@@ -8,10 +8,10 @@ export class ColorScheme extends LitElement {
   static get properties() {
     return {
       /** Base color to generate a color scheme for. */
-      baseColor: { type: Array },
+      color: { type: Array },
 
       /** Type of color scheme to generate. */
-      scheme: { type: String },
+      scheme: { type: String, attribute: 'scheme' },
 
       /** Whether to show the color HEX code. */
       showHex: { type: Boolean, attribute: 'show-hex' },
@@ -115,8 +115,8 @@ export class ColorScheme extends LitElement {
   updated(props) {
     super.updated(props);
 
-    if (props.has('baseColor')) {
-      this._generateColorScheme(this.baseColor, this.scheme);
+    if (props.has('color')) {
+      this._generateColorScheme(this.color, this.scheme);
     }
   }
 
@@ -153,6 +153,10 @@ export class ColorScheme extends LitElement {
 
   _onColorClick(e) {
     const { hsv } = e.composedPath()[0].dataset;
-    this.dispatchEvent(new CustomEvent('color-scheme-select', { detail: hsv }));
+    this.dispatchEvent(
+      new CustomEvent('color-scheme-selected', {
+        detail: hsv.split(',').map(Number),
+      })
+    );
   }
 }

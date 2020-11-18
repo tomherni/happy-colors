@@ -378,8 +378,8 @@ export class AppHappyColors extends LitElement {
               </div>
               <color-scheme
                 scheme="monochromatic"
-                .baseColor=${this.colors.hsv}
-                @color-scheme-select=${this._onColorSchemeSelected}
+                .color=${this.colors.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
 
@@ -395,8 +395,8 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="analogous"
                 show-hex
-                .baseColor=${this.colors.hsv}
-                @color-scheme-select=${this._onColorSchemeSelected}
+                .color=${this.colors.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
 
@@ -412,8 +412,8 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="complementary"
                 show-hex
-                .baseColor=${this.colors.hsv}
-                @color-scheme-select=${this._onColorSchemeSelected}
+                .color=${this.colors.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
 
@@ -428,8 +428,8 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="triadic"
                 show-hex
-                .baseColor=${this.colors.hsv}
-                @color-scheme-select=${this._onColorSchemeSelected}
+                .color=${this.colors.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
           </div>
@@ -455,12 +455,11 @@ export class AppHappyColors extends LitElement {
     this._savedScheme = createCustomScheme(scheme);
   }
 
-  _onColorPickerChanged(e) {
-    this._updateColors(e.detail);
+  _onColorPickerChanged({ detail: colors }) {
+    this._updateColors(colors);
   }
 
-  _onColorSchemeSelected(e) {
-    const hsv = e.detail.split(',').map(Number);
+  _onColorSchemeSelected({ detail: hsv }) {
     this._updateColors({ hsv });
   }
 
