@@ -1,13 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import {
-  hsvToHsl,
-  hsvToRgb,
-  hsvToHex,
-  rgbToHex,
-  validateHsv,
-} from '../utils/colors.js';
+import { hsvToHsl, hsvToRgb, hsvToHex, validateHsv } from '../utils/colors.js';
 import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import '../components/color-picker/color-picker.js';
@@ -480,11 +474,9 @@ export class AppHappyColors extends LitElement {
   }
 
   _saveColorToCustomScheme(index) {
-    const hex = rgbToHex(this.colors.rgb);
-
-    this._saveColorSchemeToStorage(hex, index);
-    this._savedScheme[index] = hex;
-    this.requestUpdate();
+    this._savedScheme[index] = hsvToHex(this.colors.hsv);
+    this._savedScheme = [...this._savedScheme];
+    this._saveColorSchemeToStorage(this._savedScheme);
   }
 
   _clearCustomScheme() {
@@ -515,10 +507,7 @@ export class AppHappyColors extends LitElement {
     return data;
   }
 
-  _saveColorSchemeToStorage(hex, index) {
-    const scheme = this._getColorSchemeFromStorage() || createCustomScheme();
-    scheme[index] = hex;
-
+  _saveColorSchemeToStorage(scheme) {
     const result = colorSchemeStorage.set(scheme);
     if (result.error) {
       this._error = ERROR_MESSAGES.setScheme;
