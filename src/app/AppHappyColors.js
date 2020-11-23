@@ -500,11 +500,11 @@ export class AppHappyColors extends LitElement {
   }
 
   _getColorSchemeFromStorage() {
-    const { data, error } = colorSchemeStorage.get();
-    if (error) {
+    const result = colorSchemeStorage.get();
+    if (result.error) {
       this._error = ERROR_MESSAGES.getScheme;
     }
-    return data;
+    return result.data;
   }
 
   _saveColorSchemeToStorage(scheme) {
