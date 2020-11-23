@@ -1,6 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
-import { debounce } from '../../utils/debounce.js';
 import { when } from '../../utils/lit-html.js';
 import { schemes } from './schemes.js';
 
@@ -105,11 +104,6 @@ export class ColorScheme extends LitElement {
         ${this._colors.map(color => this._colorBlockTemplate(color))}
       </div>
     `;
-  }
-
-  constructor() {
-    super();
-    this._generateColorScheme = debounce(this._generateColorScheme).bind(this);
   }
 
   updated(props) {
