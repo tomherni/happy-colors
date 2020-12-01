@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { LitElement, html, css } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';

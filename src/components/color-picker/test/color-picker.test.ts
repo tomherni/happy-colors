@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { expect, fixture, fixtureCleanup, html } from '@open-wc/testing';
 
 import '../color-picker.js';

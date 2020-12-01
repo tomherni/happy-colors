@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Utilities to better manage getting/setting storage values.
  * E.g. avoid saving invalid values that can break functionality.

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { LitElement, html, css } from 'lit-element';
 import {
   hsvToHsl,

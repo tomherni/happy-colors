@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { expect } from '@open-wc/testing';
 import { minMax, round } from '../numbers.js';
 

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Check if a color changed by comparing it with its previous value.
  * @param {Array|undefined} value

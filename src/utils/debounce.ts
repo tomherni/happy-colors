@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Debounce a function based on RAF.
  * @param {Function} callback - Function to debounce

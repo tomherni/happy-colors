@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { validateHsv } from '../../utils/colors.js';
 
 function createComplementaryColorScheme(hsv) {

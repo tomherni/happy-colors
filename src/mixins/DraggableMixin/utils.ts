@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { minMax, round, isNumber } from '../../utils/numbers.js';
 
 export const validatePercentage = value => round(minMax(value, 0, 100), 2);

@@ -1,8 +1,8 @@
 # Happy Colors
 
-Color picker that allows you to find a variety of complementary colors to create your own color scheme.
+Color picker web component that lets you find a variety of complementary colors and create your own color scheme.
 
-```
+```sh
 $ npm install
 $ npm start
 ```
@@ -21,6 +21,3 @@ $ npm start
 - Increase test coverage
 - Test in different browsers
 - Test on different mobile devices (only tested on Android (S9) for now)
-
-### Other
-- TS maybe

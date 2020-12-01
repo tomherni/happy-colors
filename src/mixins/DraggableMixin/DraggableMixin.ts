@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Configuration to set up a draggable element.
  * @typedef {import('../../types').DraggableConfig} DraggableConfig

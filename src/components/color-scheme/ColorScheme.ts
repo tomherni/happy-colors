@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { LitElement, html, css } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
 import { when } from '../../utils/lit-html.js';

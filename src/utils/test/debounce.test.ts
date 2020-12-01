@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { expect } from '@open-wc/testing';
 import { debounce } from '../debounce.js';
 

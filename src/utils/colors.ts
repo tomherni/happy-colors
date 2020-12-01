@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /* eslint-disable no-param-reassign, default-case */
 
 import { minMax, round } from './numbers.js';

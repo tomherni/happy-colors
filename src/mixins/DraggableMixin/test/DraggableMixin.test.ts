@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { expect, fixture, fixtureCleanup } from '@open-wc/testing';
 import { LitElement, html } from 'lit-element';
 

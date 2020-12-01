@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Ensure a number does not exceed a minimum or maximum.
  * @param {Number} number

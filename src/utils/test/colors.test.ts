@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { expect } from '@open-wc/testing';
 import * as colors from '../colors.js';
 
