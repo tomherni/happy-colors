@@ -9,11 +9,6 @@ import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
 
-/**
- * A specific color represented in different color models.
- * @typedef {import('../types').Colors} Colors
- */
-
 const ERROR_MESSAGES = {
   getColor: 'There was a problem with the saved color, and it had to be reset.',
   setColor: 'There was a problem saving your latest color.',

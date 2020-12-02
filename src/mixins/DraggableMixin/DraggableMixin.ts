@@ -1,23 +1,5 @@
 // @ts-nocheck
 
-/**
- * Configuration to set up a draggable element.
- * @typedef {import('../../types').DraggableConfig} DraggableConfig
- */
-
-/**
- * Coordinates along the X and Y axes on a canvas expressed in pixels. These
- * coords are used to correctly position a draggable element via CSS.
- * @typedef {import('../../types').PixelCoords} PixelCoords
- */
-
-/**
- * Coordinates along the X and Y axes on a canvas expressed in percentages.
- * These coords are used to translate a draggable element's position to the
- * value that they represent.
- * @typedef {import('../../types').PositionCoords} PositionCoords
- */
-
 import { debounce } from '../../utils/debounce.js';
 import {
   getCursorCoords,

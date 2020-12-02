@@ -1,15 +1,26 @@
+export type Hue = number;
+
+export type Hsv = [Hue, number, number];
+
+export type Rgb = [number, number, number];
+
+export type Hsl = [Hue, number, number];
+
+export type Hex = string;
+
 /**
  * A specific color represented in different color models.
  */
 export interface Colors {
-  hsv: [number, number, number];
-  rgb: [number, number, number];
-  hsl: [number, number, number];
-  hex: string;
+  hsv: Hsv;
+  rgb: Rgb;
+  hsl: Hsl;
+  hex: Hex;
 }
 
 /**
- * Coordinates along X and Y axes in pixels.
+ * Coordinates along the X and Y axes on a canvas expressed in pixels. These
+ * coords can be used to correctly position a draggable element via CSS.
  */
 export interface PixelCoords {
   x: number;
@@ -17,7 +28,9 @@ export interface PixelCoords {
 }
 
 /**
- * Coordinates along X and Y axes in percentages.
+ * Coordinates along the X and Y axes on a canvas expressed in percentages.
+ * These coords can be used to translate a draggable element's position to the
+ * value that they represent.
  */
 export interface PositionCoords {
   x: number;
@@ -40,9 +53,9 @@ export interface DraggableConfig {
   /** The initial position of the draggable based on a starting value. */
   initial: PositionCoords;
 
-  /** Whether the draggable can move on the X axis. */
+  /** Whether the draggable cannot move on the X axis. */
   lockX?: boolean;
 
-  /** Whether the draggable can move on the Y axis. */
+  /** Whether the draggable cannot move on the Y axis. */
   lockY?: boolean;
 }
