@@ -1,69 +1,67 @@
 // @ts-nocheck
 
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
+import { Hue } from '../../types.js';
 
 export class ColorSlider extends DraggableMixin(LitElement) {
-  static get properties() {
-    return {
-      /** Current hue value picked in the slider canvas. */
-      hue: { type: Number },
-    };
-  }
+  /** Current hue value picked in the slider canvas. */
+  @property({ type: Number })
+  hue: Hue;
 
-  static get styles() {
-    return css`
-      :host {
-        display: block;
-        --slider-width: 11px;
-        --handle-size: 21px;
-      }
+  _handleElement: HTMLElement;
 
-      *,
-      *::after {
-        box-sizing: border-box;
-      }
+  static styles = css`
+    :host {
+      display: block;
+      --slider-width: 11px;
+      --handle-size: 21px;
+    }
 
-      .slider {
-        position: relative;
-        width: var(--slider-width);
-        height: 100%;
-        background-image: linear-gradient(
-          to bottom,
-          rgb(255, 0, 0),
-          rgb(255, 0, 255),
-          rgb(0, 0, 255),
-          rgb(0, 255, 255),
-          rgb(0, 255, 0),
-          rgb(255, 255, 0),
-          rgb(255, 0, 0)
-        );
-        border-radius: calc(var(--slider-width) / 2);
-      }
+    *,
+    *::after {
+      box-sizing: border-box;
+    }
 
-      .handle {
-        position: relative;
-        height: 1px;
-        width: 1px;
-      }
+    .slider {
+      position: relative;
+      width: var(--slider-width);
+      height: 100%;
+      background-image: linear-gradient(
+        to bottom,
+        rgb(255, 0, 0),
+        rgb(255, 0, 255),
+        rgb(0, 0, 255),
+        rgb(0, 255, 255),
+        rgb(0, 255, 0),
+        rgb(255, 255, 0),
+        rgb(255, 0, 0)
+      );
+      border-radius: calc(var(--slider-width) / 2);
+    }
 
-      .handle::after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: calc(var(--handle-size) / 2 * -1);
-        left: calc((var(--handle-size) - 10px) / 2 * -1);
-        height: var(--handle-size);
-        width: var(--handle-size);
-        background-color: inherit;
-        border: 3px solid #fff;
-        border-radius: 50%;
-        box-shadow: 1px 1px 1px inset rgba(0, 0, 0, 0.3),
-          1px 1px 2px rgba(0, 0, 0, 0.3);
-      }
-    `;
-  }
+    .handle {
+      position: relative;
+      height: 1px;
+      width: 1px;
+    }
+
+    .handle::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: calc(var(--handle-size) / 2 * -1);
+      left: calc((var(--handle-size) - 10px) / 2 * -1);
+      height: var(--handle-size);
+      width: var(--handle-size);
+      background-color: inherit;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 1px 1px 1px inset rgba(0, 0, 0, 0.3),
+        1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  `;
 
   render() {
     return html`

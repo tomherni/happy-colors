@@ -17,11 +17,20 @@ import {
  */
 export const DraggableMixin = Base =>
   class extends Base {
+    __registered = false;
+
+    __position: PositionCoords;
+
+    __config: DraggableConfig;
+
+    __dragState: {
+      canvasRect: DOMRect;
+      draggableCoords: PixelCoords;
+      cursorOffset?: PixelCoords;
+    };
+
     constructor() {
       super();
-
-      this.__registered = false;
-
       this.__startDrag = this.__startDrag.bind(this);
       this.__drag = debounce(this.__drag).bind(this);
       this.__stopDrag = this.__stopDrag.bind(this);

@@ -1,11 +1,12 @@
 // @ts-nocheck
 
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { hsvToHsl, hsvToRgb, hsvToHex, validateHsv } from '../utils/colors.js';
 import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
+import { Hsv, SavedScheme } from '../types.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
 
@@ -26,273 +27,270 @@ function createCustomScheme(storage = []) {
 }
 
 export class AppHappyColors extends LitElement {
-  static get properties() {
-    return {
-      /** The currently picked color in different color models. */
-      colors: { type: Object },
+  /** The currently picked color represented in the HSV color model. */
+  @property({ type: Array })
+  hsv: Hsv;
 
-      /** The user's saved color scheme. */
-      _savedScheme: { type: Object },
+  /** The user's saved color scheme. */
+  @property()
+  _savedScheme: SavedScheme;
 
-      _error: { type: String },
-    };
-  }
+  @property()
+  _error: string;
 
-  static get styles() {
-    return css`
-      :host {
-        display: block;
+  static styles = css`
+    :host {
+      display: block;
+    }
+
+    *,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    /* Error message. */
+
+    .error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(12px + var(--height-rainbow)) 16px 12px;
+      background-color: #6f1a0b;
+    }
+
+    .error p {
+      margin: 0 32px 0 0;
+    }
+
+    .error button {
+      padding: 4px 16px;
+      color: var(--color-font);
+      font: inherit;
+      background-color: transparent;
+      border: 1px solid #c8381e;
+    }
+
+    .error button:hover {
+      padding: 4px 16px;
+      color: var(--color-font);
+      font: inherit;
+      background-color: var(--color-background);
+      border: 1px solid #c8381e;
+    }
+
+    /* Layout structure. */
+
+    .content {
+      padding-bottom: 80px;
+    }
+
+    section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 16px 0;
+    }
+
+    @media (min-width: 800px) {
+      section {
+        padding: 80px 16px 0;
       }
+    }
 
-      *,
-      *::after {
-        box-sizing: border-box;
-      }
-
-      /* Error message. */
-
-      .error {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: calc(12px + var(--height-rainbow)) 16px 12px;
-        background-color: #6f1a0b;
-      }
-
-      .error p {
-        margin: 0 32px 0 0;
-      }
-
-      .error button {
-        padding: 4px 16px;
-        color: var(--color-font);
-        font: inherit;
-        background-color: transparent;
-        border: 1px solid #c8381e;
-      }
-
-      .error button:hover {
-        padding: 4px 16px;
-        color: var(--color-font);
-        font: inherit;
-        background-color: var(--color-background);
-        border: 1px solid #c8381e;
-      }
-
-      /* Layout structure. */
-
+    @media (min-width: 1600px) {
       .content {
-        padding-bottom: 80px;
+        display: flex;
+        padding: 0;
+      }
+
+      .content > section:nth-child(1) {
+        flex: 0 0 auto;
+        padding: 80px;
+      }
+
+      .content > section:nth-child(2) {
+        flex: 1 1 auto;
+        padding: 80px;
       }
 
       section {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 40px 16px 0;
+        max-width: none;
+        padding: 0;
       }
+    }
 
-      @media (min-width: 800px) {
-        section {
-          padding: 80px 16px 0;
-        }
-      }
+    /* General styling. */
 
-      @media (min-width: 1600px) {
-        .content {
-          display: flex;
-          padding: 0;
-        }
+    h1 {
+      margin: 0;
+      font-size: 48px;
+      text-align: center;
+    }
 
-        .content > section:nth-child(1) {
-          flex: 0 0 auto;
-          padding: 80px;
-        }
+    h1 + p {
+      margin: 0 0 40px;
+      font-size: 24px;
+      text-align: center;
+    }
 
-        .content > section:nth-child(2) {
-          flex: 1 1 auto;
-          padding: 80px;
-        }
+    h2 {
+      margin: 8px 0 40px;
+      font-size: 40px;
+      text-align: center;
+    }
 
-        section {
-          max-width: none;
-          padding: 0;
-        }
-      }
+    h2 > span {
+      display: block;
+      line-height: normal;
+    }
 
-      /* General styling. */
+    .highlight {
+      color: var(--color-highlight);
+    }
 
+    .dot {
+      margin-left: 4px;
+      color: var(--color-highlight);
+    }
+
+    @media (min-width: 800px) {
       h1 {
-        margin: 0;
-        font-size: 48px;
-        text-align: center;
+        font-size: 60px;
       }
 
       h1 + p {
-        margin: 0 0 40px;
-        font-size: 24px;
-        text-align: center;
+        margin: 0 0 96px;
+        font-size: 32px;
       }
 
       h2 {
-        margin: 8px 0 40px;
-        font-size: 40px;
-        text-align: center;
+        margin: 8px 0 96px;
+        font-size: 48px;
       }
+    }
 
-      h2 > span {
-        display: block;
-        line-height: normal;
-      }
+    /* Section: color picker. */
 
-      .highlight {
-        color: var(--color-highlight);
-      }
+    .color-picker {
+      display: flex;
+      justify-content: center;
+    }
 
-      .dot {
-        margin-left: 4px;
-        color: var(--color-highlight);
-      }
+    .custom-scheme {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+    }
 
-      @media (min-width: 800px) {
-        h1 {
-          font-size: 60px;
-        }
+    .custom-scheme .color > div {
+      position: relative;
+      width: 72px;
+      height: 48px;
+      background-color: #333;
+      border: 1px solid #000;
+      cursor: pointer;
+    }
 
-        h1 + p {
-          margin: 0 0 96px;
-          font-size: 32px;
-        }
+    .custom-scheme .color + .color > div {
+      border-left: none;
+    }
 
-        h2 {
-          margin: 8px 0 96px;
-          font-size: 48px;
-        }
-      }
+    .custom-scheme .color.empty > div::after {
+      content: '+';
+      display: block;
+      color: #aaa;
+      font-weight: 700;
+      font-size: 28px;
+      text-align: center;
+    }
 
-      /* Section: color picker. */
+    .custom-scheme .color span {
+      display: block;
+      font-size: 18px;
+    }
 
-      .color-picker {
-        display: flex;
-        justify-content: center;
-      }
+    .reset-custom-scheme {
+      margin-top: 64px;
+      text-align: center;
+    }
 
+    .reset-custom-scheme button {
+      padding: 8px 16px;
+      color: var(--color-font);
+      font: inherit;
+      background-color: var(--color-background);
+      border: 1px solid var(--color-highlight);
+    }
+
+    .reset-custom-scheme button:hover {
+      color: var(--color-background);
+      background-color: var(--color-highlight);
+    }
+
+    @media (min-width: 800px) {
       .custom-scheme {
-        display: flex;
-        justify-content: center;
-        margin-top: 24px;
+        margin-top: 64px;
       }
 
       .custom-scheme .color > div {
-        position: relative;
-        width: 72px;
-        height: 48px;
-        background-color: #333;
-        border: 1px solid #000;
-        cursor: pointer;
-      }
-
-      .custom-scheme .color + .color > div {
-        border-left: none;
+        width: 112px;
+        height: 64px;
       }
 
       .custom-scheme .color.empty > div::after {
-        content: '+';
-        display: block;
-        color: #aaa;
-        font-weight: 700;
-        font-size: 28px;
-        text-align: center;
+        font-size: 40px;
       }
+    }
 
-      .custom-scheme .color span {
-        display: block;
-        font-size: 18px;
+    /* Section: generated color schemes. */
+
+    .color-scheme + .color-scheme {
+      margin-top: 40px;
+    }
+
+    .color-scheme color-scheme {
+      width: 100%;
+      height: 100px;
+      margin-top: 16px;
+    }
+
+    .color-scheme p {
+      margin: 0;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    @media (min-width: 400px) {
+      .color-scheme color-scheme {
+        width: 336px;
       }
+    }
 
-      .reset-custom-scheme {
-        margin-top: 64px;
-        text-align: center;
+    @media (min-width: 1600px) {
+      .color-scheme {
+        display: flex;
       }
-
-      .reset-custom-scheme button {
-        padding: 8px 16px;
-        color: var(--color-font);
-        font: inherit;
-        background-color: var(--color-background);
-        border: 1px solid var(--color-highlight);
-      }
-
-      .reset-custom-scheme button:hover {
-        color: var(--color-background);
-        background-color: var(--color-highlight);
-      }
-
-      @media (min-width: 800px) {
-        .custom-scheme {
-          margin-top: 64px;
-        }
-
-        .custom-scheme .color > div {
-          width: 112px;
-          height: 64px;
-        }
-
-        .custom-scheme .color.empty > div::after {
-          font-size: 40px;
-        }
-      }
-
-      /* Section: generated color schemes. */
 
       .color-scheme + .color-scheme {
-        margin-top: 40px;
+        margin-top: 80px;
       }
 
       .color-scheme color-scheme {
-        width: 100%;
-        height: 100px;
-        margin-top: 16px;
+        margin-top: 12px;
       }
 
-      .color-scheme p {
-        margin: 0;
+      .color-scheme > *:nth-child(1) {
+        flex: 1 1 auto;
+        padding-right: 80px;
       }
 
-      h3 {
-        margin: 0;
-        font-size: 1.2em;
+      .color-scheme > *:nth-child(2) {
+        flex: 0 0 auto;
       }
-
-      @media (min-width: 400px) {
-        .color-scheme color-scheme {
-          width: 336px;
-        }
-      }
-
-      @media (min-width: 1600px) {
-        .color-scheme {
-          display: flex;
-        }
-
-        .color-scheme + .color-scheme {
-          margin-top: 80px;
-        }
-
-        .color-scheme color-scheme {
-          margin-top: 12px;
-        }
-
-        .color-scheme > *:nth-child(1) {
-          flex: 1 1 auto;
-          padding-right: 80px;
-        }
-
-        .color-scheme > *:nth-child(2) {
-          flex: 0 0 auto;
-        }
-      }
-    `;
-  }
+    }
+  `;
 
   render() {
     return html`

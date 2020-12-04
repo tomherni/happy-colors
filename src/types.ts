@@ -18,6 +18,14 @@ export interface Colors {
   hex: Hex;
 }
 
+export type ColorScheme = Hsv[];
+
+export type ColorSchemeMono = [Hsv, Hsv[]];
+
+export type SavedSchemeValue = Hex | null;
+
+export type SavedScheme = SavedSchemeValue[];
+
 /**
  * Coordinates along the X and Y axes on a canvas expressed in pixels. These
  * coords can be used to correctly position a draggable element via CSS.

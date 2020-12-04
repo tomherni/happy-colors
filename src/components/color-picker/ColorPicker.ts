@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 import {
   hsvToHsl,
   hsvToRgb,
@@ -9,6 +9,7 @@ import {
   validateHsv,
 } from '../../utils/colors.js';
 import { round as roundUtil } from '../../utils/numbers.js';
+import { Hsv, Colors } from '../../types.js';
 import { hasColorChanged } from './utils.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
@@ -16,111 +17,105 @@ import '../color-slider/color-slider.js';
 const round = value => value.map(v => roundUtil(v));
 
 export class ColorPicker extends LitElement {
-  static get properties() {
-    return {
-      /** The currently picked color represented in the HSV color model. */
-      hsv: {
-        type: Array,
-        hasChanged: hasColorChanged,
-      },
-    };
-  }
+  /** The currently picked color represented in the HSV color model. */
+  @property({ type: Array, hasChanged: hasColorChanged })
+  hsv: Hsv;
 
-  static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
+  _colors: Colors;
 
-      * {
-        box-sizing: border-box;
-      }
+  static styles = css`
+    :host {
+      display: block;
+    }
 
-      .picker {
-        flex: 1 1 auto;
+    * {
+      box-sizing: border-box;
+    }
+
+    .picker {
+      flex: 1 1 auto;
+      display: flex;
+    }
+
+    color-palette {
+      width: 250px;
+      height: 250px;
+    }
+
+    color-slider {
+      height: 250px;
+      margin-left: 48px;
+    }
+
+    .panel {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      width: 250px;
+      margin-top: 24px;
+    }
+
+    .color {
+      flex: 0 0 auto;
+      width: 64px;
+      height: 175px;
+      margin-right: 24px;
+    }
+
+    @media (min-width: 800px) {
+      .container {
         display: flex;
       }
 
       color-palette {
-        width: 250px;
-        height: 250px;
+        width: 350px;
+        height: 350px;
       }
 
       color-slider {
-        height: 250px;
-        margin-left: 48px;
+        height: 350px;
+        margin: 0 56px;
       }
 
       .panel {
-        flex: 0 0 auto;
-        display: flex;
-        align-items: center;
-        width: 250px;
-        margin-top: 24px;
+        display: block;
+        width: 175px;
+        margin: 0;
       }
 
       .color {
-        flex: 0 0 auto;
-        width: 64px;
-        height: 175px;
-        margin-right: 24px;
+        width: 100%;
+        height: 72px;
+        margin: 0 0 1em;
       }
+    }
 
-      @media (min-width: 800px) {
-        .container {
-          display: flex;
-        }
+    dl {
+      flex: 1 1 auto;
+      margin: 0;
+    }
 
-        color-palette {
-          width: 350px;
-          height: 350px;
-        }
+    dl > div {
+      display: flex;
+      align-items: baseline;
+    }
 
-        color-slider {
-          height: 350px;
-          margin: 0 56px;
-        }
+    dl > div + div {
+      margin-top: 0.5em;
+    }
 
-        .panel {
-          display: block;
-          width: 175px;
-          margin: 0;
-        }
+    dt {
+      flex: 1 1 auto;
+      margin: 0;
+      font-weight: 700;
+      font-size: 18px;
+    }
 
-        .color {
-          width: 100%;
-          height: 72px;
-          margin: 0 0 1em;
-        }
-      }
-
-      dl {
-        flex: 1 1 auto;
-        margin: 0;
-      }
-
-      dl > div {
-        display: flex;
-        align-items: baseline;
-      }
-
-      dl > div + div {
-        margin-top: 0.5em;
-      }
-
-      dt {
-        flex: 1 1 auto;
-        margin: 0;
-        font-weight: 700;
-        font-size: 18px;
-      }
-
-      dd {
-        flex: 0 0 auto;
-        margin: 0;
-      }
-    `;
-  }
+    dd {
+      flex: 0 0 auto;
+      margin: 0;
+    }
+  `;
 
   render() {
     return html`

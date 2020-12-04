@@ -1,88 +1,91 @@
 // @ts-nocheck
 
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
 import { when } from '../../utils/lit-html.js';
+import {
+  Hsv,
+  ColorScheme as ColorSchemeType,
+  ColorSchemeMono,
+} from '../../types.js';
 import { schemes } from './schemes.js';
 
 export class ColorScheme extends LitElement {
-  static get properties() {
-    return {
-      /** Base color to generate a color scheme for. */
-      color: { type: Array },
+  /** Base color to generate a color scheme for. */
+  @property({ type: Array })
+  color: Hsv;
 
-      /** Type of color scheme to generate. */
-      scheme: { type: String, attribute: 'scheme' },
+  /** Type of color scheme to generate. */
+  @property({ type: String, attribute: 'scheme' })
+  scheme: string;
 
-      /** Whether to show the color HEX code. */
-      showHex: { type: Boolean, attribute: 'show-hex' },
+  /** Whether to show the color HEX code. */
+  @property({ type: Boolean, attribute: 'show-hex' })
+  showHex = false;
 
-      _colors: { type: Array },
-    };
-  }
+  @property()
+  _colors: ColorSchemeType | ColorSchemeMono;
 
-  static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
+  static styles = css`
+    :host {
+      display: block;
+    }
 
-      * {
-        box-sizing: border-box;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      .color-scheme {
-        display: flex;
-        height: 100%;
-      }
+    .color-scheme {
+      display: flex;
+      height: 100%;
+    }
 
-      .color {
-        flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        cursor: pointer;
-      }
+    .color {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      cursor: pointer;
+    }
 
-      .block {
-        flex: 1 1 auto;
-        border: 1px solid #000;
-      }
+    .block {
+      flex: 1 1 auto;
+      border: 1px solid #000;
+    }
 
-      .color + .color .block {
-        border-left: none;
-      }
+    .color + .color .block {
+      border-left: none;
+    }
 
-      .code {
-        flex: 0 0 auto;
-      }
+    .code {
+      flex: 0 0 auto;
+    }
 
-      .code span {
-        position: absolute;
-        font-size: 18px;
-      }
+    .code span {
+      position: absolute;
+      font-size: 18px;
+    }
 
-      /* Special layout for a color scheme containing a sub-scheme */
+    /* Special layout for a color scheme containing a sub-scheme */
 
-      .color-scheme.sub-scheme {
-        flex-direction: column;
-      }
+    .color-scheme.sub-scheme {
+      flex-direction: column;
+    }
 
-      .color-scheme.sub-scheme > div:nth-child(1) {
-        flex: 5 5 auto;
-        display: flex;
-      }
+    .color-scheme.sub-scheme > div:nth-child(1) {
+      flex: 5 5 auto;
+      display: flex;
+    }
 
-      .color-scheme.sub-scheme > div:nth-child(2) {
-        flex: 2 2 auto;
-        display: flex;
-      }
+    .color-scheme.sub-scheme > div:nth-child(2) {
+      flex: 2 2 auto;
+      display: flex;
+    }
 
-      .color-scheme.sub-scheme > div:nth-child(2) .block {
-        border-top: none;
-      }
-    `;
-  }
+    .color-scheme.sub-scheme > div:nth-child(2) .block {
+      border-top: none;
+    }
+  `;
 
   render() {
     if (!this._colors) {

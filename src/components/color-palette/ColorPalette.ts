@@ -1,77 +1,74 @@
 // @ts-nocheck
 
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css, property } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
+import { Hsv } from '../../types.js';
 import { hasColorChanged } from '../color-picker/utils.js';
 
 export class ColorPalette extends DraggableMixin(LitElement) {
-  static get properties() {
-    return {
-      /** The current color represented in the HSV color model. */
-      hsv: {
-        type: Array,
-        hasChanged: hasColorChanged,
-      },
-    };
-  }
+  /** The current color represented in the HSV color model. */
+  @property({ type: Array, hasChanged: hasColorChanged })
+  hsv: Hsv;
 
-  static get styles() {
-    return css`
-      :host {
-        display: block;
-        --handle-size: 21px;
-      }
+  _canvasElement: HTMLElement;
 
-      *,
-      *::after {
-        box-sizing: border-box;
-      }
+  _handleElement: HTMLElement;
 
-      .palette {
-        position: relative;
-        width: 100%;
-        height: 100%;
-      }
+  static styles = css`
+    :host {
+      display: block;
+      --handle-size: 21px;
+    }
 
-      .gradients {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-image: linear-gradient(to right, #fff, transparent);
-      }
+    *,
+    *::after {
+      box-sizing: border-box;
+    }
 
-      .gradients::after {
-        content: '';
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-image: linear-gradient(to top, #000, transparent);
-      }
+    .palette {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
 
-      .handle {
-        position: relative;
-        height: 1px;
-        width: 1px;
-      }
+    .gradients {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(to right, #fff, transparent);
+    }
 
-      .handle::after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: calc(var(--handle-size) / 2 * -1);
-        left: calc(var(--handle-size) / 2 * -1);
-        width: var(--handle-size);
-        height: var(--handle-size);
-        background-color: inherit;
-        border: 3px solid #fff;
-        border-radius: 50%;
-        box-shadow: 1px 1px 1px inset rgba(0, 0, 0, 0.3),
-          1px 1px 2px rgba(0, 0, 0, 0.3);
-      }
-    `;
-  }
+    .gradients::after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(to top, #000, transparent);
+    }
+
+    .handle {
+      position: relative;
+      height: 1px;
+      width: 1px;
+    }
+
+    .handle::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: calc(var(--handle-size) / 2 * -1);
+      left: calc(var(--handle-size) / 2 * -1);
+      width: var(--handle-size);
+      height: var(--handle-size);
+      background-color: inherit;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 1px 1px 1px inset rgba(0, 0, 0, 0.3),
+        1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  `;
 
   render() {
     return html`
