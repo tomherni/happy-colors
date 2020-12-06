@@ -1,6 +1,13 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import {
+  LitElement,
+  html,
+  css,
+  property,
+  internalProperty,
+  customElement,
+} from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { hsvToHsl, hsvToRgb, hsvToHex, validateHsv } from '../utils/colors.js';
@@ -33,10 +40,10 @@ export class AppHappyColors extends LitElement {
   hsv: Hsv;
 
   /** The user's saved color scheme. */
-  @property()
+  @internalProperty()
   _savedScheme: SavedScheme;
 
-  @property()
+  @internalProperty()
   _error: string;
 
   static styles = css`
