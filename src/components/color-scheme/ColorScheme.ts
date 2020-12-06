@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property } from 'lit-element';
+import { LitElement, html, css, property, customElement } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
 import { when } from '../../utils/lit-html.js';
 import {
@@ -10,6 +10,7 @@ import {
 } from '../../types.js';
 import { schemes } from './schemes.js';
 
+@customElement('color-scheme')
 export class ColorScheme extends LitElement {
   /** Base color to generate a color scheme for. */
   @property({ type: Array })

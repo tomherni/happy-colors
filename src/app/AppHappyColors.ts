@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property } from 'lit-element';
+import { LitElement, html, css, property, customElement } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { hsvToHsl, hsvToRgb, hsvToHex, validateHsv } from '../utils/colors.js';
@@ -26,6 +26,7 @@ function createCustomScheme(storage = []) {
   return scheme;
 }
 
+@customElement('app-happy-colors')
 export class AppHappyColors extends LitElement {
   /** The currently picked color represented in the HSV color model. */
   @property({ type: Array })

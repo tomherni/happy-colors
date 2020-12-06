@@ -1,10 +1,11 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property } from 'lit-element';
+import { LitElement, html, css, property, customElement } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
 import { Hue } from '../../types.js';
 
+@customElement('color-slider')
 export class ColorSlider extends DraggableMixin(LitElement) {
   /** Current hue value picked in the slider canvas. */
   @property({ type: Number })

@@ -1,11 +1,12 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property } from 'lit-element';
+import { LitElement, html, css, property, customElement } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
 import { Hsv } from '../../types.js';
 import { hasColorChanged } from '../color-picker/utils.js';
 
+@customElement('color-palette')
 export class ColorPalette extends DraggableMixin(LitElement) {
   /** The current color represented in the HSV color model. */
   @property({ type: Array, hasChanged: hasColorChanged })

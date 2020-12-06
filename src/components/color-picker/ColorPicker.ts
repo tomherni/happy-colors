@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property } from 'lit-element';
+import { LitElement, html, css, property, customElement } from 'lit-element';
 import {
   hsvToHsl,
   hsvToRgb,
@@ -16,6 +16,7 @@ import '../color-slider/color-slider.js';
 
 const round = value => value.map(v => roundUtil(v));
 
+@customElement('color-picker')
 export class ColorPicker extends LitElement {
   /** The currently picked color represented in the HSV color model. */
   @property({ type: Array, hasChanged: hasColorChanged })
