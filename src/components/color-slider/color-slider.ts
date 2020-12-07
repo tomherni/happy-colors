@@ -6,6 +6,7 @@ import {
   css,
   property,
   TemplateResult,
+  PropertyValues,
   customElement,
 } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
@@ -91,9 +92,9 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     });
   }
 
-  updated(props): void {
-    super.updated(props);
-    if (props.has('hue') && this.hue) {
+  updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('hue') && this.hue) {
       this._onHueChanged();
       this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
     }

@@ -6,6 +6,7 @@ import {
   css,
   property,
   TemplateResult,
+  PropertyValues,
   customElement,
 } from 'lit-element';
 import {
@@ -174,16 +175,16 @@ export class ColorPicker extends LitElement {
     this._setHsv(this.hsv || [360, 255, 255]);
   }
 
-  update(props): void {
-    if (props.has('hsv') && this.hsv) {
+  update(changedProperties: PropertyValues): void {
+    if (changedProperties.has('hsv') && this.hsv) {
       this._setColors(this.hsv);
     }
-    super.update(props);
+    super.update(changedProperties);
   }
 
-  updated(props): void {
-    super.updated(props);
-    if (props.has('hsv') && this.hsv) {
+  updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('hsv') && this.hsv) {
       this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
     }
   }

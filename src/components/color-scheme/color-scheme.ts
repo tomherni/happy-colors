@@ -7,6 +7,7 @@ import {
   property,
   internalProperty,
   TemplateResult,
+  PropertyValues,
   customElement,
 } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
@@ -120,10 +121,9 @@ export class ColorScheme extends LitElement {
     `;
   }
 
-  updated(props): void {
-    super.updated(props);
-
-    if (props.has('color')) {
+  updated(changedProperties: PropertyValues): void {
+    super.updated(changedProperties);
+    if (changedProperties.has('color')) {
       this._generateColorScheme(this.color, this.scheme);
     }
   }
