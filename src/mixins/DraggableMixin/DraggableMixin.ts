@@ -17,13 +17,13 @@ import {
  */
 export const DraggableMixin = Base =>
   class extends Base {
-    __registered = false;
+    private __registered = false;
 
-    __position: PositionCoords;
+    private __position: PositionCoords;
 
-    __config: DraggableConfig;
+    private __config: DraggableConfig;
 
-    __dragState: {
+    private __dragState: {
       canvasRect: DOMRect;
       draggableCoords: PixelCoords;
       cursorOffset?: PixelCoords;
@@ -38,7 +38,7 @@ export const DraggableMixin = Base =>
       this.__onContextMenu = this.__onContextMenu.bind(this);
     }
 
-    disconnectedCallback() {
+    disconnectedCallback(): void {
       super.disconnectedCallback();
       if (this.__registered) {
         this.deregisterDraggableElement();
@@ -49,7 +49,7 @@ export const DraggableMixin = Base =>
      * Register an HTML element as a draggable element.
      * @param {DraggableConfig} config
      */
-    registerDraggableElement(config) {
+    protected registerDraggableElement(config) {
       if (this.__registered) {
         this.deregisterDraggableElement();
       }
@@ -62,12 +62,12 @@ export const DraggableMixin = Base =>
      * Deregister the draggable element by no longer acting upon drag events
      * initiated by the user, or on position update requests.
      */
-    deregisterDraggableElement() {
+    protected deregisterDraggableElement() {
       this.__registered = false;
       this.__manageEventListeners(window.removeEventListener);
     }
 
-    __manageEventListeners(handler) {
+    private __manageEventListeners(handler) {
       handler('mousedown', this.__startDrag, { passive: false });
       handler('mousemove', this.__drag, { passive: false });
       handler('mouseup', this.__stopDrag);
@@ -84,7 +84,7 @@ export const DraggableMixin = Base =>
      * Update the draggable's CSS position based on the current position coords.
      * @param {PositionCoords} [position]
      */
-    updateDraggablePosition(position = this.__position) {
+    protected updateDraggablePosition(position = this.__position) {
       if (this.__registered) {
         const coords = positionToCoords(position, this.__config.canvas);
         this.__updateDraggablePosition(coords);
@@ -96,7 +96,7 @@ export const DraggableMixin = Base =>
      * setting up its configuration.
      * @param {DraggableConfig} config
      */
-    __initialize(config) {
+    private __initialize(config) {
       this.__config = config;
       this.updateDraggablePosition(this.__config.initial);
     }
@@ -106,7 +106,7 @@ export const DraggableMixin = Base =>
      * dragging is initiated by the user.
      * @param {MouseEvent | TouchEvent} event
      */
-    __startDrag(event) {
+    private __startDrag(event) {
       const composedPath = event.composedPath();
       if (!composedPath.includes(this.__config.canvas)) {
         return;
@@ -141,7 +141,7 @@ export const DraggableMixin = Base =>
      * Update the draggable position whenever the client tries to move it.
      * @param {MouseEvent | TouchEvent} event
      */
-    __drag(event) {
+    private __drag(event) {
       if (this.__dragState) {
         event.preventDefault();
         this.__onDragEvent(event);
@@ -151,7 +151,7 @@ export const DraggableMixin = Base =>
     /**
      * Clean up the dragging state when dragging stops.
      */
-    __stopDrag() {
+    private __stopDrag() {
       if (this.__dragState) {
         this.__dragState = undefined;
       }
@@ -161,7 +161,7 @@ export const DraggableMixin = Base =>
      * Determine the new position for the draggable based on a drag event.
      * @param {MouseEvent | TouchEvent} event
      */
-    __onDragEvent(event) {
+    private __onDragEvent(event) {
       const { canvasRect, draggableCoords: prevCoords } = this.__dragState;
       const cursor = getCursorCoords(event);
 
@@ -186,7 +186,7 @@ export const DraggableMixin = Base =>
      * Update the draggable element's position and trigger the callback.
      * @param {PixelCoords} coords
      */
-    __updateDraggablePosition({ x, y }) {
+    private __updateDraggablePosition({ x, y }) {
       const position = {
         x: validatePercentage((x / this.__config.canvas.offsetWidth) * 100),
         y: validatePercentage((y / this.__config.canvas.offsetHeight) * 100),
@@ -202,7 +202,7 @@ export const DraggableMixin = Base =>
     /**
      * Ensure the draggable position is correct when the viewport changes.
      */
-    __onWindowResize() {
+    private __onWindowResize() {
       // TODO: look into replacing this with a resize observer
       this.updateDraggablePosition();
     }
@@ -211,7 +211,7 @@ export const DraggableMixin = Base =>
      * Chromium won't send the "mouseup" event after a right-click. So dragging
      * needs to be stopped or else the mouse will continue to drag on hover.
      */
-    __onContextMenu() {
+    private __onContextMenu() {
       this.__stopDrag();
     }
   };

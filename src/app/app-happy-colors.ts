@@ -6,6 +6,7 @@ import {
   css,
   property,
   internalProperty,
+  TemplateResult,
   customElement,
 } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
@@ -41,10 +42,10 @@ export class AppHappyColors extends LitElement {
 
   /** The user's saved color scheme. */
   @internalProperty()
-  _savedScheme: SavedScheme;
+  private _savedScheme: SavedScheme;
 
   @internalProperty()
-  _error: string;
+  private _error: string;
 
   static styles = css`
     :host {
@@ -300,7 +301,7 @@ export class AppHappyColors extends LitElement {
     }
   `;
 
-  render() {
+  render(): TemplateResult {
     return html`
       ${when(
         this._error,
@@ -441,29 +442,29 @@ export class AppHappyColors extends LitElement {
     this._initializeSavedScheme();
   }
 
-  _initializeColors() {
+  private _initializeColors() {
     const initialHsv = [279, 82, 90];
     const hsv = this._getHsvFromStorage() || initialHsv;
     this._updateColors({ hsv });
   }
 
-  _initializeSavedScheme() {
+  private _initializeSavedScheme() {
     const scheme = this._getColorSchemeFromStorage() || [];
     this._savedScheme = createCustomScheme(scheme);
   }
 
-  _onColorPickerChanged({ detail: colors }) {
+  private _onColorPickerChanged({ detail: colors }) {
     this._updateColors(colors);
   }
 
-  _onColorSchemeSelected({ detail: hsv }) {
+  private _onColorSchemeSelected({ detail: hsv }) {
     this._updateColors({ hsv });
   }
 
   /**
    * @param {Object|Colors} colors
    */
-  _updateColors(colors) {
+  private _updateColors(colors) {
     const hsv = validateHsv(colors.hsv);
 
     this.colors = {
@@ -476,18 +477,18 @@ export class AppHappyColors extends LitElement {
     this._saveHsvToStorage(hsv);
   }
 
-  _saveColorToCustomScheme(index) {
+  private _saveColorToCustomScheme(index) {
     this._savedScheme[index] = hsvToHex(this.colors.hsv);
     this._savedScheme = [...this._savedScheme];
     this._saveColorSchemeToStorage(this._savedScheme);
   }
 
-  _clearCustomScheme() {
+  private _clearCustomScheme() {
     this._savedScheme = createCustomScheme();
     colorSchemeStorage.remove();
   }
 
-  _getHsvFromStorage() {
+  private _getHsvFromStorage() {
     const { data, error } = hsvStorage.get();
     if (error) {
       this._error = ERROR_MESSAGES.getColor;
@@ -495,14 +496,14 @@ export class AppHappyColors extends LitElement {
     return data;
   }
 
-  _saveHsvToStorage(hsv) {
+  private _saveHsvToStorage(hsv) {
     const result = hsvStorage.set(hsv);
     if (result.error) {
       this._error = ERROR_MESSAGES.setColor;
     }
   }
 
-  _getColorSchemeFromStorage() {
+  private _getColorSchemeFromStorage() {
     const result = colorSchemeStorage.get();
     if (result.error) {
       this._error = ERROR_MESSAGES.getScheme;
@@ -510,7 +511,7 @@ export class AppHappyColors extends LitElement {
     return result.data;
   }
 
-  _saveColorSchemeToStorage(scheme) {
+  private _saveColorSchemeToStorage(scheme) {
     const result = colorSchemeStorage.set(scheme);
     if (result.error) {
       this._error = ERROR_MESSAGES.setScheme;

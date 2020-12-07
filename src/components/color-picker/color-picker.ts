@@ -1,6 +1,13 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import {
+  LitElement,
+  html,
+  css,
+  property,
+  TemplateResult,
+  customElement,
+} from 'lit-element';
 import {
   hsvToHsl,
   hsvToRgb,
@@ -22,7 +29,7 @@ export class ColorPicker extends LitElement {
   @property({ type: Array, hasChanged: hasColorChanged })
   hsv: Hsv;
 
-  _colors: Colors;
+  private _colors: Colors;
 
   static styles = css`
     :host {
@@ -118,7 +125,7 @@ export class ColorPicker extends LitElement {
     }
   `;
 
-  render() {
+  render(): TemplateResult {
     return html`
       <div class="container">
         <div class="picker">
@@ -162,32 +169,32 @@ export class ColorPicker extends LitElement {
     `;
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     super.connectedCallback();
     this._setHsv(this.hsv || [360, 255, 255]);
   }
 
-  update(props) {
+  update(props): void {
     if (props.has('hsv') && this.hsv) {
       this._setColors(this.hsv);
     }
     super.update(props);
   }
 
-  updated(props) {
+  updated(props): void {
     super.updated(props);
     if (props.has('hsv') && this.hsv) {
       this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
     }
   }
 
-  _setHsv(hsv) {
+  private _setHsv(hsv) {
     if (hasColorChanged(hsv, this.hsv)) {
       this.hsv = validateHsv(hsv);
     }
   }
 
-  _setColors(hsv) {
+  private _setColors(hsv) {
     this._colors = {
       hsv,
       rgb: hsvToRgb(hsv),
@@ -196,11 +203,11 @@ export class ColorPicker extends LitElement {
     };
   }
 
-  _onPaletteChanged({ detail: hsv }) {
+  private _onPaletteChanged({ detail: hsv }) {
     this._setHsv(hsv);
   }
 
-  _onHueSliderChanged({ detail: hue }) {
+  private _onHueSliderChanged({ detail: hue }) {
     const [, s, v] = this.hsv;
     this._setHsv([hue, s, v]);
   }

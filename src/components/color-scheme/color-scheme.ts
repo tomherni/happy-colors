@@ -6,6 +6,7 @@ import {
   css,
   property,
   internalProperty,
+  TemplateResult,
   customElement,
 } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
@@ -32,7 +33,7 @@ export class ColorScheme extends LitElement {
   showHex = false;
 
   @internalProperty()
-  _colors: ColorSchemeType | ColorSchemeMono;
+  private _colors: ColorSchemeType | ColorSchemeMono;
 
   static styles = css`
     :host {
@@ -95,7 +96,7 @@ export class ColorScheme extends LitElement {
     }
   `;
 
-  render() {
+  render(): TemplateResult {
     if (!this._colors) {
       return html``;
     }
@@ -119,7 +120,7 @@ export class ColorScheme extends LitElement {
     `;
   }
 
-  updated(props) {
+  updated(props): void {
     super.updated(props);
 
     if (props.has('color')) {
@@ -127,7 +128,7 @@ export class ColorScheme extends LitElement {
     }
   }
 
-  _colorBlockTemplate(color) {
+  private _colorBlockTemplate(color) {
     return html`
       <div class="color">
         <div
@@ -150,7 +151,7 @@ export class ColorScheme extends LitElement {
     `;
   }
 
-  _generateColorScheme(color, scheme) {
+  private _generateColorScheme(color, scheme) {
     const fn = schemes[scheme];
     if (!fn) {
       throw new Error(`Unknown color scheme: ${scheme})`);
@@ -158,7 +159,7 @@ export class ColorScheme extends LitElement {
     this._colors = fn(color);
   }
 
-  _onColorClick(e) {
+  private _onColorClick(e) {
     const { hsv } = e.composedPath()[0].dataset;
     this.dispatchEvent(
       new CustomEvent('color-scheme-selected', {

@@ -1,6 +1,13 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import {
+  LitElement,
+  html,
+  css,
+  property,
+  TemplateResult,
+  customElement,
+} from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
 import { Hsv } from '../../types.js';
@@ -12,9 +19,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   @property({ type: Array, hasChanged: hasColorChanged })
   hsv: Hsv;
 
-  _canvasElement: HTMLElement;
+  private _canvasElement: HTMLElement;
 
-  _handleElement: HTMLElement;
+  private _handleElement: HTMLElement;
 
   static styles = css`
     :host {
@@ -71,7 +78,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     }
   `;
 
-  render() {
+  render(): TemplateResult {
     return html`
       <div class="palette">
         <div class="gradients"></div>
@@ -80,7 +87,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     `;
   }
 
-  firstUpdated() {
+  firstUpdated(): void {
     this._canvasElement = this.shadowRoot.querySelector('.palette');
     this._handleElement = this.shadowRoot.querySelector('.handle');
 
@@ -92,7 +99,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     });
   }
 
-  updated(props) {
+  updated(props): void {
     super.updated(props);
     if (props.has('hsv') && this.hsv) {
       this._onHsvChanged();
@@ -100,13 +107,13 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     }
   }
 
-  _setHsv(hsv) {
+  private _setHsv(hsv) {
     if (hasColorChanged(hsv, this.hsv)) {
       this.hsv = validateHsv(hsv);
     }
   }
 
-  _onHsvChanged() {
+  private _onHsvChanged() {
     const handlePosition = this._convertHsvToHandlePosition();
     this.updateDraggablePosition(handlePosition);
     this._updatePaletteStyling();
@@ -115,13 +122,13 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   /**
    * @param {PositionCoords} position
    */
-  _onHandlePositionChanged(position) {
+  private _onHandlePositionChanged(position) {
     const hsv = this._convertHandlePositionToHsv(position);
     this._setHsv(hsv);
     this._updatePaletteStyling();
   }
 
-  _convertHsvToHandlePosition() {
+  private _convertHsvToHandlePosition() {
     return {
       x: this.hsv[1],
       y: 100 - this.hsv[2],
@@ -131,14 +138,14 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   /**
    * @param {PositionCoords} position
    */
-  _convertHandlePositionToHsv(position) {
+  private _convertHandlePositionToHsv(position) {
     const [hue] = this.hsv;
     const saturation = position.x;
     const value = 100 - position.y;
     return [hue, saturation, value];
   }
 
-  _updatePaletteStyling() {
+  private _updatePaletteStyling() {
     this._canvasElement.style.backgroundColor = rgbToCssString(
       hsvToRgb([this.hsv[0], 100, 100])
     );

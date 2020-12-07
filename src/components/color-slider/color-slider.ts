@@ -1,6 +1,13 @@
 // @ts-nocheck
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import {
+  LitElement,
+  html,
+  css,
+  property,
+  TemplateResult,
+  customElement,
+} from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
 import { Hue } from '../../types.js';
@@ -11,7 +18,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   @property({ type: Number })
   hue: Hue;
 
-  _handleElement: HTMLElement;
+  private _handleElement: HTMLElement;
 
   static styles = css`
     :host {
@@ -64,7 +71,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     }
   `;
 
-  render() {
+  render(): TemplateResult {
     return html`
       <div class="slider">
         <div class="handle"></div>
@@ -72,7 +79,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     `;
   }
 
-  firstUpdated() {
+  firstUpdated(): void {
     this._handleElement = this.shadowRoot.querySelector('.handle');
 
     this.registerDraggableElement({
@@ -84,7 +91,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     });
   }
 
-  updated(props) {
+  updated(props): void {
     super.updated(props);
     if (props.has('hue') && this.hue) {
       this._onHueChanged();
@@ -92,11 +99,11 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     }
   }
 
-  _setHue(hue) {
+  private _setHue(hue) {
     this.hue = validateHue(hue);
   }
 
-  _onHueChanged() {
+  private _onHueChanged() {
     const handlePosition = this._convertHueToHandlePosition();
     this.updateDraggablePosition(handlePosition);
     this._updateSliderStyling();
@@ -105,19 +112,19 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   /**
    * @param {PositionCoords} position
    */
-  _onHandlePositionChanged(position) {
+  private _onHandlePositionChanged(position) {
     this._setHue(360 - (360 / 100) * position.y);
     this._updateSliderStyling();
   }
 
-  _convertHueToHandlePosition() {
+  private _convertHueToHandlePosition() {
     return {
       x: 0,
       y: 100 - (this.hue / 360) * 100,
     };
   }
 
-  _updateSliderStyling() {
+  private _updateSliderStyling() {
     this._handleElement.style.backgroundColor = rgbToCssString(
       hsvToRgb([this.hue, 100, 100])
     );
