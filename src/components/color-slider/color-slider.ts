@@ -11,7 +11,7 @@ import {
 } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
-import { Hue } from '../../types.js';
+import { Hue, PositionCoords } from '../../types.js';
 
 @customElement('color-slider')
 export class ColorSlider extends DraggableMixin(LitElement) {
@@ -110,10 +110,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     this._updateSliderStyling();
   }
 
-  /**
-   * @param {PositionCoords} position
-   */
-  private _onHandlePositionChanged(position) {
+  private _onHandlePositionChanged(position: PositionCoords) {
     this._setHue(360 - (360 / 100) * position.y);
     this._updateSliderStyling();
   }

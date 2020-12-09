@@ -16,7 +16,7 @@ export const storageManager = {
   storage: window.localStorage,
 };
 
-function isValidStorageHsv(hsv) {
+function isValidStorageHsv(hsv: unknown): boolean {
   return (
     Array.isArray(hsv) &&
     hsv.length === 3 &&
@@ -24,7 +24,7 @@ function isValidStorageHsv(hsv) {
   );
 }
 
-function isValidStorageColorScheme(scheme) {
+function isValidStorageColorScheme(scheme: unknown): boolean {
   return (
     Array.isArray(scheme) && scheme.every(color => !color || color.length === 6)
   );
@@ -35,12 +35,12 @@ const storageValidators = {
   [STORAGE_KEYS.scheme]: isValidStorageColorScheme,
 };
 
-function removeAndErrorOut(storageKey) {
+function removeAndErrorOut(storageKey: string) {
   storageManager.storage.removeItem(storageKey);
   return { error: true };
 }
 
-function get(storageKey) {
+function get(storageKey: string) {
   const storedValue = storageManager.storage.getItem(storageKey);
   if (!storedValue) {
     return { data: undefined };
@@ -55,7 +55,7 @@ function get(storageKey) {
   }
 }
 
-function save(storageKey, value) {
+function save(storageKey: string, value: unknown) {
   const validator = storageValidators[storageKey];
   if (!validator(value)) {
     return { error: true };
@@ -67,7 +67,7 @@ function save(storageKey, value) {
   return { data };
 }
 
-function remove(storageKey) {
+function remove(storageKey: string) {
   storageManager.storage.removeItem(storageKey);
 }
 
@@ -76,10 +76,10 @@ function remove(storageKey) {
  * @param {String} storageKey
  * @returns {Object}
  */
-export function createStorageInterface(storageKey) {
+export function createStorageInterface(storageKey: string) {
   return {
     get: () => get(storageKey),
-    set: value => save(storageKey, value),
+    set: (value: unknown) => save(storageKey, value),
     remove: () => remove(storageKey),
   };
 }

@@ -1,7 +1,6 @@
-// @ts-nocheck
-
 /* eslint-disable no-param-reassign, default-case */
 
+import { Hue, Hsv, Rgb, Hsl, Hex } from '../types.js';
 import { minMax, round } from './numbers.js';
 
 /**
@@ -9,7 +8,7 @@ import { minMax, round } from './numbers.js';
  * https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
  */
 
-export function validateHue(hue) {
+export function validateHue(hue: Hue): Hue {
   return minMax(round(hue, 2), 0, 360);
 }
 
@@ -18,7 +17,7 @@ export function validateHue(hue) {
  * @param {Number[]} hsv
  * @returns {Number[]}
  */
-export function validateHsv([h, s, v]) {
+export function validateHsv([h, s, v]: Hsv): Hsv {
   return [
     validateHue(h),
     minMax(round(s, 2), 0, 100),
@@ -31,11 +30,9 @@ export function validateHsv([h, s, v]) {
  * @param {Number[]} rgb
  * @returns {Number[]}
  */
-export function validateRgb(rgb) {
-  return rgb.reduce(
-    (all, value) => [...all, minMax(round(value, 2), 0, 255)],
-    []
-  );
+export function validateRgb(rgb: Rgb): Rgb {
+  // @ts-ignore
+  return rgb.map(value => minMax(round(value, 2), 0, 255));
 }
 
 /**
@@ -43,7 +40,7 @@ export function validateRgb(rgb) {
  * @param {Number[]} hsv
  * @returns {Number[]}
  */
-export function hsvToRgb([h, s, v]) {
+export function hsvToRgb([h, s, v]: Hsv): Hsv {
   h /= 360;
   s /= 100;
   v /= 100;
@@ -90,6 +87,7 @@ export function hsvToRgb([h, s, v]) {
       break;
   }
 
+  // @ts-ignore
   return validateRgb([r * 255, g * 255, b * 255]);
 }
 
@@ -98,7 +96,7 @@ export function hsvToRgb([h, s, v]) {
  * @param {Number[]} hsv
  * @returns {Number[]}
  */
-export function hsvToHsl([h, s, v]) {
+export function hsvToHsl([h, s, v]: Hsv): Hsl {
   s /= 100;
   v /= 100;
 
@@ -118,7 +116,7 @@ export function hsvToHsl([h, s, v]) {
  * @param {Number[]} rgb
  * @returns {String}
  */
-export function rgbToHex(rgb) {
+export function rgbToHex(rgb: Rgb): Hex {
   return rgb
     .reduce((output, number) => {
       const hex = round(number).toString(16);
@@ -127,7 +125,7 @@ export function rgbToHex(rgb) {
     .toUpperCase();
 }
 
-export function hsvToHex(hsv) {
+export function hsvToHex(hsv: Hsv): Hex {
   return rgbToHex(hsvToRgb(hsv));
 }
 
@@ -136,6 +134,6 @@ export function hsvToHex(hsv) {
  * @param {Number[]} rgb
  * @returns {String}
  */
-export function rgbToCssString(rgb) {
+export function rgbToCssString(rgb: Rgb): string {
   return `rgb(${rgb.join(',')})`;
 }

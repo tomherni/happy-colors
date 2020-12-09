@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 /**
  * Ensure a number does not exceed a minimum or maximum.
  * @param {Number} number
@@ -7,7 +5,7 @@
  * @param {Number} max
  * @returns {Number}
  */
-export function minMax(number, min, max) {
+export function minMax(number: number, min: number, max: number): number {
   return Math.min(Math.max(number, min), max);
 }
 
@@ -18,8 +16,15 @@ export function minMax(number, min, max) {
  * @param {Number} maxDecimals
  * @returns {Number}
  */
-export function round(number, maxDecimals = 0) {
+export function round(number: number, maxDecimals = 0): number {
   return Number(number.toFixed(maxDecimals));
 }
 
-export const isNumber = value => typeof value === 'number';
+/**
+ * Simple check whether a given value is a number.
+ * @param {*} value
+ * @returns {Boolean}
+ */
+export function isNumber(value: unknown): boolean {
+  return typeof value === 'number';
+}

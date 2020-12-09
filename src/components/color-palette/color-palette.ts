@@ -11,7 +11,7 @@ import {
 } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
-import { Hsv } from '../../types.js';
+import { Hsv, PositionCoords } from '../../types.js';
 import { hasColorChanged } from '../color-picker/utils.js';
 
 @customElement('color-palette')
@@ -120,10 +120,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this._updatePaletteStyling();
   }
 
-  /**
-   * @param {PositionCoords} position
-   */
-  private _onHandlePositionChanged(position) {
+  private _onHandlePositionChanged(position: PositionCoords) {
     const hsv = this._convertHandlePositionToHsv(position);
     this._setHsv(hsv);
     this._updatePaletteStyling();
@@ -136,10 +133,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     };
   }
 
-  /**
-   * @param {PositionCoords} position
-   */
-  private _convertHandlePositionToHsv(position) {
+  private _convertHandlePositionToHsv(position: PositionCoords) {
     const [hue] = this.hsv;
     const saturation = position.x;
     const value = 100 - position.y;

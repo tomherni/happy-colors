@@ -59,7 +59,7 @@ export interface DraggableConfig {
   callback(position: PositionCoords): void;
 
   /** The initial position of the draggable based on a starting value. */
-  initial: PositionCoords;
+  initial?: PositionCoords;
 
   /** Whether the draggable cannot move on the X axis. */
   lockX?: boolean;

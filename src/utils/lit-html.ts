@@ -1,5 +1,8 @@
-// @ts-nocheck
+import { TemplateResult } from 'lit-html';
 
-export function when(condition, template) {
+export function when(
+  condition: unknown,
+  template: () => TemplateResult
+): TemplateResult | undefined {
   return condition ? template() : undefined;
 }
