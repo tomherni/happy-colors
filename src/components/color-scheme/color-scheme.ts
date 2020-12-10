@@ -12,12 +12,9 @@ import {
 } from 'lit-element';
 import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
 import { when } from '../../utils/lit-html.js';
-import {
-  Hsv,
-  ColorScheme as ColorSchemeType,
-  ColorSchemeMono,
-} from '../../types.js';
+import { Hsv } from '../../types.js';
 import { schemes } from './schemes.js';
+import { ColorScheme as ColorSchemeType, ColorSchemeMono } from './types.js';
 
 @customElement('color-scheme')
 export class ColorScheme extends LitElement {

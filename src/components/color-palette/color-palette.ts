@@ -10,8 +10,9 @@ import {
   customElement,
 } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
+import { PositionCoords } from '../../mixins/DraggableMixin/types.js';
 import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
-import { Hsv, PositionCoords } from '../../types.js';
+import { Hsv } from '../../types.js';
 import { hasColorChanged } from '../color-picker/utils.js';
 
 @customElement('color-palette')

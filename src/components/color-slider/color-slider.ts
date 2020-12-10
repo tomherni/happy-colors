@@ -10,8 +10,9 @@ import {
   customElement,
 } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
+import { PositionCoords } from '../../mixins/DraggableMixin/types.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
-import { Hue, PositionCoords } from '../../types.js';
+import { Hue } from '../../types.js';
 
 @customElement('color-slider')
 export class ColorSlider extends DraggableMixin(LitElement) {

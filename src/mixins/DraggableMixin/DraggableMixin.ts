@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { debounce } from '../../utils/debounce.js';
+import { PixelCoords, PositionCoords, DraggableConfig } from './types.js';
 import {
   getCursorCoords,
   positionToCoords,
