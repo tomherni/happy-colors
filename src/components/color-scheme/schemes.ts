@@ -2,6 +2,10 @@ import { validateHsv } from '../../utils/colors.js';
 import { Hsv } from '../../types.js';
 import { ColorScheme, ColorSchemeMono } from './types.js';
 
+type ColorSchemeFn = (hsv: Hsv) => ColorScheme | ColorSchemeMono;
+
+type ColorSchemes = Record<string, ColorSchemeFn>;
+
 function createComplementaryColorScheme(hsv: Hsv): ColorScheme {
   const [h, s, v] = hsv;
   return [validateHsv(hsv), validateHsv([Math.abs((h + 180) % 360), s, v])];
@@ -43,9 +47,13 @@ function createMonochromaticColorScheme(hsv: Hsv): ColorSchemeMono {
   return [validateHsv([h, 100, 100]), result];
 }
 
-export const schemes = {
+const schemes: ColorSchemes = {
   complementary: createComplementaryColorScheme,
   triadic: createTriadicColorScheme,
   analogous: createAnalogousColorScheme,
   monochromatic: createMonochromaticColorScheme,
 };
+
+export function getColorScheme(scheme: string): ColorSchemeFn {
+  return schemes[scheme];
+}

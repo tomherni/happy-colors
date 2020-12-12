@@ -10,10 +10,10 @@ import {
   PropertyValues,
   customElement,
 } from 'lit-element';
-import { hsvToRgb, rgbToCssString, hsvToHex } from '../../utils/colors.js';
+import { hsvToRgb, hsvToHex, rgbToCssString } from '../../utils/colors.js';
 import { when } from '../../utils/lit-html.js';
 import { Hsv } from '../../types.js';
-import { schemes } from './schemes.js';
+import { getColorScheme } from './schemes.js';
 import { ColorScheme as ColorSchemeType, ColorSchemeMono } from './types.js';
 
 @customElement('color-scheme')
@@ -151,7 +151,7 @@ export class ColorScheme extends LitElement {
   }
 
   private _generateColorScheme(color: Hsv, scheme: string) {
-    const fn = schemes[scheme];
+    const fn = getColorScheme(scheme);
     if (!fn) {
       throw new Error(`Unknown color scheme: ${scheme})`);
     }
