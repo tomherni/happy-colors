@@ -109,7 +109,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     }
   }
 
-  private _setHsv(hsv) {
+  private _setHsv(hsv: Hsv) {
     if (hasColorChanged(hsv, this.hsv)) {
       this.hsv = validateHsv(hsv);
     }

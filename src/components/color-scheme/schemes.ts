@@ -1,13 +1,13 @@
-// @ts-nocheck
-
 import { validateHsv } from '../../utils/colors.js';
+import { Hsv } from '../../types.js';
+import { ColorScheme, ColorSchemeMono } from './types.js';
 
-function createComplementaryColorScheme(hsv) {
+function createComplementaryColorScheme(hsv: Hsv): ColorScheme {
   const [h, s, v] = hsv;
   return [validateHsv(hsv), validateHsv([Math.abs((h + 180) % 360), s, v])];
 }
 
-function createTriadicColorScheme(hsv) {
+function createTriadicColorScheme(hsv: Hsv): ColorScheme {
   const [h, s, v] = hsv;
   return [
     validateHsv(hsv),
@@ -16,7 +16,7 @@ function createTriadicColorScheme(hsv) {
   ];
 }
 
-function createAnalogousColorScheme(hsv) {
+function createAnalogousColorScheme(hsv: Hsv): ColorScheme {
   const [h, s, v] = hsv;
   return [
     validateHsv([Math.abs((h + 25) % 360), s, v]),
@@ -25,7 +25,7 @@ function createAnalogousColorScheme(hsv) {
   ];
 }
 
-function createMonochromaticColorScheme(hsv) {
+function createMonochromaticColorScheme(hsv: Hsv): ColorSchemeMono {
   const [h] = hsv;
   const amount = 8;
   const result = [];

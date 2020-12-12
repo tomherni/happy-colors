@@ -105,7 +105,9 @@ export class ColorScheme extends LitElement {
           <div>${this._colorBlockTemplate(this._colors[0])}</div>
 
           <div>
-            ${this._colors[1].map(color => this._colorBlockTemplate(color))}
+            ${this._colors[1].map((color: Hsv) =>
+              this._colorBlockTemplate(color)
+            )}
           </div>
         </div>
       `;
@@ -113,7 +115,7 @@ export class ColorScheme extends LitElement {
 
     return html`
       <div class="color-scheme">
-        ${this._colors.map(color => this._colorBlockTemplate(color))}
+        ${this._colors.map((color: Hsv) => this._colorBlockTemplate(color))}
       </div>
     `;
   }
@@ -125,7 +127,7 @@ export class ColorScheme extends LitElement {
     }
   }
 
-  private _colorBlockTemplate(color) {
+  private _colorBlockTemplate(color: Hsv) {
     return html`
       <div class="color">
         <div
@@ -148,7 +150,7 @@ export class ColorScheme extends LitElement {
     `;
   }
 
-  private _generateColorScheme(color, scheme) {
+  private _generateColorScheme(color: Hsv, scheme: string) {
     const fn = schemes[scheme];
     if (!fn) {
       throw new Error(`Unknown color scheme: ${scheme})`);
@@ -156,7 +158,7 @@ export class ColorScheme extends LitElement {
     this._colors = fn(color);
   }
 
-  private _onColorClick(e) {
+  private _onColorClick(e: Event) {
     const { hsv } = e.composedPath()[0].dataset;
     this.dispatchEvent(
       new CustomEvent('color-scheme-selected', {

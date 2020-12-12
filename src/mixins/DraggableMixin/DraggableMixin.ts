@@ -50,7 +50,7 @@ export const DraggableMixin = Base =>
      * Register an HTML element as a draggable element.
      * @param {DraggableConfig} config
      */
-    protected registerDraggableElement(config) {
+    protected registerDraggableElement(config: DraggableConfig) {
       if (this.__registered) {
         this.deregisterDraggableElement();
       }
@@ -97,7 +97,7 @@ export const DraggableMixin = Base =>
      * setting up its configuration.
      * @param {DraggableConfig} config
      */
-    private __initialize(config) {
+    private __initialize(config: DraggableConfig) {
       this.__config = config;
       this.updateDraggablePosition(this.__config.initial);
     }
@@ -107,7 +107,7 @@ export const DraggableMixin = Base =>
      * dragging is initiated by the user.
      * @param {MouseEvent | TouchEvent} event
      */
-    private __startDrag(event) {
+    private __startDrag(event: MouseEvent | TouchEvent) {
       const composedPath = event.composedPath();
       if (!composedPath.includes(this.__config.canvas)) {
         return;
@@ -142,7 +142,7 @@ export const DraggableMixin = Base =>
      * Update the draggable position whenever the client tries to move it.
      * @param {MouseEvent | TouchEvent} event
      */
-    private __drag(event) {
+    private __drag(event: MouseEvent | TouchEvent) {
       if (this.__dragState) {
         event.preventDefault();
         this.__onDragEvent(event);
@@ -162,7 +162,7 @@ export const DraggableMixin = Base =>
      * Determine the new position for the draggable based on a drag event.
      * @param {MouseEvent | TouchEvent} event
      */
-    private __onDragEvent(event) {
+    private __onDragEvent(event: MouseEvent | TouchEvent) {
       const { canvasRect, draggableCoords: prevCoords } = this.__dragState;
       const cursor = getCursorCoords(event);
 
@@ -187,7 +187,7 @@ export const DraggableMixin = Base =>
      * Update the draggable element's position and trigger the callback.
      * @param {PixelCoords} coords
      */
-    private __updateDraggablePosition({ x, y }) {
+    private __updateDraggablePosition({ x, y }: PixelCoords) {
       const position = {
         x: validatePercentage((x / this.__config.canvas.offsetWidth) * 100),
         y: validatePercentage((y / this.__config.canvas.offsetHeight) * 100),

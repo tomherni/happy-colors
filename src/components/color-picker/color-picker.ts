@@ -189,13 +189,13 @@ export class ColorPicker extends LitElement {
     }
   }
 
-  private _setHsv(hsv) {
+  private _setHsv(hsv: Hsv) {
     if (hasColorChanged(hsv, this.hsv)) {
       this.hsv = validateHsv(hsv);
     }
   }
 
-  private _setColors(hsv) {
+  private _setColors(hsv: Hsv) {
     this._colors = {
       hsv,
       rgb: hsvToRgb(hsv),
@@ -204,11 +204,11 @@ export class ColorPicker extends LitElement {
     };
   }
 
-  private _onPaletteChanged({ detail: hsv }) {
+  private _onPaletteChanged({ detail: hsv }: CustomEvent) {
     this._setHsv(hsv);
   }
 
-  private _onHueSliderChanged({ detail: hue }) {
+  private _onHueSliderChanged({ detail: hue }: CustomEvent) {
     const [, s, v] = this.hsv;
     this._setHsv([hue, s, v]);
   }
