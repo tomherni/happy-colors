@@ -31,8 +31,7 @@ export function validateHsv([h, s, v]: Hsv): Hsv {
  * @returns {Number[]}
  */
 export function validateRgb(rgb: Rgb): Rgb {
-  // @ts-ignore
-  return rgb.map(value => minMax(round(value, 2), 0, 255));
+  return rgb.map(value => minMax(round(value, 2), 0, 255)) as Rgb;
 }
 
 /**
