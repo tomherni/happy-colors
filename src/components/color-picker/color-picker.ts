@@ -10,15 +10,15 @@ import {
   customElement,
 } from 'lit-element';
 import {
+  hasColorChanged,
   hsvToHsl,
   hsvToRgb,
-  rgbToCssString,
   hsvToHex,
+  rgbToCssString,
   validateHsv,
 } from '../../utils/colors.js';
 import { round as roundUtil } from '../../utils/numbers.js';
-import { Hsv, Colors } from '../../types.js';
-import { hasColorChanged } from './utils.js';
+import { Hue, Hsv, Colors } from '../../types.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
 
@@ -185,7 +185,7 @@ export class ColorPicker extends LitElement {
   updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     if (changedProperties.has('hsv') && this.hsv) {
-      this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
+      this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
     }
   }
 

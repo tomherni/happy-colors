@@ -11,7 +11,7 @@ import {
 } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { hsvToHsl, hsvToRgb, hsvToHex, validateHsv } from '../utils/colors.js';
+import { hasColorChanged, hsvToHex, validateHsv } from '../utils/colors.js';
 import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import { Hsv, SavedScheme } from '../types.js';
@@ -328,7 +328,7 @@ export class AppHappyColors extends LitElement {
 
           <div class="color-picker">
             <color-picker
-              .hsv=${this.colors.hsv}
+              .hsv=${this.hsv}
               @changed=${this._onColorPickerChanged}
             ></color-picker>
           </div>
@@ -376,7 +376,7 @@ export class AppHappyColors extends LitElement {
               </div>
               <color-scheme
                 scheme="monochromatic"
-                .color=${this.colors.hsv}
+                .color=${this.hsv}
                 @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
@@ -393,7 +393,7 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="analogous"
                 show-hex
-                .color=${this.colors.hsv}
+                .color=${this.hsv}
                 @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
@@ -410,7 +410,7 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="complementary"
                 show-hex
-                .color=${this.colors.hsv}
+                .color=${this.hsv}
                 @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
@@ -426,7 +426,7 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="triadic"
                 show-hex
-                .color=${this.colors.hsv}
+                .color=${this.hsv}
                 @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
             </div>
@@ -442,10 +442,17 @@ export class AppHappyColors extends LitElement {
     this._initializeSavedScheme();
   }
 
+  private _setHsv(hsv: Hsv) {
+    if (hasColorChanged(hsv, this.hsv)) {
+      this.hsv = validateHsv(hsv);
+      this._saveHsvToStorage(hsv);
+    }
+  }
+
   private _initializeColors() {
     const initialHsv = [279, 82, 90];
     const hsv = this._getHsvFromStorage() || initialHsv;
-    this._updateColors({ hsv });
+    this._setHsv(hsv);
   }
 
   private _initializeSavedScheme() {
@@ -453,32 +460,16 @@ export class AppHappyColors extends LitElement {
     this._savedScheme = createCustomScheme(scheme);
   }
 
-  private _onColorPickerChanged({ detail: colors }) {
-    this._updateColors(colors);
+  private _onColorPickerChanged({ detail: hsv }: CustomEvent) {
+    this._setHsv(hsv);
   }
 
-  private _onColorSchemeSelected({ detail: hsv }) {
-    this._updateColors({ hsv });
-  }
-
-  /**
-   * @param {Object|Colors} colors
-   */
-  private _updateColors(colors) {
-    const hsv = validateHsv(colors.hsv);
-
-    this.colors = {
-      hsv,
-      rgb: colors.rgb || hsvToRgb(hsv),
-      hsl: colors.hsl || hsvToHsl(hsv),
-      hex: colors.hex || hsvToHex(hsv),
-    };
-
-    this._saveHsvToStorage(hsv);
+  private _onColorSchemeSelected({ detail: hsv }: CustomEvent) {
+    this._setHsv(hsv);
   }
 
   private _saveColorToCustomScheme(index) {
-    this._savedScheme[index] = hsvToHex(this.colors.hsv);
+    this._savedScheme[index] = hsvToHex(this.hsv);
     this._savedScheme = [...this._savedScheme];
     this._saveColorSchemeToStorage(this._savedScheme);
   }

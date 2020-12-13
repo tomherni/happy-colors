@@ -136,3 +136,18 @@ export function hsvToHex(hsv: Hsv): Hex {
 export function rgbToCssString(rgb: Rgb): string {
   return `rgb(${rgb.join(',')})`;
 }
+
+/**
+ * Check if a color changed by comparing it with its previous value.
+ * @param {Array|undefined} value
+ * @param {Array|undefined} previous
+ * @returns {Boolean}
+ */
+export function hasColorChanged(
+  value: number[] | undefined,
+  previous: number[] | undefined
+): boolean {
+  return Array.isArray(value) && Array.isArray(previous)
+    ? value.some((val, index) => val !== previous[index])
+    : value !== previous;
+}

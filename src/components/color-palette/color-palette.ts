@@ -11,9 +11,13 @@ import {
 } from 'lit-element';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { PositionCoords } from '../../mixins/DraggableMixin/types.js';
-import { hsvToRgb, validateHsv, rgbToCssString } from '../../utils/colors.js';
+import {
+  hasColorChanged,
+  hsvToRgb,
+  validateHsv,
+  rgbToCssString,
+} from '../../utils/colors.js';
 import { Hsv } from '../../types.js';
-import { hasColorChanged } from '../color-picker/utils.js';
 
 @customElement('color-palette')
 export class ColorPalette extends DraggableMixin(LitElement) {
