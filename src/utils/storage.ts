@@ -1,9 +1,19 @@
-// @ts-nocheck
-
 /**
  * Utilities to better manage getting/setting storage values.
  * E.g. avoid saving invalid values that can break functionality.
  */
+
+import { Hsv, SavedScheme } from '../types.js';
+
+interface StorageResult<T> {
+  data: T | null;
+}
+
+interface StorageInterface<T> {
+  get(): StorageResult<T>;
+  set(value: T): void;
+  remove(): void;
+}
 
 const STORAGE_KEYS = {
   hsv: 'picked-hsv',
@@ -35,54 +45,51 @@ const storageValidators = {
   [STORAGE_KEYS.scheme]: isValidStorageColorScheme,
 };
 
-function removeAndErrorOut(storageKey: string) {
+function remove(storageKey: string): void {
   storageManager.storage.removeItem(storageKey);
-  return { error: true };
 }
 
-function get(storageKey: string) {
+function get<T>(storageKey: string): StorageResult<T> {
   const storedValue = storageManager.storage.getItem(storageKey);
-  if (!storedValue) {
-    return { data: undefined };
+
+  if (storedValue) {
+    try {
+      const data = JSON.parse(storedValue);
+      if (storageValidators[storageKey](data)) {
+        return { data };
+      }
+    } catch {
+      // Swallow error
+    }
   }
 
-  try {
-    const parsed = JSON.parse(storedValue);
-    const validator = storageValidators[storageKey];
-    return validator(parsed) ? { data: parsed } : removeAndErrorOut(storageKey);
-  } catch (error) {
-    return removeAndErrorOut(storageKey);
-  }
+  remove(storageKey);
+  return { data: null };
 }
 
-function save(storageKey: string, value: unknown) {
-  const validator = storageValidators[storageKey];
-  if (!validator(value)) {
-    return { error: true };
+function set<T>(storageKey: string, value: T): void {
+  if (storageValidators[storageKey](value)) {
+    const data = JSON.stringify(value);
+    storageManager.storage.setItem(storageKey, data);
   }
-
-  const data = JSON.stringify(value);
-  storageManager.storage.setItem(storageKey, data);
-
-  return { data };
-}
-
-function remove(storageKey: string) {
-  storageManager.storage.removeItem(storageKey);
 }
 
 /**
  * Create an interface to manage a specific key in the client's Local Storage.
  * @param {String} storageKey
- * @returns {Object}
+ * @returns {StorageInterface}
  */
-export function createStorageInterface(storageKey: string) {
+export function createStorageInterface<T>(
+  storageKey: string
+): StorageInterface<T> {
   return {
-    get: () => get(storageKey),
-    set: (value: unknown) => save(storageKey, value),
+    get: () => get<T>(storageKey),
+    set: (value: T) => set<T>(storageKey, value),
     remove: () => remove(storageKey),
   };
 }
 
-export const hsvStorage = createStorageInterface(STORAGE_KEYS.hsv);
-export const colorSchemeStorage = createStorageInterface(STORAGE_KEYS.scheme);
+export const hsvStorage = createStorageInterface<Hsv>(STORAGE_KEYS.hsv);
+export const colorSchemeStorage = createStorageInterface<SavedScheme>(
+  STORAGE_KEYS.scheme
+);
