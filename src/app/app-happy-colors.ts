@@ -18,14 +18,6 @@ import { Hsv, SavedScheme } from '../types.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
 
-const ERROR_MESSAGES = {
-  getColor: 'There was a problem with the saved color, and it had to be reset.',
-  setColor: 'There was a problem saving your latest color.',
-  getScheme:
-    'There was a problem with the saved color scheme, and it had to be reset.',
-  setScheme: 'There was a problem saving your color scheme.',
-};
-
 function createCustomScheme(storage = []) {
   const scheme = [];
   for (let i = 0; i < 4; i += 1) {
@@ -44,9 +36,6 @@ export class AppHappyColors extends LitElement {
   @internalProperty()
   private _savedScheme: SavedScheme;
 
-  @internalProperty()
-  private _error: string;
-
   static styles = css`
     :host {
       display: block;
@@ -55,36 +44,6 @@ export class AppHappyColors extends LitElement {
     *,
     *::after {
       box-sizing: border-box;
-    }
-
-    /* Error message. */
-
-    .error {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: calc(12px + var(--height-rainbow)) 16px 12px;
-      background-color: #6f1a0b;
-    }
-
-    .error p {
-      margin: 0 32px 0 0;
-    }
-
-    .error button {
-      padding: 4px 16px;
-      color: var(--color-font);
-      font: inherit;
-      background-color: transparent;
-      border: 1px solid #c8381e;
-    }
-
-    .error button:hover {
-      padding: 4px 16px;
-      color: var(--color-font);
-      font: inherit;
-      background-color: var(--color-background);
-      border: 1px solid #c8381e;
     }
 
     /* Layout structure. */
@@ -303,24 +262,6 @@ export class AppHappyColors extends LitElement {
 
   render(): TemplateResult {
     return html`
-      ${when(
-        this._error,
-        () => html`
-          <div class="error">
-            <p>Oops... ${this._error}</p>
-            <div>
-              <button
-                @click=${() => {
-                  this._error = undefined;
-                }}
-              >
-                Close message
-              </button>
-            </div>
-          </div>
-        `
-      )}
-
       <div class="content">
         <section>
           <h1>Happy Colors<span class="dot">.</span></h1>
@@ -445,18 +386,18 @@ export class AppHappyColors extends LitElement {
   private _setHsv(hsv: Hsv) {
     if (hasColorChanged(hsv, this.hsv)) {
       this.hsv = validateHsv(hsv);
-      this._saveHsvToStorage(hsv);
+      hsvStorage.set(hsv);
     }
   }
 
   private _initializeColors() {
     const initialHsv = [279, 82, 90];
-    const hsv = this._getHsvFromStorage() || initialHsv;
+    const hsv = hsvStorage.get().data || initialHsv;
     this._setHsv(hsv);
   }
 
   private _initializeSavedScheme() {
-    const scheme = this._getColorSchemeFromStorage() || [];
+    const scheme = colorSchemeStorage.get().data || [];
     this._savedScheme = createCustomScheme(scheme);
   }
 
@@ -471,41 +412,11 @@ export class AppHappyColors extends LitElement {
   private _saveColorToCustomScheme(index) {
     this._savedScheme[index] = hsvToHex(this.hsv);
     this._savedScheme = [...this._savedScheme];
-    this._saveColorSchemeToStorage(this._savedScheme);
+    colorSchemeStorage.set(this._savedScheme);
   }
 
   private _clearCustomScheme() {
     this._savedScheme = createCustomScheme();
     colorSchemeStorage.remove();
-  }
-
-  private _getHsvFromStorage() {
-    const { data, error } = hsvStorage.get();
-    if (error) {
-      this._error = ERROR_MESSAGES.getColor;
-    }
-    return data;
-  }
-
-  private _saveHsvToStorage(hsv) {
-    const result = hsvStorage.set(hsv);
-    if (result.error) {
-      this._error = ERROR_MESSAGES.setColor;
-    }
-  }
-
-  private _getColorSchemeFromStorage() {
-    const result = colorSchemeStorage.get();
-    if (result.error) {
-      this._error = ERROR_MESSAGES.getScheme;
-    }
-    return result.data;
-  }
-
-  private _saveColorSchemeToStorage(scheme) {
-    const result = colorSchemeStorage.set(scheme);
-    if (result.error) {
-      this._error = ERROR_MESSAGES.setScheme;
-    }
   }
 }
