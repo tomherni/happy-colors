@@ -29,8 +29,8 @@ function createCustomScheme(storage = []) {
 @customElement('app-happy-colors')
 export class AppHappyColors extends LitElement {
   /** The currently picked color represented in the HSV color model. */
-  @property({ type: Array })
-  hsv: Hsv;
+  @property({ type: Array, hasChanged: hasColorChanged })
+  hsv: Hsv = [279, 82, 90];
 
   /** The user's saved color scheme. */
   @internalProperty()
@@ -379,8 +379,12 @@ export class AppHappyColors extends LitElement {
 
   constructor() {
     super();
-    this._initializeColors();
-    this._initializeSavedScheme();
+
+    const hsv = hsvStorage.get().data || this.hsv;
+    this._setHsv(hsv);
+
+    const scheme = colorSchemeStorage.get().data || [];
+    this._savedScheme = createCustomScheme(scheme);
   }
 
   private _setHsv(hsv: Hsv) {
@@ -388,17 +392,6 @@ export class AppHappyColors extends LitElement {
       this.hsv = validateHsv(hsv);
       hsvStorage.set(hsv);
     }
-  }
-
-  private _initializeColors() {
-    const initialHsv = [279, 82, 90];
-    const hsv = hsvStorage.get().data || initialHsv;
-    this._setHsv(hsv);
-  }
-
-  private _initializeSavedScheme() {
-    const scheme = colorSchemeStorage.get().data || [];
-    this._savedScheme = createCustomScheme(scheme);
   }
 
   private _onColorPickerChanged({ detail: hsv }: CustomEvent) {
