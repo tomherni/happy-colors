@@ -101,7 +101,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     }
   }
 
-  private _setHue(hue) {
+  private _setHue(hue: Hue) {
     this.hue = validateHue(hue);
   }
 

@@ -14,7 +14,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { hasColorChanged, hsvToHex, validateHsv } from '../utils/colors.js';
 import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
-import { Hsv, SavedScheme } from '../types.js';
+import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
 
@@ -276,7 +276,7 @@ export class AppHappyColors extends LitElement {
 
           <div class="custom-scheme">
             ${this._savedScheme.map(
-              (hex, index) => html`
+              (hex: SavedSchemeValue, index: number) => html`
                 <div class="${classMap({ color: true, empty: !hex })}">
                   <div
                     style="background-color: #${ifDefined(hex)}"
@@ -289,7 +289,7 @@ export class AppHappyColors extends LitElement {
           </div>
 
           ${when(
-            this._savedScheme.some(hex => !!hex),
+            this._savedScheme.some((hex: SavedSchemeValue) => !!hex),
             () => html`
               <div class="reset-custom-scheme">
                 <button @click=${this._clearCustomScheme}>
@@ -394,15 +394,15 @@ export class AppHappyColors extends LitElement {
     }
   }
 
-  private _onColorPickerChanged({ detail: hsv }: CustomEvent) {
+  private _onColorPickerChanged({ detail: hsv }: CustomEvent<Hsv>) {
     this._setHsv(hsv);
   }
 
-  private _onColorSchemeSelected({ detail: hsv }: CustomEvent) {
+  private _onColorSchemeSelected({ detail: hsv }: CustomEvent<Hsv>) {
     this._setHsv(hsv);
   }
 
-  private _saveColorToCustomScheme(index) {
+  private _saveColorToCustomScheme(index: number) {
     this._savedScheme[index] = hsvToHex(this.hsv);
     this._savedScheme = [...this._savedScheme];
     colorSchemeStorage.set(this._savedScheme);

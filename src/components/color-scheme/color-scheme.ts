@@ -158,8 +158,8 @@ export class ColorScheme extends LitElement {
     this._colors = fn(color);
   }
 
-  private _onColorClick(e: Event) {
-    const { hsv } = e.composedPath()[0].dataset;
+  private _onColorClick(event: Event) {
+    const { hsv } = event.composedPath()[0].dataset;
     this.dispatchEvent(
       new CustomEvent('color-scheme-selected', {
         detail: hsv.split(',').map(Number),

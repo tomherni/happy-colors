@@ -85,7 +85,9 @@ export const DraggableMixin = Base =>
      * Update the draggable's CSS position based on the current position coords.
      * @param {PositionCoords} [position]
      */
-    protected updateDraggablePosition(position = this.__position) {
+    protected updateDraggablePosition(
+      position: PositionCoords = this.__position
+    ) {
       if (this.__registered) {
         const coords = positionToCoords(position, this.__config.canvas);
         this.__updateDraggablePosition(coords);

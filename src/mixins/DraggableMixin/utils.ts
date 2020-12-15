@@ -1,8 +1,11 @@
 // @ts-nocheck
 
 import { minMax, round, isNumber } from '../../utils/numbers.js';
+import { PixelCoords, PositionCoords } from './types.js';
 
-export const validatePercentage = value => round(minMax(value, 0, 100), 2);
+export function validatePercentage(value: number): number {
+  return round(minMax(value, 0, 100), 2);
+}
 
 /**
  * Get the relative cursor coordinates in the viewport. For touch devices we get
@@ -10,7 +13,7 @@ export const validatePercentage = value => round(minMax(value, 0, 100), 2);
  * @param {MouseEvent | TouchEvent} event
  * @returns {PixelCoords}
  */
-export function getCursorCoords(event) {
+export function getCursorCoords(event: MouseEvent | TouchEvent): PixelCoords {
   let source = event;
 
   if (event.type === 'touchstart' || event.type === 'touchmove') {
@@ -30,7 +33,10 @@ export function getCursorCoords(event) {
  * @param {HTMLElement} canvas
  * @returns {PixelCoords}
  */
-export function positionToCoords(position, canvas) {
+export function positionToCoords(
+  position: PositionCoords,
+  canvas: HTMLElement
+): PixelCoords {
   const { offsetWidth, offsetHeight } = canvas;
 
   const x = isNumber(position?.x)
@@ -52,7 +58,11 @@ export function positionToCoords(position, canvas) {
  * @param {Object} [options]
  * @returns {PixelCoords}
  */
-export function eventCoordsToCanvasCoords(coords, canvas, options = {}) {
+export function eventCoordsToCanvasCoords(
+  coords: PixelCoords,
+  canvas: DOMRect,
+  options: { noMinMax?: boolean } = {}
+): PixelCoords {
   const x = coords.x - canvas.left;
   const y = coords.y - canvas.top;
 
@@ -68,10 +78,13 @@ export function eventCoordsToCanvasCoords(coords, canvas, options = {}) {
 
 /**
  * Check whether any axes changed by comparing new axes with previous values.
- * @param {PixelCoords | PositionCoords} axes
- * @param {PixelCoords | PositionCoords} previous
+ * @param {PixelCoords | PositionCoords | undefined} axes
+ * @param {PixelCoords | PositionCoords | undefined} previous
  * @returns {Boolean}
  */
-export function haveAxesChanged(axes, previous) {
+export function haveAxesChanged(
+  axes: PixelCoords | PositionCoords | undefined,
+  previous: PixelCoords | PositionCoords | undefined
+): boolean {
   return axes?.x !== previous?.x || axes?.y !== previous?.y;
 }

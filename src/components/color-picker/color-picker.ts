@@ -22,7 +22,7 @@ import { Hue, Hsv, Colors } from '../../types.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
 
-const round = value => value.map(v => roundUtil(v));
+const round = (value: number[]) => value.map(v => roundUtil(v));
 
 @customElement('color-picker')
 export class ColorPicker extends LitElement {
@@ -204,11 +204,11 @@ export class ColorPicker extends LitElement {
     };
   }
 
-  private _onPaletteChanged({ detail: hsv }: CustomEvent) {
+  private _onPaletteChanged({ detail: hsv }: CustomEvent<Hsv>) {
     this._setHsv(hsv);
   }
 
-  private _onHueSliderChanged({ detail: hue }: CustomEvent) {
+  private _onHueSliderChanged({ detail: hue }: CustomEvent<Hue>) {
     const [, s, v] = this.hsv;
     this._setHsv([hue, s, v]);
   }
