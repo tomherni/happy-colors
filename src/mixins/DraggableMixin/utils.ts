@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { minMax, round, isNumber } from '../../utils/numbers.js';
 import { PixelCoords, PositionCoords } from './types.js';
 
@@ -14,17 +12,12 @@ export function validatePercentage(value: number): number {
  * @returns {PixelCoords}
  */
 export function getCursorCoords(event: MouseEvent | TouchEvent): PixelCoords {
-  let source = event;
+  const { clientX, clientY } =
+    event instanceof TouchEvent
+      ? event.touches[0] || event.changedTouches[0]
+      : event;
 
-  if (event.type === 'touchstart' || event.type === 'touchmove') {
-    const touchEvent = event.originalEvent || event;
-    [source] = touchEvent.touches || touchEvent.changedTouches;
-  }
-
-  return {
-    x: source.clientX,
-    y: source.clientY,
-  };
+  return { x: clientX, y: clientY };
 }
 
 /**
