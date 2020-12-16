@@ -18,12 +18,16 @@ import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
 
-function createCustomScheme(storage = []) {
-  const scheme = [];
-  for (let i = 0; i < 4; i += 1) {
-    scheme[i] = storage[i];
-  }
-  return scheme;
+/**
+ * Create a custom color scheme template. If a saved scheme is provided then
+ * the values will be used to prefill the template.
+ * @param {SavedScheme} [storage]
+ * @returns {SavedScheme}
+ */
+function createCustomScheme(storage: SavedScheme = []) {
+  return new Array(4)
+    .fill(null)
+    .map((_null, i) => storage[i] || _null) as SavedScheme;
 }
 
 @customElement('app-happy-colors')
@@ -279,7 +283,7 @@ export class AppHappyColors extends LitElement {
               (hex: SavedSchemeValue, index: number) => html`
                 <div class="${classMap({ color: true, empty: !hex })}">
                   <div
-                    style="background-color: #${ifDefined(hex)}"
+                    style="${ifDefined(hex && `background-color: #${hex}`)}"
                     @click=${() => this._saveColorToCustomScheme(index)}
                   ></div>
                   <span>${hex ? `#${hex}` : ''}&nbsp;</span>
@@ -394,14 +398,6 @@ export class AppHappyColors extends LitElement {
     }
   }
 
-  private _onColorPickerChanged({ detail: hsv }: CustomEvent<Hsv>) {
-    this._setHsv(hsv);
-  }
-
-  private _onColorSchemeSelected({ detail: hsv }: CustomEvent<Hsv>) {
-    this._setHsv(hsv);
-  }
-
   private _saveColorToCustomScheme(index: number) {
     this._savedScheme[index] = hsvToHex(this.hsv);
     this._savedScheme = [...this._savedScheme];
@@ -411,5 +407,13 @@ export class AppHappyColors extends LitElement {
   private _clearCustomScheme() {
     this._savedScheme = createCustomScheme();
     colorSchemeStorage.remove();
+  }
+
+  private _onColorPickerChanged({ detail: hsv }: CustomEvent<Hsv>) {
+    this._setHsv(hsv);
+  }
+
+  private _onColorSchemeSelected({ detail: hsv }: CustomEvent<Hsv>) {
+    this._setHsv(hsv);
   }
 }

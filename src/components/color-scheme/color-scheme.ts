@@ -120,11 +120,11 @@ export class ColorScheme extends LitElement {
     `;
   }
 
-  updated(changedProperties: PropertyValues): void {
-    super.updated(changedProperties);
+  update(changedProperties: PropertyValues): void {
     if (changedProperties.has('color')) {
       this._generateColorScheme(this.color, this.scheme);
     }
+    super.update(changedProperties);
   }
 
   private _colorBlockTemplate(color: Hsv) {
