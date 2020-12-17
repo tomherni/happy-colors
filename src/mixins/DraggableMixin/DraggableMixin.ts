@@ -1,5 +1,8 @@
 // @ts-nocheck
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
+import { UpdatingElement } from 'lit-element';
 import { debounce } from '../../utils/debounce.js';
 import { PixelCoords, PositionCoords, DraggableConfig } from './types.js';
 import {
@@ -10,14 +13,19 @@ import {
   validatePercentage,
 } from './utils.js';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Constructor<T = Record<string, unknown>> = new (...args: any[]) => T;
+
 /**
  * Mixin that allows a component to register an element as a draggable element.
  *
  * The draggable can be dragged by the user within the bounds of a specified
  * canvas element.
  */
-export const DraggableMixin = Base =>
-  class extends Base {
+export function DraggableMixin<T extends Constructor<UpdatingElement>>(
+  Base: T
+) {
+  return class extends Base {
     private __registered = false;
 
     private __position: PositionCoords;
@@ -30,7 +38,7 @@ export const DraggableMixin = Base =>
       cursorOffset?: PixelCoords;
     };
 
-    constructor() {
+    constructor(...args: any[]) {
       super();
       this.__startDrag = this.__startDrag.bind(this);
       this.__drag = debounce(this.__drag).bind(this);
@@ -218,3 +226,4 @@ export const DraggableMixin = Base =>
       this.__stopDrag();
     }
   };
+}
