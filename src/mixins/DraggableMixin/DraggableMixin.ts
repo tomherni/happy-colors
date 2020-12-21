@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { UpdatingElement } from 'lit-element';
@@ -28,11 +26,11 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
   return class extends Base {
     private __registered = false;
 
-    private __position: PositionCoords;
+    private __position?: PositionCoords;
 
-    private __config: DraggableConfig;
+    private __config?: DraggableConfig;
 
-    private __dragState: {
+    private __dragState?: {
       canvasRect: DOMRect;
       draggableCoords: PixelCoords;
       cursorOffset?: PixelCoords;
@@ -76,6 +74,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
       this.__manageEventListeners(window.removeEventListener);
     }
 
+    // @ts-ignore
     private __manageEventListeners(handler) {
       handler('mousedown', this.__startDrag, { passive: false });
       handler('mousemove', this.__drag, { passive: false });
@@ -94,10 +93,10 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * @param {PositionCoords} [position]
      */
     protected updateDraggablePosition(
-      position: PositionCoords = this.__position
+      position: PositionCoords = this.__position!
     ) {
       if (this.__registered) {
-        const coords = positionToCoords(position, this.__config.canvas);
+        const coords = positionToCoords(position, this.__config!.canvas);
         this.__updateDraggablePosition(coords);
       }
     }
@@ -119,13 +118,13 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      */
     private __startDrag(event: MouseEvent | TouchEvent) {
       const composedPath = event.composedPath();
-      if (!composedPath.includes(this.__config.canvas)) {
+      if (!composedPath.includes(this.__config!.canvas)) {
         return;
       }
       event.preventDefault();
 
-      const canvasRect = this.__config.canvas.getBoundingClientRect();
-      const { x, y } = this.__config.draggable.getBoundingClientRect();
+      const canvasRect = this.__config!.canvas.getBoundingClientRect();
+      const { x, y } = this.__config!.draggable.getBoundingClientRect();
 
       this.__dragState = {
         canvasRect,
@@ -134,7 +133,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
       // A click anywhere on the draggable should not make it jump to that spot.
       // Instead, ignore the click position vs. draggable position difference.
-      if (composedPath.includes(this.__config.draggable)) {
+      if (composedPath.includes(this.__config!.draggable)) {
         const cursor = getCursorCoords(event);
         const coords = eventCoordsToCanvasCoords(cursor, canvasRect, {
           noMinMax: true,
@@ -173,22 +172,22 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * @param {MouseEvent | TouchEvent} event
      */
     private __onDragEvent(event: MouseEvent | TouchEvent) {
-      const { canvasRect, draggableCoords: prevCoords } = this.__dragState;
+      const { canvasRect, draggableCoords: prevCoords } = this.__dragState!;
       const cursor = getCursorCoords(event);
 
-      if (this.__dragState.cursorOffset) {
-        cursor.x -= this.__dragState.cursorOffset.x;
-        cursor.y -= this.__dragState.cursorOffset.y;
+      if (this.__dragState!.cursorOffset) {
+        cursor.x -= this.__dragState!.cursorOffset.x;
+        cursor.y -= this.__dragState!.cursorOffset.y;
       }
 
       const newCoords = eventCoordsToCanvasCoords(cursor, canvasRect);
       const coords = {
-        x: this.__config.lockX ? prevCoords.x : newCoords.x,
-        y: this.__config.lockY ? prevCoords.y : newCoords.y,
+        x: this.__config!.lockX ? prevCoords.x : newCoords.x,
+        y: this.__config!.lockY ? prevCoords.y : newCoords.y,
       };
 
       if (haveAxesChanged(coords, prevCoords)) {
-        this.__dragState.draggableCoords = coords;
+        this.__dragState!.draggableCoords = coords;
         this.__updateDraggablePosition(coords);
       }
     }
@@ -199,14 +198,14 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      */
     private __updateDraggablePosition({ x, y }: PixelCoords) {
       const position = {
-        x: validatePercentage((x / this.__config.canvas.offsetWidth) * 100),
-        y: validatePercentage((y / this.__config.canvas.offsetHeight) * 100),
+        x: validatePercentage((x / this.__config!.canvas.offsetWidth) * 100),
+        y: validatePercentage((y / this.__config!.canvas.offsetHeight) * 100),
       };
 
       if (haveAxesChanged(position, this.__position)) {
         this.__position = position;
-        this.__config.draggable.style.transform = `translate(${x}px, ${y}px)`;
-        this.__config.callback(this.__position);
+        this.__config!.draggable.style.transform = `translate(${x}px, ${y}px)`;
+        this.__config!.callback(this.__position);
       }
     }
 
