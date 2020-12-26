@@ -23,9 +23,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   @property({ type: Array, hasChanged: hasColorChanged })
   hsv?: Hsv;
 
-  private _canvasElement?: HTMLElement;
+  private _canvasElement?: HTMLDivElement;
 
-  private _handleElement?: HTMLElement;
+  private _handleElement?: HTMLDivElement;
 
   static styles = css`
     :host {
@@ -94,10 +94,10 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   firstUpdated(): void {
     this._canvasElement = this.shadowRoot!.querySelector(
       '.palette'
-    ) as HTMLElement;
+    ) as HTMLDivElement;
     this._handleElement = this.shadowRoot!.querySelector(
       '.handle'
-    ) as HTMLElement;
+    ) as HTMLDivElement;
 
     this.registerDraggableElement({
       draggable: this._handleElement,

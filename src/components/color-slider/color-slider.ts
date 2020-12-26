@@ -18,7 +18,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   @property({ type: Number })
   hue?: Hue;
 
-  private _handleElement?: HTMLElement;
+  private _handleElement?: HTMLDivElement;
 
   static styles = css`
     :host {
@@ -82,11 +82,11 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   firstUpdated(): void {
     this._handleElement = this.shadowRoot!.querySelector(
       '.handle'
-    ) as HTMLElement;
+    ) as HTMLDivElement;
 
     this.registerDraggableElement({
       draggable: this._handleElement,
-      canvas: this.shadowRoot!.querySelector('.slider') as HTMLElement,
+      canvas: this.shadowRoot!.querySelector('.slider') as HTMLDivElement,
       callback: this._onHandlePositionChanged.bind(this),
       initial: this._convertHueToHandlePosition(),
       lockX: true,
