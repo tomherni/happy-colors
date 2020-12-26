@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   LitElement,
   html,
@@ -20,18 +18,18 @@ import { ColorScheme as ColorSchemeType, ColorSchemeMono } from './types.js';
 export class ColorScheme extends LitElement {
   /** Base color to generate a color scheme for. */
   @property({ type: Array })
-  color: Hsv;
+  color!: Hsv;
 
   /** Type of color scheme to generate. */
   @property({ type: String, attribute: 'scheme' })
-  scheme: string;
+  scheme!: string;
 
   /** Whether to show the color HEX code. */
   @property({ type: Boolean, attribute: 'show-hex' })
   showHex = false;
 
   @internalProperty()
-  private _colors: ColorSchemeType | ColorSchemeMono;
+  private _colors?: ColorSchemeType | ColorSchemeMono;
 
   static styles = css`
     :host {
@@ -95,19 +93,15 @@ export class ColorScheme extends LitElement {
   `;
 
   render(): TemplateResult {
-    if (!this._colors) {
-      return html``;
-    }
-
     if (this.scheme === 'monochromatic') {
+      const colors = this._colors as ColorSchemeMono;
+
       return html`
         <div class="color-scheme sub-scheme">
-          <div>${this._colorBlockTemplate(this._colors[0])}</div>
+          <div>${this._colorBlockTemplate(colors[0])}</div>
 
           <div>
-            ${this._colors[1].map((color: Hsv) =>
-              this._colorBlockTemplate(color)
-            )}
+            ${colors[1].map((color: Hsv) => this._colorBlockTemplate(color))}
           </div>
         </div>
       `;
@@ -115,7 +109,9 @@ export class ColorScheme extends LitElement {
 
     return html`
       <div class="color-scheme">
-        ${this._colors.map((color: Hsv) => this._colorBlockTemplate(color))}
+        ${(this._colors as ColorSchemeType).map((color: Hsv) =>
+          this._colorBlockTemplate(color)
+        )}
       </div>
     `;
   }
@@ -159,10 +155,10 @@ export class ColorScheme extends LitElement {
   }
 
   private _onColorClick(event: Event) {
-    const { hsv } = event.composedPath()[0].dataset;
+    const { hsv } = (event.composedPath()[0] as HTMLElement).dataset;
     this.dispatchEvent(
       new CustomEvent('color-scheme-selected', {
-        detail: hsv.split(',').map(Number),
+        detail: hsv!.split(',').map(Number),
       })
     );
   }

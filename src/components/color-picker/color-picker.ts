@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   LitElement,
   html,
@@ -30,7 +28,7 @@ export class ColorPicker extends LitElement {
   @property({ type: Array, hasChanged: hasColorChanged })
   hsv: Hsv = [360, 255, 255];
 
-  private _colors: Colors;
+  private _colors?: Colors;
 
   static styles = css`
     :host {
@@ -131,12 +129,12 @@ export class ColorPicker extends LitElement {
       <div class="container">
         <div class="picker">
           <color-palette
-            .hsv=${this._colors.hsv}
+            .hsv=${this._colors!.hsv}
             @changed=${this._onPaletteChanged}
           ></color-palette>
 
           <color-slider
-            .hue=${this._colors.hsv[0]}
+            .hue=${this._colors!.hsv[0]}
             @changed=${this._onHueSliderChanged}
           ></color-slider>
         </div>
@@ -144,25 +142,25 @@ export class ColorPicker extends LitElement {
         <div class="panel">
           <div
             class="color"
-            style="background-color: ${rgbToCssString(this._colors.rgb)}"
+            style="background-color: ${rgbToCssString(this._colors!.rgb)}"
           ></div>
 
           <dl>
             <div>
               <dt>HEX</dt>
-              <dd>#${this._colors.hex}</dd>
+              <dd>#${this._colors!.hex}</dd>
             </div>
             <div>
               <dt>RGB</dt>
-              <dd>${round(this._colors.rgb).join(', ')}</dd>
+              <dd>${round(this._colors!.rgb).join(', ')}</dd>
             </div>
             <div>
               <dt>HSB</dt>
-              <dd>${round(this._colors.hsv).join(', ')}</dd>
+              <dd>${round(this._colors!.hsv).join(', ')}</dd>
             </div>
             <div>
               <dt>HSL</dt>
-              <dd>${round(this._colors.hsl).join(', ')}</dd>
+              <dd>${round(this._colors!.hsl).join(', ')}</dd>
             </div>
           </dl>
         </div>
@@ -209,7 +207,7 @@ export class ColorPicker extends LitElement {
   }
 
   private _onHueSliderChanged({ detail: hue }: CustomEvent<Hue>) {
-    const [, s, v] = this.hsv;
+    const [, s, v] = this.hsv!;
     this._setHsv([hue, s, v]);
   }
 }

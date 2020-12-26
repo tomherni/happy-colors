@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   LitElement,
   html,
@@ -18,9 +16,9 @@ import { Hue } from '../../types.js';
 export class ColorSlider extends DraggableMixin(LitElement) {
   /** Current hue value picked in the slider canvas. */
   @property({ type: Number })
-  hue: Hue;
+  hue?: Hue;
 
-  private _handleElement: HTMLElement;
+  private _handleElement?: HTMLElement;
 
   static styles = css`
     :host {
@@ -82,11 +80,13 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   }
 
   firstUpdated(): void {
-    this._handleElement = this.shadowRoot.querySelector('.handle');
+    this._handleElement = this.shadowRoot!.querySelector(
+      '.handle'
+    ) as HTMLElement;
 
     this.registerDraggableElement({
       draggable: this._handleElement,
-      canvas: this.shadowRoot.querySelector('.slider'),
+      canvas: this.shadowRoot!.querySelector('.slider') as HTMLElement,
       callback: this._onHandlePositionChanged.bind(this),
       initial: this._convertHueToHandlePosition(),
       lockX: true,
@@ -119,13 +119,13 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   private _convertHueToHandlePosition() {
     return {
       x: 0,
-      y: 100 - (this.hue / 360) * 100,
+      y: 100 - (this.hue! / 360) * 100,
     };
   }
 
   private _updateSliderStyling() {
-    this._handleElement.style.backgroundColor = rgbToCssString(
-      hsvToRgb([this.hue, 100, 100])
+    this._handleElement!.style.backgroundColor = rgbToCssString(
+      hsvToRgb([this.hue!, 100, 100])
     );
   }
 }
