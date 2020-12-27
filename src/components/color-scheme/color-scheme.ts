@@ -163,3 +163,9 @@ export class ColorScheme extends LitElement {
     );
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'color-scheme': ColorScheme;
+  }
+}

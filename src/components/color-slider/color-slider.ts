@@ -129,3 +129,9 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     );
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'color-slider': ColorSlider;
+  }
+}

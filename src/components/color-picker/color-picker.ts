@@ -211,3 +211,9 @@ export class ColorPicker extends LitElement {
     this._setHsv([hue, s, v]);
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'color-picker': ColorPicker;
+  }
+}

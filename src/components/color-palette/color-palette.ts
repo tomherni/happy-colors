@@ -156,3 +156,9 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     );
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'color-palette': ColorPalette;
+  }
+}

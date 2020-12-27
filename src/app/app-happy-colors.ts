@@ -415,3 +415,9 @@ export class AppHappyColors extends LitElement {
     this._setHsv(hsv);
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'app-happy-colors': AppHappyColors;
+  }
+}
