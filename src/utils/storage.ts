@@ -20,9 +20,7 @@ const STORAGE_KEYS = {
   scheme: 'custom-scheme',
 };
 
-// For testing purposes that allows for easy local storage mocking.
-export const storageManager = {
-  _originalStorage: window.localStorage,
+const storageManager = {
   storage: window.localStorage,
 };
 
@@ -93,3 +91,13 @@ export const hsvStorage = createStorageInterface<Hsv>(STORAGE_KEYS.hsv);
 export const colorSchemeStorage = createStorageInterface<SavedScheme>(
   STORAGE_KEYS.scheme
 );
+
+// Mock the local storage for testing purposes.
+export function __mockStorage(mock?: unknown): void {
+  // @ts-ignore
+  storageManager.storage = mock ?? {};
+}
+
+export function __restoreStorage(): void {
+  storageManager.storage = window.localStorage;
+}
