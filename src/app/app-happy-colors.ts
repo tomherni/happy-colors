@@ -281,7 +281,9 @@ export class AppHappyColors extends LitElement {
               (hex: SavedSchemeValue, index: number) => html`
                 <div class="${classMap({ color: true, empty: !hex })}">
                   <div
-                    style="${ifDefined(hex && `background-color: #${hex}`)}"
+                    style="${ifDefined(
+                      hex ? `background-color: #${hex}` : undefined
+                    )}"
                     @click=${() => this._saveColorToCustomScheme(index)}
                   ></div>
                   <span>${hex ? `#${hex}` : ''}&nbsp;</span>
