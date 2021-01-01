@@ -159,12 +159,10 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     }
 
     /**
-     * Clean up the dragging state when dragging stops.
+     * Clear the dragging state when dragging stops.
      */
     private __stopDrag() {
-      if (this.__dragState) {
-        this.__dragState = undefined;
-      }
+      this.__dragState = undefined;
     }
 
     /**
