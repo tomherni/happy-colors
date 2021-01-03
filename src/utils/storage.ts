@@ -1,8 +1,3 @@
-/**
- * Utilities to better manage getting/setting storage values.
- * E.g. avoid saving invalid values that can break functionality.
- */
-
 import { Hsv, SavedScheme } from '../types.js';
 
 interface StorageResult<T> {
@@ -20,6 +15,7 @@ const STORAGE_KEYS = {
   scheme: 'custom-scheme',
 };
 
+// Abstraction to allow for mocking.
 const storageManager = {
   storage: window.localStorage,
 };
@@ -34,7 +30,11 @@ function isValidStorageHsv(hsv: unknown): boolean {
 
 function isValidStorageColorScheme(scheme: unknown): boolean {
   return (
-    Array.isArray(scheme) && scheme.every(color => !color || color.length === 6)
+    Array.isArray(scheme) &&
+    scheme.every(
+      color =>
+        color === null || (typeof color === 'string' && color.length === 6)
+    )
   );
 }
 
@@ -77,9 +77,7 @@ function set<T>(storageKey: string, value: T): void {
  * @param {String} storageKey
  * @returns {StorageInterface}
  */
-export function createStorageInterface<T>(
-  storageKey: string
-): StorageInterface<T> {
+function createStorageInterface<T>(storageKey: string): StorageInterface<T> {
   return {
     get: () => get<T>(storageKey),
     set: (value: T) => set<T>(storageKey, value),
@@ -91,13 +89,3 @@ export const hsvStorage = createStorageInterface<Hsv>(STORAGE_KEYS.hsv);
 export const colorSchemeStorage = createStorageInterface<SavedScheme>(
   STORAGE_KEYS.scheme
 );
-
-// Mock the local storage for testing purposes.
-export function __mockStorage(mock?: unknown): void {
-  // @ts-ignore
-  storageManager.storage = mock ?? {};
-}
-
-export function __restoreStorage(): void {
-  storageManager.storage = window.localStorage;
-}
