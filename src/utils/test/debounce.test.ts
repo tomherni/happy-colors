@@ -3,7 +3,7 @@
 import { expect } from '@open-wc/testing';
 import { debounce } from '../debounce.js';
 
-describe('debounce utils', () => {
+describe('Utils: debounce', () => {
   async function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -39,8 +39,9 @@ describe('debounce utils', () => {
 
     it('should preserve "this" context when returning a debounced function', async () => {
       const TestClass = new (class Test {
+        counter = 0;
+
         constructor() {
-          this.counter = 0;
           this.log = debounce(this.log).bind(this);
         }
 

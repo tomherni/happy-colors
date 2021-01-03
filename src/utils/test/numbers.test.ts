@@ -3,7 +3,7 @@
 import { expect } from '@open-wc/testing';
 import { minMax, round } from '../numbers.js';
 
-describe('numbers utils', () => {
+describe('Utils: numbers', () => {
   describe('function minMax()', () => {
     it('should return a value that does not exceed a minimum or maximum', () => {
       [-1.1, -1, 0, 0.1, 0.9, 1].forEach(value =>

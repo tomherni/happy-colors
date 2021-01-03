@@ -3,7 +3,7 @@
 import { expect } from '@open-wc/testing';
 import * as colors from '../colors.js';
 
-describe('colors utils', () => {
+describe('Utils: colors', () => {
   describe('function rgbToCssString()', () => {
     it('should convert an RGB set to a CSS value', () => {
       expect(colors.rgbToCssString([12, 34, 56])).to.equal('rgb(12,34,56)');
