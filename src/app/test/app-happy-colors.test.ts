@@ -1,27 +1,21 @@
 // @ts-nocheck
 
-import { expect } from '@open-wc/testing';
-
+import { expect, fixture } from '@open-wc/testing';
+import { html } from 'lit-element';
 import '../app-happy-colors.js';
 
-describe('HappyColors', () => {
-  it('...', async () => {
-    expect(true).to.equal(true);
+describe('Application: app-happy-colors', () => {
+  let element;
+
+  beforeEach(async () => {
+    element = await fixture(html`<app-happy-colors></app-happy-colors>`);
   });
 
-  // it('matches the snapshot', async () => {
-  //   const el = await fixture(html`
-  //     <app-happy-colors></app-happy-colors>
-  //   `);
-  //
-  //   expect(el).shadowDom.to.equalSnapshot();
-  // });
+  it('should match the markup snapshot', () => {
+    expect(element).shadowDom.to.equalSnapshot();
+  });
 
-  // it('passes the a11y audit', async () => {
-  //   const el = await fixture(html`
-  //     <app-happy-colors></app-happy-colors>
-  //   `);
-  //
-  //   await expect(el).shadowDom.to.be.accessible();
-  // });
+  it('should pass the a11y audit', async () => {
+    await expect(element).shadowDom.to.be.accessible();
+  });
 });
