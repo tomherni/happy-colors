@@ -1,8 +1,6 @@
-# `color-picker component`
+# `Component: color-picker`
 
-## `initial color value`
-
-####   `should pass the markup snapshot`
+#### `should match the markup snapshot`
 
 ```html
 <div class="container">
@@ -52,33 +50,6 @@
         </dd>
       </div>
     </dl>
-  </div>
-</div>
-
-```
-
-```html
-<div
-  class="palette"
-  style="background-color: rgb(255, 0, 0);"
->
-  <div class="gradients">
-  </div>
-  <div
-    class="handle"
-    style="transform: translate(350px, 0px); background-color: rgb(255, 0, 0);"
-  >
-  </div>
-</div>
-
-```
-
-```html
-<div class="slider">
-  <div
-    class="handle"
-    style="transform: translate(0px, 0px); background-color: rgb(255, 0, 0);"
-  >
   </div>
 </div>
 
