@@ -13,9 +13,9 @@ export function validatePercentage(value: number): number {
  */
 export function getCursorCoords(event: MouseEvent | TouchEvent): PixelCoords {
   const { clientX, clientY } =
-    event instanceof TouchEvent
+    window.TouchEvent && event instanceof TouchEvent
       ? event.touches[0] || event.changedTouches[0]
-      : event;
+      : (event as MouseEvent);
 
   return { x: clientX, y: clientY };
 }
