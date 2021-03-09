@@ -2,13 +2,13 @@
 
 import { UpdatingElement } from 'lit-element';
 import { debounce } from '../../utils/debounce.js';
+import { round, roundPercentage } from '../../utils/numbers.js';
 import { PixelCoords, PositionCoords, DraggableConfig } from './types.js';
 import {
   getCursorCoords,
   positionToCoords,
   eventCoordsToCanvasCoords,
   haveAxesChanged,
-  validatePercentage,
 } from './utils.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -180,8 +180,8 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
       const newCoords = eventCoordsToCanvasCoords(cursor, canvasRect);
       const coords = {
-        x: this.__config!.lockX ? prevCoords.x : newCoords.x,
-        y: this.__config!.lockY ? prevCoords.y : newCoords.y,
+        x: round(this.__config!.lockX ? prevCoords.x : newCoords.x, 1),
+        y: round(this.__config!.lockY ? prevCoords.y : newCoords.y, 1),
       };
 
       if (haveAxesChanged(coords, prevCoords)) {
@@ -196,8 +196,8 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      */
     private __updateDraggablePosition({ x, y }: PixelCoords) {
       const position = {
-        x: validatePercentage((x / this.__config!.canvas.offsetWidth) * 100),
-        y: validatePercentage((y / this.__config!.canvas.offsetHeight) * 100),
+        x: roundPercentage((x / this.__config!.canvas.offsetWidth) * 100),
+        y: roundPercentage((y / this.__config!.canvas.offsetHeight) * 100),
       };
 
       if (haveAxesChanged(position, this.__position)) {

@@ -15,6 +15,7 @@ import {
   validateHsv,
   rgbToCssString,
 } from '../../utils/colors.js';
+import { roundPercentage } from '../../utils/numbers.js';
 import { Hsv } from '../../types.js';
 
 @customElement('color-palette')
@@ -136,7 +137,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
   private _convertHsvToHandlePosition() {
     return {
       x: this.hsv[1],
-      y: 100 - this.hsv[2],
+      y: roundPercentage(100 - this.hsv[2]),
     };
   }
 

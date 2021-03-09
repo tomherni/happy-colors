@@ -1,10 +1,6 @@
 import { minMax, round, isNumber } from '../../utils/numbers.js';
 import { PixelCoords, PositionCoords } from './types.js';
 
-export function validatePercentage(value: number): number {
-  return round(minMax(value, 0, 100), 2);
-}
-
 /**
  * Get the relative cursor coordinates in the viewport. For touch devices we get
  * the first contact point.

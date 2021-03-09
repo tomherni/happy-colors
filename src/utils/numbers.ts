@@ -20,6 +20,10 @@ export function round(number: number, maxDecimals = 0): number {
   return Number(number.toFixed(maxDecimals));
 }
 
+export function roundPercentage(value: number): number {
+  return round(minMax(value, 0, 100), 2);
+}
+
 /**
  * Simple check whether a given value is a number.
  * @param {*} value
