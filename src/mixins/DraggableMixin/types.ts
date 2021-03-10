@@ -9,10 +9,10 @@ export interface PixelCoords {
 
 /**
  * Coordinates along the X and Y axes on a canvas expressed in percentages.
- * These coords can be used to translate a draggable element's position to the
- * value that they represent.
+ * These coords can be used to translate a draggable element's position value to
+ * the value that they represent.
  */
-export interface PositionCoords {
+export interface ValueCoords {
   x: number;
   y: number;
 }
@@ -28,10 +28,10 @@ export interface DraggableConfig {
   canvas: HTMLElement;
 
   /** Callback function for when the position of the draggable changed. */
-  callback(position: PositionCoords): void;
+  callback(position: ValueCoords): void;
 
   /** The initial position of the draggable based on a starting value. */
-  initial?: PositionCoords;
+  initial?: ValueCoords;
 
   /** Whether the draggable cannot move on the X axis. */
   lockX?: boolean;

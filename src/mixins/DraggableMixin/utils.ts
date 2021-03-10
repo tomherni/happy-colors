@@ -1,5 +1,5 @@
 import { minMax, round, isNumber } from '../../utils/numbers.js';
-import { PixelCoords, PositionCoords } from './types.js';
+import { PixelCoords, ValueCoords } from './types.js';
 
 /**
  * Get the relative cursor coordinates in the viewport. For touch devices we get
@@ -18,12 +18,12 @@ export function getCursorCoords(event: MouseEvent | TouchEvent): PixelCoords {
 
 /**
  * Translate percentage coordinates to pixel coordinates on a canvas.
- * @param {PositionCoords} position
+ * @param {ValueCoords} position
  * @param {HTMLElement} canvas
  * @returns {PixelCoords}
  */
 export function positionToCoords(
-  position: PositionCoords,
+  position: ValueCoords,
   canvas: HTMLElement
 ): PixelCoords {
   const { offsetWidth, offsetHeight } = canvas;
@@ -67,13 +67,13 @@ export function eventCoordsToCanvasCoords(
 
 /**
  * Check whether any axes changed by comparing new axes with previous values.
- * @param {PixelCoords | PositionCoords | undefined} axes
- * @param {PixelCoords | PositionCoords | undefined} previous
+ * @param {PixelCoords | ValueCoords} [axes]
+ * @param {PixelCoords | ValueCoords} [previous]
  * @returns {Boolean}
  */
 export function haveAxesChanged(
-  axes: PixelCoords | PositionCoords | undefined,
-  previous: PixelCoords | PositionCoords | undefined
+  axes?: PixelCoords | ValueCoords,
+  previous?: PixelCoords | ValueCoords
 ): boolean {
   return axes?.x !== previous?.x || axes?.y !== previous?.y;
 }

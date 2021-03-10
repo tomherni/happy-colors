@@ -3,7 +3,7 @@
 import { UpdatingElement } from 'lit-element';
 import { debounce } from '../../utils/debounce.js';
 import { round, roundPercentage } from '../../utils/numbers.js';
-import { PixelCoords, PositionCoords, DraggableConfig } from './types.js';
+import { PixelCoords, ValueCoords, DraggableConfig } from './types.js';
 import {
   getCursorCoords,
   positionToCoords,
@@ -26,7 +26,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
   return class extends Base {
     private __registered = false;
 
-    private __position?: PositionCoords;
+    private __value?: ValueCoords;
 
     private __config?: DraggableConfig;
 
@@ -89,12 +89,10 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     }
 
     /**
-     * Update the draggable's CSS position based on the current position coords.
-     * @param {PositionCoords} [position]
+     * Update the draggable's CSS position based on the current or a given value.
+     * @param {ValueCoords} [position]
      */
-    protected updateDraggablePosition(
-      position: PositionCoords = this.__position!
-    ) {
+    protected updateDraggablePosition(position: ValueCoords = this.__value!) {
       if (this.__registered) {
         const coords = positionToCoords(position, this.__config!.canvas);
         this.__updateDraggablePosition(coords);
@@ -195,15 +193,15 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * @param {PixelCoords} coords
      */
     private __updateDraggablePosition({ x, y }: PixelCoords) {
-      const position = {
+      const value = {
         x: roundPercentage((x / this.__config!.canvas.offsetWidth) * 100),
         y: roundPercentage((y / this.__config!.canvas.offsetHeight) * 100),
       };
 
-      if (haveAxesChanged(position, this.__position)) {
-        this.__position = position;
+      if (haveAxesChanged(value, this.__value)) {
+        this.__value = value;
         this.__config!.draggable.style.transform = `translate(${x}px, ${y}px)`;
-        this.__config!.callback(this.__position);
+        this.__config!.callback(this.__value);
       }
     }
 
