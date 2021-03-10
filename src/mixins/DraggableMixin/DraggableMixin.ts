@@ -61,7 +61,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
         this.deregisterDraggableElement();
       }
       this.__registered = true;
-      this.__manageEventListeners(window.addEventListener);
+      this.__manageEventListeners(true);
       this.__initialize(config);
     }
 
@@ -71,19 +71,20 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      */
     protected deregisterDraggableElement() {
       this.__registered = false;
-      this.__manageEventListeners(window.removeEventListener);
+      this.__manageEventListeners(false);
     }
 
-    // @ts-ignore
-    private __manageEventListeners(handler) {
+    private __manageEventListeners(initializing: boolean) {
+      const handler = initializing
+        ? window.addEventListener
+        : window.removeEventListener;
+
       handler('mousedown', this.__startDrag, { passive: false });
       handler('mousemove', this.__drag, { passive: false });
       handler('mouseup', this.__stopDrag);
-
       handler('touchstart', this.__startDrag, { passive: false });
       handler('touchmove', this.__drag, { passive: false });
       handler('touchend', this.__stopDrag);
-
       handler('resize', this.__onWindowResize);
       handler('contextmenu', this.__onContextMenu);
     }
