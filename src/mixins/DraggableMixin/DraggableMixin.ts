@@ -36,12 +36,14 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
       cursorOffset?: PixelCoords;
     };
 
+    private __resizeObserver?: ResizeObserver;
+
     constructor(...args: any[]) {
       super();
       this.__startDrag = this.__startDrag.bind(this);
       this.__drag = debounce(this.__drag).bind(this);
       this.__stopDrag = this.__stopDrag.bind(this);
-      this.__onWindowResize = debounce(this.__onWindowResize).bind(this);
+      this.__onCanvasResize = debounce(this.__onCanvasResize).bind(this);
       this.__onContextMenu = this.__onContextMenu.bind(this);
     }
 
@@ -61,8 +63,9 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
         this.deregisterDraggableElement();
       }
       this.__registered = true;
-      this.__manageEventListeners(true);
       this.__initialize(config);
+      this.__manageEventListeners(true);
+      this.__observeCanvasResizes();
     }
 
     /**
@@ -72,6 +75,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     protected deregisterDraggableElement() {
       this.__registered = false;
       this.__manageEventListeners(false);
+      this.__resizeObserver?.disconnect();
     }
 
     private __manageEventListeners(initializing: boolean) {
@@ -85,8 +89,23 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
       handler('touchstart', this.__startDrag, { passive: false });
       handler('touchmove', this.__drag, { passive: false });
       handler('touchend', this.__stopDrag);
-      handler('resize', this.__onWindowResize);
       handler('contextmenu', this.__onContextMenu);
+    }
+
+    /**
+     * Observe changes in the canvas element's dimensions.
+     */
+    private __observeCanvasResizes() {
+      this.__resizeObserver = new ResizeObserver(() => this.__onCanvasResize());
+      this.__resizeObserver.observe(this.__config!.canvas);
+    }
+
+    /**
+     * Debounced wrapper method to ensure the draggable element maintains its
+     * position in the canvas whenever the canvas resizes.
+     */
+    private __onCanvasResize() {
+      this.updateDraggablePosition();
     }
 
     /**
@@ -204,14 +223,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
         this.__config!.draggable.style.transform = `translate(${x}px, ${y}px)`;
         this.__config!.callback(this.__value);
       }
-    }
-
-    /**
-     * Ensure the draggable position is correct when the viewport changes.
-     */
-    private __onWindowResize() {
-      // TODO: look into replacing this with a resize observer
-      this.updateDraggablePosition();
     }
 
     /**
