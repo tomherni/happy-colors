@@ -28,6 +28,8 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     private __value?: ValueCoords;
 
+    private __position?: PixelCoords;
+
     private __config?: DraggableConfig;
 
     private __dragState?: {
@@ -212,15 +214,23 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * Update the draggable element's position and trigger the callback.
      * @param {PixelCoords} coords
      */
-    private __updateDraggablePosition({ x, y }: PixelCoords) {
+    private __updateDraggablePosition(coords: PixelCoords) {
       const value = {
-        x: roundPercentage((x / this.__config!.canvas.offsetWidth) * 100),
-        y: roundPercentage((y / this.__config!.canvas.offsetHeight) * 100),
+        x: roundPercentage(
+          (coords.x / this.__config!.canvas.offsetWidth) * 100
+        ),
+        y: roundPercentage(
+          (coords.y / this.__config!.canvas.offsetHeight) * 100
+        ),
       };
+
+      if (haveAxesChanged(coords, this.__position)) {
+        this.__position = coords;
+        this.__config!.draggable.style.transform = `translate(${coords.x}px, ${coords.y}px)`;
+      }
 
       if (haveAxesChanged(value, this.__value)) {
         this.__value = value;
-        this.__config!.draggable.style.transform = `translate(${x}px, ${y}px)`;
         this.__config!.callback(this.__value);
       }
     }
