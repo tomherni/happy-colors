@@ -30,5 +30,5 @@ export function roundPercentage(value: number): number {
  * @returns {Boolean}
  */
 export function isNumber(value: unknown): boolean {
-  return typeof value === 'number';
+  return typeof value === 'number' && !Number.isNaN(value);
 }

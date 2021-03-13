@@ -1,6 +1,10 @@
 import { minMax, round, isNumber } from '../../utils/numbers.js';
 import { PixelCoords, ValueCoords } from './types.js';
 
+export function safeToDivideWith(...numbers: number[]): boolean {
+  return numbers.every(num => isNumber(num) && num !== 0);
+}
+
 /**
  * Get the relative cursor coordinates in the viewport. For touch devices we get
  * the first contact point.

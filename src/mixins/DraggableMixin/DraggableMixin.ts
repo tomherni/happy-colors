@@ -9,6 +9,7 @@ import {
   positionToCoords,
   eventCoordsToCanvasCoords,
   haveAxesChanged,
+  safeToDivideWith,
 } from './utils.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -215,13 +216,15 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * @param {PixelCoords} coords
      */
     private __updateDraggablePosition(coords: PixelCoords) {
+      const { offsetWidth, offsetHeight } = this.__config!.canvas;
+
       const value = {
-        x: roundPercentage(
-          (coords.x / this.__config!.canvas.offsetWidth) * 100
-        ),
-        y: roundPercentage(
-          (coords.y / this.__config!.canvas.offsetHeight) * 100
-        ),
+        x: safeToDivideWith(coords.x, offsetWidth)
+          ? roundPercentage((coords.x / offsetWidth) * 100)
+          : 0,
+        y: safeToDivideWith(coords.y, offsetHeight)
+          ? roundPercentage((coords.y / offsetHeight) * 100)
+          : 0,
       };
 
       if (haveAxesChanged(coords, this.__position)) {
