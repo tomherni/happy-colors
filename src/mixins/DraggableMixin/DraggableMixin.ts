@@ -19,7 +19,6 @@ const resizeObserverSupported = typeof window.ResizeObserver !== 'undefined';
 
 /**
  * Mixin that allows a component to register an element as a draggable element.
- *
  * The draggable can be dragged by the user within the bounds of a specified
  * canvas element.
  */
@@ -63,7 +62,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * Register an HTML element as a draggable element.
      * @param {DraggableConfig} config
      */
-    protected registerDraggableElement(config: DraggableConfig) {
+    protected registerDraggableElement(config: DraggableConfig): void {
       if (this.__registered) {
         this.deregisterDraggableElement();
       }
@@ -77,7 +76,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * Deregister the draggable element by no longer acting upon drag events
      * initiated by the user, or on position update requests.
      */
-    protected deregisterDraggableElement() {
+    protected deregisterDraggableElement(): void {
       this.__registered = false;
       this.__manageEventListeners(false);
       this.__unobserveCanvasResizes();
@@ -122,7 +121,9 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * position in the canvas whenever the canvas resizes.
      */
     private __onCanvasResize() {
-      this.updateDraggablePosition();
+      if (this.__registered) {
+        this.updateDraggablePosition();
+      }
     }
 
     /**
@@ -187,7 +188,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * @param {MouseEvent | TouchEvent} event
      */
     private __drag(event: MouseEvent | TouchEvent) {
-      if (this.__dragState) {
+      if (this.__registered && this.__dragState) {
         event.preventDefault();
         this.__onDragEvent(event);
       }
@@ -261,7 +262,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     /**
      * Chromium won't send the "mouseup" event after a right-click. So dragging
-     * needs to be stopped or else the mouse will continue to drag on hover.
+     * needs to be stopped or else the cursor will continue to drag on hover.
      */
     private __onContextMenu() {
       this.__stopDrag();
