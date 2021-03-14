@@ -15,6 +15,8 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Constructor<T = Record<string, unknown>> = new (...args: any[]) => T;
 
+const resizeObserverSupported = typeof window.ResizeObserver !== 'undefined';
+
 /**
  * Mixin that allows a component to register an element as a draggable element.
  *
@@ -78,7 +80,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     protected deregisterDraggableElement() {
       this.__registered = false;
       this.__manageEventListeners(false);
-      this.__resizeObserver?.disconnect();
+      this.__unobserveCanvasResizes();
     }
 
     private __manageEventListeners(initializing: boolean) {
@@ -99,8 +101,20 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * Observe changes in the canvas element's dimensions.
      */
     private __observeCanvasResizes() {
-      this.__resizeObserver = new ResizeObserver(() => this.__onCanvasResize());
-      this.__resizeObserver.observe(this.__config!.canvas);
+      if (!resizeObserverSupported) {
+        window.addEventListener('resize', this.__onCanvasResize);
+      } else {
+        this.__resizeObserver = new ResizeObserver(this.__onCanvasResize);
+        this.__resizeObserver.observe(this.__config!.canvas);
+      }
+    }
+
+    private __unobserveCanvasResizes() {
+      if (!resizeObserverSupported) {
+        window.removeEventListener('resize', this.__onCanvasResize);
+      } else {
+        this.__resizeObserver?.disconnect();
+      }
     }
 
     /**
