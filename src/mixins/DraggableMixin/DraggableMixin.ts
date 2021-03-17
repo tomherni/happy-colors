@@ -122,7 +122,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      */
     private __onCanvasResize() {
       if (this.__registered) {
-        this.updateDraggablePosition();
+        this.__syncDraggablePositionToValue();
       }
     }
 
@@ -258,6 +258,15 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
         this.__value = value;
         this.__config!.callback(this.__value);
       }
+    }
+
+    /**
+     * Update the draggable element's position to match its current value. This
+     * method can be used when the value and position might be out of sync.
+     */
+    private __syncDraggablePositionToValue() {
+      const newCoords = positionToCoords(this.__value!, this.__config!.canvas);
+      this.__updateDraggablePosition(newCoords);
     }
 
     /**
