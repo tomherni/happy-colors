@@ -127,13 +127,15 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     }
 
     /**
-     * Update the draggable's CSS position based on the current or a given value.
-     * @param {ValueCoords} [position]
+     * Update the draggable element's value, and with that its position. This
+     * method can be used when a new value was computed (without dragging).
+     * @param {ValueCoords} [value]
      */
-    protected updateDraggablePosition(position: ValueCoords = this.__value!) {
+    protected updateDraggableValue(value?: ValueCoords): void {
       if (this.__registered) {
-        const coords = positionToCoords(position, this.__config!.canvas);
-        this.__updateDraggable(coords);
+        const newValue = value || this.__value!;
+        const newCoords = positionToCoords(newValue, this.__config!.canvas);
+        this.__updateDraggable(newCoords);
       }
     }
 
@@ -144,7 +146,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      */
     private __initialize(config: DraggableConfig) {
       this.__config = config;
-      this.updateDraggablePosition(this.__config.initial);
+      this.updateDraggableValue(this.__config.initial);
     }
 
     /**

@@ -124,7 +124,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
   private _onHsvChanged() {
     const handlePosition = this._convertHsvToHandlePosition();
-    this.updateDraggablePosition(handlePosition);
+    this.updateDraggableValue(handlePosition);
     this._updatePaletteStyling();
   }
 

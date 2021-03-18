@@ -108,7 +108,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
   private _onHueChanged() {
     const handlePosition = this._convertHueToHandlePosition();
-    this.updateDraggablePosition(handlePosition);
+    this.updateDraggableValue(handlePosition);
     this._updateSliderStyling();
   }
 
