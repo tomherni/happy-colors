@@ -2,7 +2,7 @@ import {
   LitElement,
   html,
   css,
-  property,
+  internalProperty,
   TemplateResult,
   PropertyValues,
   customElement,
@@ -16,8 +16,16 @@ import { Hue } from '../../types.js';
 @customElement('color-slider')
 export class ColorSlider extends DraggableMixin(LitElement) {
   /** Current hue value picked in the slider canvas. */
-  @property({ type: Number })
-  hue: Hue = 0;
+  get hue(): Hue {
+    return this._hue;
+  }
+
+  set hue(hue: Hue) {
+    this._setHue(hue);
+  }
+
+  @internalProperty()
+  private _hue: Hue = 0;
 
   private _handleElement?: HTMLDivElement;
 
@@ -96,14 +104,21 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
   updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    if (changedProperties.has('hue') && this.hue) {
-      this._onHueChanged();
-      this.dispatchEvent(new CustomEvent('changed', { detail: this.hue }));
+    if (changedProperties.has('_hue') && this.draggableElementRegistered) {
+      this.dispatchEvent(new CustomEvent('changed', { detail: this._hue }));
     }
   }
 
   private _setHue(hue: Hue) {
-    this.hue = validateHue(hue);
+    const validatedHue = validateHue(hue);
+
+    if (validatedHue !== this._hue) {
+      this._hue = validatedHue;
+    }
+
+    if (this.draggableElementRegistered) {
+      this._onHueChanged();
+    }
   }
 
   private _onHueChanged() {
@@ -120,13 +135,13 @@ export class ColorSlider extends DraggableMixin(LitElement) {
   private _convertHueToHandlePosition() {
     return {
       x: 0,
-      y: roundPercentage(100 - (this.hue / 360) * 100),
+      y: roundPercentage(100 - (this._hue / 360) * 100),
     };
   }
 
   private _updateSliderStyling() {
     this._handleElement!.style.backgroundColor = rgbToCssString(
-      hsvToRgb([this.hue, 100, 100])
+      hsvToRgb([this._hue, 100, 100])
     );
   }
 }

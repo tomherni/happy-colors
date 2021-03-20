@@ -2,7 +2,7 @@ import {
   LitElement,
   html,
   css,
-  property,
+  internalProperty,
   TemplateResult,
   PropertyValues,
   customElement,
@@ -25,8 +25,16 @@ const round = (value: number[]) => value.map(v => roundUtil(v));
 @customElement('color-picker')
 export class ColorPicker extends LitElement {
   /** The currently picked color represented in the HSV color model. */
-  @property({ type: Array, hasChanged: hasColorChanged })
-  hsv: Hsv = [360, 100, 100];
+  get hsv(): Hsv {
+    return this._hsv;
+  }
+
+  set hsv(hsv: Hsv) {
+    this._setHsv(hsv);
+  }
+
+  @internalProperty()
+  private _hsv: Hsv = [360, 100, 100];
 
   private _colors?: Colors;
 
@@ -168,28 +176,19 @@ export class ColorPicker extends LitElement {
     `;
   }
 
-  connectedCallback(): void {
-    super.connectedCallback();
-    this._setHsv(this.hsv);
-  }
-
-  update(changedProperties: PropertyValues): void {
-    if (changedProperties.has('hsv') && this.hsv) {
-      this._setColors(this.hsv);
-    }
-    super.update(changedProperties);
-  }
-
   updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    if (changedProperties.has('hsv') && this.hsv) {
-      this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
+    if (changedProperties.has('_hsv')) {
+      this.dispatchEvent(new CustomEvent('changed', { detail: this._hsv }));
     }
   }
 
   private _setHsv(hsv: Hsv) {
-    if (hasColorChanged(hsv, this.hsv)) {
-      this.hsv = validateHsv(hsv);
+    const validatedHsv = validateHsv(hsv);
+
+    if (hasColorChanged(validatedHsv, this._hsv)) {
+      this._hsv = validatedHsv;
+      this._setColors(this._hsv);
     }
   }
 
@@ -207,7 +206,7 @@ export class ColorPicker extends LitElement {
   }
 
   private _onHueSliderChanged({ detail: hue }: CustomEvent<Hue>) {
-    const [, s, v] = this.hsv!;
+    const [, s, v] = this._hsv;
     this._setHsv([hue, s, v]);
   }
 }

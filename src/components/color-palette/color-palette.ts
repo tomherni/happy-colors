@@ -2,7 +2,7 @@ import {
   LitElement,
   html,
   css,
-  property,
+  internalProperty,
   TemplateResult,
   PropertyValues,
   customElement,
@@ -21,8 +21,16 @@ import { Hsv } from '../../types.js';
 @customElement('color-palette')
 export class ColorPalette extends DraggableMixin(LitElement) {
   /** The current color represented in the HSV color model. */
-  @property({ type: Array, hasChanged: hasColorChanged })
-  hsv: Hsv = [360, 100, 100];
+  get hsv(): Hsv {
+    return this._hsv;
+  }
+
+  set hsv(hsv: Hsv) {
+    this._setHsv(hsv);
+  }
+
+  @internalProperty()
+  private _hsv: Hsv = [360, 100, 100];
 
   private _canvasElement?: HTMLDivElement;
 
@@ -110,15 +118,20 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
   updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
-    if (changedProperties.has('hsv') && this.hsv) {
-      this._onHsvChanged();
-      this.dispatchEvent(new CustomEvent('changed', { detail: this.hsv }));
+    if (changedProperties.has('_hsv') && this.draggableElementRegistered) {
+      this.dispatchEvent(new CustomEvent('changed', { detail: this._hsv }));
     }
   }
 
   private _setHsv(hsv: Hsv) {
-    if (hasColorChanged(hsv, this.hsv)) {
-      this.hsv = validateHsv(hsv);
+    const validatedHsv = validateHsv(hsv);
+
+    if (hasColorChanged(validatedHsv, this._hsv)) {
+      this._hsv = validatedHsv;
+    }
+
+    if (this.draggableElementRegistered) {
+      this._onHsvChanged();
     }
   }
 
@@ -136,13 +149,13 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
   private _convertHsvToHandlePosition() {
     return {
-      x: this.hsv[1],
-      y: roundPercentage(100 - this.hsv[2]),
+      x: this._hsv[1],
+      y: roundPercentage(100 - this._hsv[2]),
     };
   }
 
   private _convertHandlePositionToHsv(position: ValueCoords) {
-    const [hue] = this.hsv;
+    const [hue] = this._hsv;
     const saturation = position.x;
     const value = 100 - position.y;
     return [hue, saturation, value] as Hsv;
@@ -150,10 +163,10 @@ export class ColorPalette extends DraggableMixin(LitElement) {
 
   private _updatePaletteStyling() {
     this._canvasElement!.style.backgroundColor = rgbToCssString(
-      hsvToRgb([this.hsv[0], 100, 100])
+      hsvToRgb([this._hsv[0], 100, 100])
     );
     this._handleElement!.style.backgroundColor = rgbToCssString(
-      hsvToRgb(this.hsv)
+      hsvToRgb(this._hsv)
     );
   }
 }

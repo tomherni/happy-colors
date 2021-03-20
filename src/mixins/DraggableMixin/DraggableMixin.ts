@@ -26,6 +26,8 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
   Base: T
 ) {
   return class extends Base {
+    protected draggableElementRegistered = false;
+
     private __registered = false;
 
     private __value?: ValueCoords;
@@ -66,6 +68,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
       if (this.__registered) {
         this.deregisterDraggableElement();
       }
+      this.draggableElementRegistered = true;
       this.__registered = true;
       this.__initialize(config);
       this.__manageEventListeners(true);
@@ -77,6 +80,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * initiated by the user, or on position update requests.
      */
     protected deregisterDraggableElement(): void {
+      this.draggableElementRegistered = false;
       this.__registered = false;
       this.__manageEventListeners(false);
       this.__unobserveCanvasResizes();
