@@ -144,8 +144,8 @@ export function rgbToCssString(rgb: Rgb): string {
  * @returns {Boolean}
  */
 export function hasColorChanged(
-  value: number[] | undefined,
-  previous: number[] | undefined
+  value?: number[],
+  previous?: number[]
 ): boolean {
   return Array.isArray(value) && Array.isArray(previous)
     ? value.some((val, index) => val !== previous[index])

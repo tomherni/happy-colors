@@ -114,10 +114,10 @@ export class ColorSlider extends DraggableMixin(LitElement) {
 
     if (validatedHue !== this._hue) {
       this._hue = validatedHue;
-    }
 
-    if (this.draggableElementRegistered) {
-      this._onHueChanged();
+      if (this.draggableElementRegistered) {
+        this._onHueChanged();
+      }
     }
   }
 
