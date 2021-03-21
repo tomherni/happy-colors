@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Happy Colors</title>
   <base href="/">
+  <link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:400,700&display=swap" rel="stylesheet">
   <style>
     :root {
+      font: 18px/1.5 'Barlow Semi Condensed', sans-serif;
       --color-font: #ddd;
       --color-background: #111;
       --color-highlight: #e6a729;
@@ -18,7 +20,6 @@
       margin: 0;
       padding: 0;
       color: var(--color-font);
-      font: 22px/1.5 'Barlow Semi Condensed', sans-serif;
       background-color: var(--color-background);
     }
 
@@ -33,7 +34,7 @@
     }
 
     .rainbow > * {
-      flex: 1 1 auto;
+      flex: 1 1 0;
       height: 100%;
     }
   </style>
@@ -49,8 +50,6 @@
   </div>
 
   <app-happy-colors></app-happy-colors>
-
   <script type="module" src="./out-tsc/src/app/app-happy-colors.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed:400,700&display=swap" rel="stylesheet">
 </body>
 </html>

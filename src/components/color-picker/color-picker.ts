@@ -77,7 +77,7 @@ export class ColorPicker extends LitElement {
       margin-right: 24px;
     }
 
-    @media (min-width: 800px) {
+    @media (min-width: 1400px) {
       .container {
         display: flex;
       }
