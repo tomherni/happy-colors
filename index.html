@@ -9,10 +9,31 @@
   <style>
     :root {
       font: 18px/1.5 'Barlow Semi Condensed', sans-serif;
+      color-scheme: light dark;
+      --height-rainbow: 6px;
+
+      /* Light theme */
+      --color-font: #333;
+      --color-background: #eee;
+      --color-highlight: #e6a729;
+      --scheme-color-background: #ccc;
+      --scheme-color-border: #aaa;
+      --scheme-color-add: #888;
+    }
+
+    :root[data-theme="dark"] {
       --color-font: #ddd;
       --color-background: #111;
       --color-highlight: #e6a729;
-      --height-rainbow: 6px;
+      --scheme-color-background: #333;
+      --scheme-color-border: #111;
+      --scheme-color-add: #aaa;
+    }
+
+    @media(min-width: 900px) {
+      :root {
+        font-size: 22px;
+      }
     }
 
     body {
@@ -50,6 +71,11 @@
   </div>
 
   <app-happy-colors></app-happy-colors>
+
+  <script type="module">
+    import { initializeTheme } from './out-tsc/src/utils/theme.js';
+    initializeTheme();
+  </script>
   <script type="module" src="./out-tsc/src/app/app-happy-colors.js"></script>
 </body>
 </html>

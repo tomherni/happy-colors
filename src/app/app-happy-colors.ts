@@ -12,9 +12,16 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { hasColorChanged, hsvToHex, validateHsv } from '../utils/colors.js';
 import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
+import {
+  observeThemeChanges,
+  unobserveThemeChanges,
+  getTheme,
+  toggleTheme,
+} from '../libs/theme.js';
 import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';
+import '../components/theme-switch/theme-switch.js';
 
 /**
  * Create a custom color scheme template. If a saved scheme is provided then
@@ -37,6 +44,10 @@ export class AppHappyColors extends LitElement {
   /** The user's saved color scheme. */
   @internalProperty()
   private _savedScheme: SavedScheme;
+
+  /** The color scheme based on user preference. */
+  @internalProperty()
+  private _theme: string;
 
   static styles = css`
     :host {
@@ -82,11 +93,21 @@ export class AppHappyColors extends LitElement {
 
     /* Color picker and custom color scheme */
 
+    .title {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
     h1 {
-      margin: 24px 0 0;
+      margin: 0 24px;
       font-weight: bold;
       font-size: 1.3rem;
       text-align: center;
+    }
+
+    theme-switch {
+      margin-top: 8px;
     }
 
     color-overview {
@@ -105,8 +126,8 @@ export class AppHappyColors extends LitElement {
       position: relative;
       width: 100%;
       height: 48px;
-      background-color: #333;
-      border: 1px solid #000;
+      background-color: var(--scheme-color-background);
+      border: 1px solid var(--scheme-color-border);
       cursor: pointer;
     }
 
@@ -117,7 +138,7 @@ export class AppHappyColors extends LitElement {
     .custom-color-scheme .color.empty::after {
       content: '+';
       display: block;
-      color: #aaa;
+      color: var(--scheme-color-add);
       font-weight: bold;
       font-size: 28px;
       text-align: center;
@@ -196,7 +217,13 @@ export class AppHappyColors extends LitElement {
   render(): TemplateResult {
     return html`
       <main>
-        <h1>Happy Colors</h1>
+        <div class="title">
+          <h1>Happy Colors</h1>
+          <theme-switch
+            theme="${this._theme}"
+            @click=${toggleTheme}
+          ></theme-switch>
+        </div>
 
         <div class="content">
           <div class="color-management">
@@ -324,6 +351,18 @@ export class AppHappyColors extends LitElement {
 
     const scheme = colorSchemeStorage.get().data || [];
     this._savedScheme = createCustomScheme(scheme);
+
+    this._theme = getTheme();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    observeThemeChanges(theme => (this._theme = theme));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    unobserveThemeChanges();
   }
 
   private _setHsv(hsv: Hsv) {

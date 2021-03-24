@@ -46,8 +46,8 @@ export class ThemeSwitch extends LitElement {
     return html`
       <button
         class="${classMap({
-          'switch-to-light': this.theme === 'light',
-          'switch-to-dark': this.theme === 'dark',
+          'switch-to-dark': this.theme === 'light',
+          'switch-to-light': this.theme === 'dark',
         })}"
         aria-label="Switch theme"
         title="Switch theme"
