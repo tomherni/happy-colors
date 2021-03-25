@@ -10,6 +10,7 @@ import {
 import { classMap } from 'lit-html/directives/class-map.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { hasColorChanged, hsvToHex, validateHsv } from '../utils/colors.js';
+import { debounce } from '../utils/debounce.js';
 import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import {
@@ -49,9 +50,20 @@ export class AppHappyColors extends LitElement {
   @internalProperty()
   private _theme: string;
 
+  /** Whether the page is in a scrolled position. */
+  @internalProperty()
+  private _scrolled = false;
+
   static styles = css`
     :host {
       display: block;
+      --header-height: 52px;
+    }
+
+    @media (min-width: 900px) {
+      :host {
+        --header-height: 64px;
+      }
     }
 
     *,
@@ -60,10 +72,63 @@ export class AppHappyColors extends LitElement {
       box-sizing: border-box;
     }
 
+    /* Fixed header with title and theme switcher */
+
+    .header {
+      position: fixed;
+      top: var(--height-rainbow);
+      right: 0;
+      left: 0;
+      height: var(--header-height);
+      background-color: var(--header-color-background);
+      z-index: 1;
+    }
+
+    /* Show a shadow when scrolled. Instead of animating the box-shadow, animating */
+    /* a pseudo-element and its opacity performs better. */
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      box-shadow: 0 0 8px 8px var(--header-color-shadow);
+      transition: opacity 400ms;
+      z-index: -1;
+    }
+
+    .header.scrolled::after {
+      opacity: 1;
+    }
+
+    .header .container {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: bold;
+      font-size: 1.3rem;
+      line-height: var(--header-height);
+      text-align: center;
+    }
+
+    theme-switch {
+      position: absolute;
+      top: 0;
+      right: 8px;
+      bottom: 0;
+      margin: auto 0;
+    }
+
     /* Layout structure */
 
-    .content {
-      padding: 16px 16px 80px;
+    main {
+      padding: var(--header-height) 16px 80px;
     }
 
     .color-management {
@@ -78,7 +143,7 @@ export class AppHappyColors extends LitElement {
     }
 
     @media (min-width: 900px) {
-      .content {
+      main {
         display: flex;
       }
 
@@ -92,23 +157,6 @@ export class AppHappyColors extends LitElement {
     }
 
     /* Color picker and custom color scheme */
-
-    .title {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
-    }
-
-    h1 {
-      margin: 0 24px;
-      font-weight: bold;
-      font-size: 1.3rem;
-      text-align: center;
-    }
-
-    theme-switch {
-      margin-top: 8px;
-    }
 
     color-overview {
       margin-top: 16px;
@@ -217,125 +265,125 @@ export class AppHappyColors extends LitElement {
   render(): TemplateResult {
     return html`
       <main>
-        <div class="title">
-          <h1>Happy Colors</h1>
-          <theme-switch
-            theme="${this._theme}"
-            @click=${toggleTheme}
-          ></theme-switch>
+        <div class="${classMap({ header: true, scrolled: !!this._scrolled })}">
+          <div class="container">
+            <h1 class="dot">Happy Colors</h1>
+            <theme-switch
+              theme="${this._theme}"
+              @click=${toggleTheme}
+            ></theme-switch>
+          </div>
         </div>
 
-        <div class="content">
-          <div class="color-management">
-            <h2>Pick your color</h2>
+        <div class="color-management">
+          <h2>Pick your color</h2>
 
-            <color-picker
-              .hsv=${this.hsv}
-              @changed=${this._onColorPickerChanged}
-            ></color-picker>
+          <color-picker
+            .hsv=${this.hsv}
+            @changed=${this._onColorPickerChanged}
+          ></color-picker>
 
-            <h2>Save your color</h2>
+          <h2>Save your color</h2>
 
-            <div class="custom-color-scheme">
-              ${this._savedScheme.map(
-                (hex: SavedSchemeValue, index: number) => html`
-                  <div class="column">
-                    <div
-                      class="${classMap({ color: true, empty: !hex })}"
-                      style="${ifDefined(
-                        hex ? `background-color: #${hex}` : undefined
-                      )}"
-                      @click=${() => this._saveColorToCustomScheme(index)}
-                    ></div>
-                    <div class="hex">${hex ? `#${hex}` : ''}&nbsp;</div>
-                  </div>
-                `
-              )}
-            </div>
-
-            ${when(
-              this._savedScheme.some((hex: SavedSchemeValue) => !!hex),
-              () => html`
-                <div class="reset-custom-color-scheme">
-                  <button @click=${this._clearCustomScheme}>
-                    Reset color scheme
-                  </button>
+          <div class="custom-color-scheme">
+            ${this._savedScheme.map(
+              (hex: SavedSchemeValue, index: number) => html`
+                <div class="column">
+                  <div
+                    class="${classMap({ color: true, empty: !hex })}"
+                    style="${ifDefined(
+                      hex ? `background-color: #${hex}` : undefined
+                    )}"
+                    @click=${() => this._saveColorToCustomScheme(index)}
+                  ></div>
+                  <div class="hex">${hex ? `#${hex}` : ''}&nbsp;</div>
                 </div>
               `
             )}
           </div>
 
-          <div class="color-schemes">
-            <h2>
-              <span>Generated schemes</span>
-              <span><span class="highlight">&</span> inspiration</span>
-            </h2>
-
-            <div>
-              <div class="color-scheme">
-                <div>
-                  <h3>Monochromatic color scheme</h3>
-                  <p>
-                    The monochromatic color scheme consists of a base color, and
-                    a range of its shades.
-                  </p>
-                </div>
-                <color-scheme
-                  scheme="monochromatic"
-                  .color=${this.hsv}
-                  @color-scheme-selected=${this._onColorSchemeSelected}
-                ></color-scheme>
+          ${when(
+            this._savedScheme.some((hex: SavedSchemeValue) => !!hex),
+            () => html`
+              <div class="reset-custom-color-scheme">
+                <button @click=${this._clearCustomScheme}>
+                  Reset color scheme
+                </button>
               </div>
+            `
+          )}
+        </div>
 
-              <div class="color-scheme">
-                <div>
-                  <h3>Analogous color scheme</h3>
-                  <p>
-                    The analogous color scheme adds two additional colors on the
-                    color wheel: one on either side of the base color,
-                    distributed evenly.
-                  </p>
-                </div>
-                <color-scheme
-                  scheme="analogous"
-                  show-hex
-                  .color=${this.hsv}
-                  @color-scheme-selected=${this._onColorSchemeSelected}
-                ></color-scheme>
-              </div>
+        <div class="color-schemes">
+          <h2>
+            <span>Generated schemes</span>
+            <span><span class="highlight">&</span> inspiration</span>
+          </h2>
 
-              <div class="color-scheme">
-                <div>
-                  <h3>Complementary color scheme</h3>
-                  <p>
-                    The complementary color scheme adds one opposite
-                    (complement) color. This color is on the exact opposite side
-                    of the color wheel.
-                  </p>
-                </div>
-                <color-scheme
-                  scheme="complementary"
-                  show-hex
-                  .color=${this.hsv}
-                  @color-scheme-selected=${this._onColorSchemeSelected}
-                ></color-scheme>
+          <div>
+            <div class="color-scheme">
+              <div>
+                <h3>Monochromatic color scheme</h3>
+                <p>
+                  The monochromatic color scheme consists of a base color, and a
+                  range of its shades.
+                </p>
               </div>
+              <color-scheme
+                scheme="monochromatic"
+                .color=${this.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
+              ></color-scheme>
+            </div>
 
-              <div class="color-scheme">
-                <div>
-                  <h3>Triadic color scheme</h3>
-                  <p>
-                    The triadic color scheme adds two additional colors. All
-                    three colors are distributed evenly around the color wheel.
-                  </p>
-                </div>
-                <color-scheme
-                  scheme="triadic"
-                  show-hex
-                  .color=${this.hsv}
-                  @color-scheme-selected=${this._onColorSchemeSelected}
-                ></color-scheme>
+            <div class="color-scheme">
+              <div>
+                <h3>Analogous color scheme</h3>
+                <p>
+                  The analogous color scheme adds two additional colors on the
+                  color wheel: one on either side of the base color, distributed
+                  evenly.
+                </p>
               </div>
+              <color-scheme
+                scheme="analogous"
+                show-hex
+                .color=${this.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
+              ></color-scheme>
+            </div>
+
+            <div class="color-scheme">
+              <div>
+                <h3>Complementary color scheme</h3>
+                <p>
+                  The complementary color scheme adds one opposite (complement)
+                  color. This color is on the exact opposite side of the color
+                  wheel.
+                </p>
+              </div>
+              <color-scheme
+                scheme="complementary"
+                show-hex
+                .color=${this.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
+              ></color-scheme>
+            </div>
+
+            <div class="color-scheme">
+              <div>
+                <h3>Triadic color scheme</h3>
+                <p>
+                  The triadic color scheme adds two additional colors. All three
+                  colors are distributed evenly around the color wheel.
+                </p>
+              </div>
+              <color-scheme
+                scheme="triadic"
+                show-hex
+                .color=${this.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
+              ></color-scheme>
             </div>
           </div>
         </div>
@@ -353,16 +401,23 @@ export class AppHappyColors extends LitElement {
     this._savedScheme = createCustomScheme(scheme);
 
     this._theme = getTheme();
+    this._onPageScroll = debounce(this._onPageScroll).bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
     observeThemeChanges(theme => (this._theme = theme));
+    window.addEventListener('scroll', this._onPageScroll);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     unobserveThemeChanges();
+    window.removeEventListener('scroll', this._onPageScroll);
+  }
+
+  private _onPageScroll() {
+    this._scrolled = window.pageYOffset > 0;
   }
 
   private _setHsv(hsv: Hsv) {
