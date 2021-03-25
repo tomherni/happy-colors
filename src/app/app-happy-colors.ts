@@ -323,38 +323,6 @@ export class AppHappyColors extends LitElement {
           <div>
             <div class="color-scheme">
               <div>
-                <h3>Monochromatic color scheme</h3>
-                <p>
-                  The monochromatic color scheme consists of a base color, and a
-                  range of its shades.
-                </p>
-              </div>
-              <color-scheme
-                scheme="monochromatic"
-                .color=${this.hsv}
-                @color-scheme-selected=${this._onColorSchemeSelected}
-              ></color-scheme>
-            </div>
-
-            <div class="color-scheme">
-              <div>
-                <h3>Analogous color scheme</h3>
-                <p>
-                  The analogous color scheme adds two additional colors on the
-                  color wheel: one on either side of the base color, distributed
-                  evenly.
-                </p>
-              </div>
-              <color-scheme
-                scheme="analogous"
-                show-hex
-                .color=${this.hsv}
-                @color-scheme-selected=${this._onColorSchemeSelected}
-              ></color-scheme>
-            </div>
-
-            <div class="color-scheme">
-              <div>
                 <h3>Complementary color scheme</h3>
                 <p>
                   The complementary color scheme adds one opposite (complement)
@@ -381,6 +349,38 @@ export class AppHappyColors extends LitElement {
               <color-scheme
                 scheme="triadic"
                 show-hex
+                .color=${this.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
+              ></color-scheme>
+            </div>
+
+            <div class="color-scheme">
+              <div>
+                <h3>Analogous color scheme</h3>
+                <p>
+                  The analogous color scheme adds two additional colors on the
+                  color wheel: one on either side of the base color, distributed
+                  evenly.
+                </p>
+              </div>
+              <color-scheme
+                scheme="analogous"
+                show-hex
+                .color=${this.hsv}
+                @color-scheme-selected=${this._onColorSchemeSelected}
+              ></color-scheme>
+            </div>
+
+            <div class="color-scheme">
+              <div>
+                <h3>Monochromatic color scheme</h3>
+                <p>
+                  The monochromatic color scheme consists of a base color, and a
+                  range of its shades.
+                </p>
+              </div>
+              <color-scheme
+                scheme="monochromatic"
                 .color=${this.hsv}
                 @color-scheme-selected=${this._onColorSchemeSelected}
               ></color-scheme>
