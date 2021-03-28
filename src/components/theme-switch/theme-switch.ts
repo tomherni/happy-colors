@@ -7,11 +7,12 @@ import {
   customElement,
 } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
+import { Theme, toggleTheme } from '../../libs/theme.js';
 
 @customElement('theme-switch')
 export class ThemeSwitch extends LitElement {
-  @property({ type: String })
-  theme?: string;
+  @property({ type: String, attribute: 'active-theme' })
+  activeTheme?: Theme;
 
   static styles = css`
     :host {
@@ -46,11 +47,12 @@ export class ThemeSwitch extends LitElement {
     return html`
       <button
         class="${classMap({
-          'switch-to-dark': this.theme === 'light',
-          'switch-to-light': this.theme === 'dark',
+          'switch-to-dark': this.activeTheme === 'light',
+          'switch-to-light': this.activeTheme === 'dark',
         })}"
         aria-label="Switch theme"
         title="Switch theme"
+        @click="${toggleTheme}"
       ></button>
     `;
   }

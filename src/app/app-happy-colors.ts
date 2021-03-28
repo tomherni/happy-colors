@@ -17,7 +17,6 @@ import {
   observeThemeChanges,
   unobserveThemeChanges,
   getTheme,
-  toggleTheme,
 } from '../libs/theme.js';
 import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 import '../components/color-picker/color-picker.js';
@@ -268,10 +267,7 @@ export class AppHappyColors extends LitElement {
         <div class="${classMap({ header: true, scrolled: !!this._scrolled })}">
           <div class="container">
             <h1 class="dot">Happy Colors</h1>
-            <theme-switch
-              theme="${this._theme}"
-              @click=${toggleTheme}
-            ></theme-switch>
+            <theme-switch active-theme="${this._theme}"></theme-switch>
           </div>
         </div>
 
