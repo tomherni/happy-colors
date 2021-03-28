@@ -17,7 +17,7 @@ import {
   observeThemeChanges,
   unobserveThemeChanges,
   getTheme,
-} from '../libs/theme.js';
+} from '../utils/theme.js';
 import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 import '../components/color-picker/color-picker.js';
 import '../components/color-scheme/color-scheme.js';

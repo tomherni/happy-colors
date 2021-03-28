@@ -39,4 +39,5 @@ export function observeThemeChanges(callback?: (theme: Theme) => void): void {
     attributes: true,
     attributeFilter: [THEME_ATTRIBUTE],
   });
+  document.body.style.transition = `color 250ms, background-color 250ms`;
 }

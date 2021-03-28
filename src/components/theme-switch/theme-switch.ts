@@ -7,7 +7,7 @@ import {
   customElement,
 } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
-import { Theme, toggleTheme } from '../../libs/theme.js';
+import { Theme, toggleTheme } from '../../utils/theme.js';
 
 @customElement('theme-switch')
 export class ThemeSwitch extends LitElement {
