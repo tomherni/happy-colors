@@ -2,6 +2,7 @@ export type Theme = 'light' | 'dark';
 
 const THEME_TARGET_ELEMENT = document.documentElement;
 const THEME_ATTRIBUTE = 'data-theme';
+export const THEME_TRANSITION_MS = 250;
 
 let observer: MutationObserver;
 
@@ -39,5 +40,5 @@ export function observeThemeChanges(callback?: (theme: Theme) => void): void {
     attributes: true,
     attributeFilter: [THEME_ATTRIBUTE],
   });
-  document.body.style.transition = `color 250ms, background-color 250ms`;
+  document.body.style.transition = `color ${THEME_TRANSITION_MS}ms, background-color ${THEME_TRANSITION_MS}ms`;
 }

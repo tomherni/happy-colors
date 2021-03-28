@@ -7,7 +7,7 @@ import {
   customElement,
 } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
-import { Theme, toggleTheme } from '../../utils/theme.js';
+import { Theme, THEME_TRANSITION_MS, toggleTheme } from '../../utils/theme.js';
 
 @customElement('theme-switch')
 export class ThemeSwitch extends LitElement {
@@ -47,7 +47,7 @@ export class ThemeSwitch extends LitElement {
       background-position: 50%;
       transform: rotate(-45deg);
       opacity: 0;
-      transition: transform 250ms;
+      transition: transform ${THEME_TRANSITION_MS}ms;
     }
 
     .icon.sun {
