@@ -266,7 +266,7 @@ export class AppHappyColors extends LitElement {
       <main>
         <div class="${classMap({ header: true, scrolled: !!this._scrolled })}">
           <div class="container">
-            <h1 class="dot">Happy Colors</h1>
+            <h1>Happy Colors</h1>
             <theme-switch active-theme="${this._theme}"></theme-switch>
           </div>
         </div>

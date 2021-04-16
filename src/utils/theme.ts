@@ -4,7 +4,7 @@ const THEME_TARGET_ELEMENT = document.documentElement;
 const THEME_ATTRIBUTE = 'data-theme';
 export const THEME_TRANSITION_MS = 250;
 
-let observer: MutationObserver;
+let observer: MutationObserver | undefined;
 
 export function getTheme(): Theme {
   return THEME_TARGET_ELEMENT.getAttribute(THEME_ATTRIBUTE) as Theme;
@@ -29,6 +29,7 @@ export function initializeTheme(): void {
 
 export function unobserveThemeChanges(): void {
   observer?.disconnect();
+  observer = undefined;
 }
 
 export function observeThemeChanges(callback?: (theme: Theme) => void): void {

@@ -30,7 +30,7 @@ export class ColorPicker extends LitElement {
   }
 
   @internalProperty()
-  private _hsv: Hsv = [360, 100, 100];
+  private _hsv!: Hsv;
 
   private _colors?: Colors;
 
@@ -86,6 +86,11 @@ export class ColorPicker extends LitElement {
         ></color-slider>
       </div>
     `;
+  }
+
+  constructor() {
+    super();
+    this.hsv = [360, 100, 100];
   }
 
   updated(changedProperties: PropertyValues): void {

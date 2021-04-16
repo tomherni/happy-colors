@@ -13,7 +13,10 @@ describe('Component: color-picker', () => {
 
   beforeEach(async () => {
     element = await fixture(html`
-      <color-picker @changed=${e => (onChanged = e.detail)}></color-picker>
+      <color-picker
+        @changed=${e => (onChanged = e.detail)}
+        style="width: 393px;"
+      ></color-picker>
     `);
 
     palette = element.shadowRoot
@@ -63,9 +66,9 @@ describe('Component: color-picker', () => {
   });
 
   it('should send a "changed" event when the picker\'s color changed', async () => {
-    expect(onChanged).to.deep.equal([360, 100, 100]); // The default value
+    expect(onChanged.hsv).to.deep.equal([360, 100, 100]); // The default value
     await simulateMouseEvent('mousedown', palette, 50, 50);
-    expect(onChanged).to.deep.equal([360, 14.29, 85.71]);
+    expect(onChanged.hsv).to.deep.equal([360, 14.29, 85.71]);
 
     onChanged = undefined;
     await simulateMouseEvent('mousedown', palette, 50, 50);

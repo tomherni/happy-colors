@@ -322,13 +322,13 @@ describe('draggable mixin', () => {
         },
       });
 
-      element.updateDraggablePosition({ x: 0, y: 60 });
+      element.updateDraggableValue({ x: 0, y: 60 });
       expect(draggable.style.transform).to.equal('translate(0px, 120px)');
       expect(callback).to.deep.equal({ x: 0, y: 60 });
     });
 
     it('should not crash if there is no actual draggable element', () => {
-      element.updateDraggablePosition({ x: 0, y: 60 });
+      element.updateDraggableValue({ x: 0, y: 60 });
       expect(draggable.style.transform).to.equal('');
     });
   });
