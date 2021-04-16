@@ -19,7 +19,7 @@ import {
   getTheme,
 } from '../utils/theme.js';
 import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
-import '../components/color-picker/color-picker.js';
+import '../components/color-overview/color-overview.js';
 import '../components/color-scheme/color-scheme.js';
 import '../components/theme-switch/theme-switch.js';
 
@@ -147,11 +147,11 @@ export class AppHappyColors extends LitElement {
       }
 
       .color-management {
-        flex: 0 0 70%;
+        flex: 0 0 50%;
       }
 
       .color-schemes {
-        flex: 0 0 30%;
+        flex: 0 0 50%;
       }
     }
 
@@ -274,10 +274,10 @@ export class AppHappyColors extends LitElement {
         <div class="color-management">
           <h2>Pick your color</h2>
 
-          <color-picker
+          <color-overview
             .hsv=${this.hsv}
             @changed=${this._onColorPickerChanged}
-          ></color-picker>
+          ></color-overview>
 
           <h2>Save your color</h2>
 

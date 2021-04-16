@@ -12,15 +12,11 @@ import {
   hsvToHsl,
   hsvToRgb,
   hsvToHex,
-  rgbToCssString,
   validateHsv,
 } from '../../utils/colors.js';
-import { round as roundUtil } from '../../utils/numbers.js';
 import { Hue, Hsv, Colors } from '../../types.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
-
-const round = (value: number[]) => value.map(v => roundUtil(v));
 
 @customElement('color-picker')
 export class ColorPicker extends LitElement {
@@ -47,131 +43,47 @@ export class ColorPicker extends LitElement {
       box-sizing: border-box;
     }
 
-    .picker {
-      flex: 1 1 auto;
+    .color-picker {
       display: flex;
+    }
+
+    .palette-column {
+      flex: 1 1 auto;
+    }
+
+    .palette-aspect-ratio {
+      position: relative;
+      padding-bottom: 100%;
     }
 
     color-palette {
-      width: 250px;
-      height: 250px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
     }
 
     color-slider {
-      height: 250px;
-      margin-left: 48px;
-    }
-
-    .panel {
       flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      width: 250px;
-      margin-top: 24px;
-    }
-
-    .color {
-      flex: 0 0 auto;
-      width: 64px;
-      height: 175px;
-      margin-right: 24px;
-    }
-
-    @media (min-width: 1400px) {
-      .container {
-        display: flex;
-      }
-
-      color-palette {
-        width: 350px;
-        height: 350px;
-      }
-
-      color-slider {
-        height: 350px;
-        margin: 0 56px;
-      }
-
-      .panel {
-        display: block;
-        width: 175px;
-        margin: 0;
-      }
-
-      .color {
-        width: 100%;
-        height: 72px;
-        margin: 0 0 1em;
-      }
-    }
-
-    dl {
-      flex: 1 1 auto;
-      margin: 0;
-    }
-
-    dl > div {
-      display: flex;
-      align-items: baseline;
-    }
-
-    dl > div + div {
-      margin-top: 0.5em;
-    }
-
-    dt {
-      flex: 1 1 auto;
-      margin: 0;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    dd {
-      flex: 0 0 auto;
-      margin: 0;
+      margin-left: var(--hue-slider-distance, 32px);
     }
   `;
 
   render(): TemplateResult {
     return html`
-      <div class="container">
-        <div class="picker">
-          <color-palette
-            .hsv=${this._colors!.hsv}
-            @changed=${this._onPaletteChanged}
-          ></color-palette>
-
-          <color-slider
-            .hue=${this._colors!.hsv[0]}
-            @changed=${this._onHueSliderChanged}
-          ></color-slider>
+      <div class="color-picker">
+        <div class="palette-column">
+          <div class="palette-aspect-ratio">
+            <color-palette
+              .hsv=${this._hsv}
+              @changed=${this._onPaletteChanged}
+            ></color-palette>
+          </div>
         </div>
 
-        <div class="panel">
-          <div
-            class="color"
-            style="background-color: ${rgbToCssString(this._colors!.rgb)}"
-          ></div>
-
-          <dl>
-            <div>
-              <dt>HEX</dt>
-              <dd>#${this._colors!.hex}</dd>
-            </div>
-            <div>
-              <dt>RGB</dt>
-              <dd>${round(this._colors!.rgb).join(', ')}</dd>
-            </div>
-            <div>
-              <dt>HSB</dt>
-              <dd>${round(this._colors!.hsv).join(', ')}</dd>
-            </div>
-            <div>
-              <dt>HSL</dt>
-              <dd>${round(this._colors!.hsl).join(', ')}</dd>
-            </div>
-          </dl>
-        </div>
+        <color-slider
+          .hue=${this._hsv[0]}
+          @changed=${this._onHueSliderChanged}
+        ></color-slider>
       </div>
     `;
   }
@@ -179,7 +91,7 @@ export class ColorPicker extends LitElement {
   updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     if (changedProperties.has('_hsv')) {
-      this.dispatchEvent(new CustomEvent('changed', { detail: this._hsv }));
+      this.dispatchEvent(new CustomEvent('changed', { detail: this._colors }));
     }
   }
 
