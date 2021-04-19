@@ -1,6 +1,7 @@
+import type { Hsv } from '../../types.js';
+import type { ColorScheme, ColorSchemeMono } from './types.js';
+
 import { validateHsv } from '../../utils/colors.js';
-import { Hsv } from '../../types.js';
-import { ColorScheme, ColorSchemeMono } from './types.js';
 
 type ColorSchemeFn = (hsv: Hsv) => ColorScheme | ColorSchemeMono;
 

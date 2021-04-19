@@ -1,4 +1,4 @@
-import { Hsv, SavedScheme } from '../types.js';
+import type { Hsv, SavedScheme } from '../types.js';
 
 interface StorageResult<T> {
   data: T | null;

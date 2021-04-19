@@ -1,4 +1,4 @@
-import { TemplateResult } from 'lit-html';
+import type { TemplateResult } from 'lit-html';
 
 export function when(
   condition: unknown,

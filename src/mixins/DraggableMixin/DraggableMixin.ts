@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
+import type { PixelCoords, ValueCoords, DraggableConfig } from './types.js';
+
 import { UpdatingElement } from 'lit-element';
 import { debounce } from '../../utils/debounce.js';
 import { round, roundPercentage } from '../../utils/numbers.js';
-import { PixelCoords, ValueCoords, DraggableConfig } from './types.js';
 import {
   getCursorCoords,
   positionToCoords,

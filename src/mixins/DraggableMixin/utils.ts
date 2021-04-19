@@ -1,5 +1,6 @@
+import type { PixelCoords, ValueCoords } from './types.js';
+
 import { minMax, round, isNumber } from '../../utils/numbers.js';
-import { PixelCoords, ValueCoords } from './types.js';
 
 export function safeToDivideWith(...numbers: number[]): boolean {
   return numbers.every(num => isNumber(num) && num !== 0);

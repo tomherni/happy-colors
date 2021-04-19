@@ -1,10 +1,13 @@
+import type { TemplateResult } from 'lit-element';
+import type { Theme } from '../utils/theme.js';
+import type { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
+
 import {
   LitElement,
   html,
   css,
   property,
   internalProperty,
-  TemplateResult,
   customElement,
 } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
@@ -18,7 +21,6 @@ import {
   unobserveThemeChanges,
   getTheme,
 } from '../utils/theme.js';
-import { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 import '../components/color-overview/color-overview.js';
 import '../components/color-scheme/color-scheme.js';
 import '../components/theme-switch/theme-switch.js';
@@ -47,7 +49,7 @@ export class AppHappyColors extends LitElement {
 
   /** The color scheme based on user preference. */
   @internalProperty()
-  private _theme: string;
+  private _theme: Theme;
 
   /** Whether the page is in a scrolled position. */
   @internalProperty()

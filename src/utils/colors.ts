@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign, default-case */
 
-import { Hue, Hsv, Rgb, Hsl, Hex } from '../types.js';
+import type { Hue, Hsv, Rgb, Hsl, Hex } from '../types.js';
+
 import { minMax, round } from './numbers.js';
 
 /**

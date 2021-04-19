@@ -1,10 +1,11 @@
+import type { TemplateResult, PropertyValues } from 'lit-element';
+import type { Hue, Hsv, Colors } from '../../types.js';
+
 import {
   LitElement,
   html,
   css,
   internalProperty,
-  TemplateResult,
-  PropertyValues,
   customElement,
 } from 'lit-element';
 import {
@@ -14,7 +15,6 @@ import {
   hsvToHex,
   validateHsv,
 } from '../../utils/colors.js';
-import { Hue, Hsv, Colors } from '../../types.js';
 import '../color-palette/color-palette.js';
 import '../color-slider/color-slider.js';
 

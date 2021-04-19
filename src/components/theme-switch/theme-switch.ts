@@ -1,13 +1,9 @@
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  TemplateResult,
-  customElement,
-} from 'lit-element';
+import type { TemplateResult } from 'lit-element';
+import type { Theme } from '../../utils/theme.js';
+
+import { LitElement, html, css, property, customElement } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
-import { Theme, THEME_TRANSITION_MS, toggleTheme } from '../../utils/theme.js';
+import { THEME_TRANSITION_MS, toggleTheme } from '../../utils/theme.js';
 
 @customElement('theme-switch')
 export class ThemeSwitch extends LitElement {
