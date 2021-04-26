@@ -4,15 +4,8 @@
 
 ```html
 <main>
-  <div class="header">
-    <div class="container">
-      <h1>
-        Happy Colors
-      </h1>
-      <theme-switch active-theme="null">
-      </theme-switch>
-    </div>
-  </div>
+  <top-header active-theme="null">
+  </top-header>
   <div class="color-management">
     <h2>
       Pick your color

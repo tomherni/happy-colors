@@ -24,6 +24,7 @@ import {
 import '../components/color-overview/color-overview.js';
 import '../components/color-scheme/color-scheme.js';
 import '../components/theme-switch/theme-switch.js';
+import '../components/top-header/top-header.js';
 
 /**
  * Create a custom color scheme template. If a saved scheme is provided then
@@ -73,63 +74,14 @@ export class AppHappyColors extends LitElement {
       box-sizing: border-box;
     }
 
-    /* Fixed header with title and theme switcher */
-
-    .header {
-      position: fixed;
-      top: var(--height-rainbow);
-      right: 0;
-      left: 0;
-      height: var(--header-height);
-      background-color: var(--header-color-background);
-      z-index: 1;
-    }
-
-    /* Show a shadow when scrolled. Instead of animating the box-shadow, animating */
-    /* a pseudo-element and its opacity performs better. */
-    .header::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      box-shadow: 0 0 8px 8px var(--header-color-shadow);
-      transition: opacity 400ms;
-      z-index: -1;
-    }
-
-    .header.scrolled::after {
-      opacity: 1;
-    }
-
-    .header .container {
-      position: relative;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin: 0;
-      font-weight: bold;
-      font-size: 1.3rem;
-      line-height: var(--header-height);
-      text-align: center;
-    }
-
-    theme-switch {
-      position: absolute;
-      top: 0;
-      right: 8px;
-      bottom: 0;
-      margin: auto 0;
-    }
-
     /* Layout structure */
 
     main {
       padding: var(--header-height) 16px 80px;
+    }
+
+    top-header {
+      --offset-top: var(--height-rainbow);
     }
 
     .color-management {
@@ -266,12 +218,10 @@ export class AppHappyColors extends LitElement {
   render(): TemplateResult {
     return html`
       <main>
-        <div class="${classMap({ header: true, scrolled: !!this._scrolled })}">
-          <div class="container">
-            <h1>Happy Colors</h1>
-            <theme-switch active-theme="${this._theme}"></theme-switch>
-          </div>
-        </div>
+        <top-header
+          active-theme="${this._theme}"
+          ?increase-depth=${this._scrolled}
+        ></top-header>
 
         <div class="color-management">
           <h2>Pick your color</h2>
