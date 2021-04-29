@@ -50,7 +50,7 @@ export class AppHappyColors extends LitElement {
 
   /** The color scheme based on user preference. */
   @internalProperty()
-  private _theme: Theme;
+  private _theme: Theme = getTheme();
 
   /** Whether the page is in a scrolled position. */
   @internalProperty()
@@ -348,17 +348,16 @@ export class AppHappyColors extends LitElement {
     const scheme = colorSchemeStorage.get().data || [];
     this._savedScheme = createCustomScheme(scheme);
 
-    this._theme = getTheme();
     this._onPageScroll = debounce(this._onPageScroll).bind(this);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     super.connectedCallback();
     observeThemeChanges(theme => (this._theme = theme));
     window.addEventListener('scroll', this._onPageScroll);
   }
 
-  disconnectedCallback() {
+  disconnectedCallback(): void {
     super.disconnectedCallback();
     unobserveThemeChanges();
     window.removeEventListener('scroll', this._onPageScroll);

@@ -107,10 +107,10 @@ export class ThemeSwitch extends LitElement {
       <button
         class="${classMap({ checked: isDarkMode })}"
         role="checkbox"
-        aria-checked="${isDarkMode}"
+        aria-checked="${String(isDarkMode)}"
         aria-label="Toggle dark mode"
         title="Toggle dark mode"
-        @click="${toggleTheme}"
+        @click=${toggleTheme}
       >
         <span class="icon sun"></span>
         <span class="icon moon"></span>
