@@ -1,6 +1,8 @@
-export type Theme = 'light' | 'dark';
+const DEFAULT_THEME = 'light';
+const SECONDARY_THEME = 'dark';
+export type Theme = typeof DEFAULT_THEME | typeof SECONDARY_THEME;
 
-const THEME_TARGET_ELEMENT = document.documentElement;
+const THEME_TARGET_ELEMENT: HTMLElement = document.documentElement;
 const THEME_ATTRIBUTE = 'data-theme';
 export const THEME_TRANSITION_MS = 250;
 
@@ -17,13 +19,15 @@ function setTheme(theme: Theme): void {
 }
 
 export function toggleTheme(): void {
-  setTheme(getTheme() === 'light' ? 'dark' : 'light');
+  setTheme(getTheme() === DEFAULT_THEME ? SECONDARY_THEME : DEFAULT_THEME);
 }
 
 // TODO: get from storage?
 export function initializeTheme(): void {
   setTheme(
-    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    window.matchMedia(`(prefers-color-scheme: ${SECONDARY_THEME})`).matches
+      ? SECONDARY_THEME
+      : DEFAULT_THEME
   );
 }
 
