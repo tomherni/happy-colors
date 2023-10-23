@@ -63,7 +63,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     /**
      * Register an HTML element as a draggable element.
-     * @param {DraggableConfig} config
      */
     protected registerDraggableElement(config: DraggableConfig): void {
       if (this.__registered) {
@@ -134,7 +133,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     /**
      * Update the draggable element's value, and with that its position. This
      * method can be used when a new value was computed (without dragging).
-     * @param {ValueCoords} [value]
      */
     protected updateDraggableValue(value?: ValueCoords): void {
       if (this.__registered) {
@@ -147,7 +145,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     /**
      * Initialize the draggable element by setting its initial value and by
      * setting up its configuration.
-     * @param {DraggableConfig} config
      */
     private __initialize(config: DraggableConfig) {
       this.__config = config;
@@ -157,7 +154,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     /**
      * Enter a dragging state and start dragging the draggable element when
      * dragging is initiated by the user.
-     * @param {MouseEvent | TouchEvent} event
      */
     private __startDrag(event: MouseEvent | TouchEvent) {
       const composedPath = event.composedPath();
@@ -192,7 +188,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     /**
      * Update the draggable position whenever the client tries to move it.
-     * @param {MouseEvent | TouchEvent} event
      */
     private __drag(event: MouseEvent | TouchEvent) {
       if (this.__registered && this.__dragState) {
@@ -210,7 +205,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     /**
      * Determine the new position for the draggable based on a drag event.
-     * @param {MouseEvent | TouchEvent} event
      */
     private __onDragEvent(event: MouseEvent | TouchEvent) {
       const { canvasRect, draggableCoords: prevCoords } = this.__dragState!;
@@ -235,7 +229,6 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     /**
      * Update the draggable element's value and position.
-     * @param {PixelCoords} coords
      */
     private __updateDraggable(coords: PixelCoords) {
       this.__updateDraggablePosition(coords);

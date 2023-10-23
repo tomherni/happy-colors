@@ -3,8 +3,6 @@ type DebounceCallback = (...args: any[]) => void;
 
 /**
  * Debounce a function based on RAF.
- * @param {Function} callback - Function to debounce
- * @returns {Function} Debounced function
  */
 export function debounce<F extends DebounceCallback>(
   callback: F

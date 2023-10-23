@@ -9,8 +9,6 @@ export function safeToDivideWith(...numbers: number[]): boolean {
 /**
  * Get the relative cursor coordinates in the viewport. For touch devices we get
  * the first contact point.
- * @param {MouseEvent | TouchEvent} event
- * @returns {PixelCoords}
  */
 export function getCursorCoords(event: MouseEvent | TouchEvent): PixelCoords {
   const { clientX, clientY } =
@@ -23,9 +21,6 @@ export function getCursorCoords(event: MouseEvent | TouchEvent): PixelCoords {
 
 /**
  * Translate percentage coordinates to pixel coordinates on a canvas.
- * @param {ValueCoords} position
- * @param {HTMLElement} canvas
- * @returns {PixelCoords}
  */
 export function positionToCoords(
   position: ValueCoords,
@@ -47,10 +42,6 @@ export function positionToCoords(
 /**
  * Translate pixel coordinates provided by an event (typically viewport coords)
  * to the coords on a canvas.
- * @param {PixelCoords} coords
- * @param {DOMRect} canvas - Canvas on which the coordinates must be placed.
- * @param {Object} [options]
- * @returns {PixelCoords}
  */
 export function eventCoordsToCanvasCoords(
   coords: PixelCoords,
@@ -72,9 +63,6 @@ export function eventCoordsToCanvasCoords(
 
 /**
  * Check whether any axes changed by comparing new axes with previous values.
- * @param {PixelCoords | ValueCoords} [axes]
- * @param {PixelCoords | ValueCoords} [previous]
- * @returns {Boolean}
  */
 export function haveAxesChanged(
   axes?: PixelCoords | ValueCoords,

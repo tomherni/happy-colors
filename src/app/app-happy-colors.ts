@@ -29,8 +29,6 @@ import '../components/top-header/top-header.js';
 /**
  * Create a custom color scheme template. If a saved scheme is provided then
  * the values will be used to prefill the template.
- * @param {SavedScheme} [storage]
- * @returns {SavedScheme}
  */
 function createCustomScheme(storage: SavedScheme = []) {
   return new Array(4)

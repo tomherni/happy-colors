@@ -74,8 +74,6 @@ function set<T>(storageKey: string, value: T): void {
 
 /**
  * Create an interface to manage a specific key in the client's Local Storage.
- * @param {String} storageKey
- * @returns {StorageInterface}
  */
 function createStorageInterface<T>(storageKey: string): StorageInterface<T> {
   return {

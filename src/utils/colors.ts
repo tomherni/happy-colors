@@ -15,8 +15,6 @@ export function validateHue(hue: Hue): Hue {
 
 /**
  * Ensure a set of HSV values are valid. Also applicable to HSL values.
- * @param {Number[]} hsv
- * @returns {Number[]}
  */
 export function validateHsv([h, s, v]: Hsv): Hsv {
   return [
@@ -28,8 +26,6 @@ export function validateHsv([h, s, v]: Hsv): Hsv {
 
 /**
  * Ensure a set of RGB values are valid.
- * @param {Number[]} rgb
- * @returns {Number[]}
  */
 export function validateRgb(rgb: Rgb): Rgb {
   return rgb.map(value => minMax(round(value, 2), 0, 255)) as Rgb;
@@ -37,8 +33,6 @@ export function validateRgb(rgb: Rgb): Rgb {
 
 /**
  * Convert a set of HSV values to RGB.
- * @param {Number[]} hsv
- * @returns {Number[]}
  */
 export function hsvToRgb([h, s, v]: Hsv): Hsv {
   h /= 360;
@@ -93,8 +87,6 @@ export function hsvToRgb([h, s, v]: Hsv): Hsv {
 
 /**
  * Convert a set of HSV values to HSL.
- * @param {Number[]} hsv
- * @returns {Number[]}
  */
 export function hsvToHsl([h, s, v]: Hsv): Hsl {
   s /= 100;
@@ -113,8 +105,6 @@ export function hsvToHsl([h, s, v]: Hsv): Hsl {
 
 /**
  * Convert a set of RGB values to HEX.
- * @param {Number[]} rgb
- * @returns {String}
  */
 export function rgbToHex(rgb: Rgb): Hex {
   return rgb
@@ -131,8 +121,6 @@ export function hsvToHex(hsv: Hsv): Hex {
 
 /**
  * Parse a set of RGB values as a usable CSS value.
- * @param {Number[]} rgb
- * @returns {String}
  */
 export function rgbToCssString(rgb: Rgb): string {
   return `rgb(${rgb.join(',')})`;
@@ -140,9 +128,6 @@ export function rgbToCssString(rgb: Rgb): string {
 
 /**
  * Check if a color changed by comparing it with its previous value.
- * @param {Array|undefined} value
- * @param {Array|undefined} previous
- * @returns {Boolean}
  */
 export function hasColorChanged(
   value?: number[],
