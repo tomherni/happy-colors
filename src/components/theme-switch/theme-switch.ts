@@ -1,8 +1,9 @@
-import type { TemplateResult } from 'lit-element';
+import type { TemplateResult } from 'lit';
 import type { Theme } from '../../utils/theme.js';
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map.js';
+import { LitElement, html, css } from 'lit';
+import { property, customElement } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { THEME_TRANSITION_MS, toggleTheme } from '../../utils/theme.js';
 
 @customElement('theme-switch')

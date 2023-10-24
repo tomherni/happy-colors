@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit-element';
+import { html } from 'lit';
 import '../app-happy-colors.js';
 
 describe('Application: app-happy-colors', () => {
@@ -11,6 +11,7 @@ describe('Application: app-happy-colors', () => {
     element = await fixture(html`<app-happy-colors></app-happy-colors>`);
   });
 
+  // TODO: see if we can mock the active-theme attr?
   it('should match the markup snapshot', () => {
     expect(element).shadowDom.to.equalSnapshot();
   });

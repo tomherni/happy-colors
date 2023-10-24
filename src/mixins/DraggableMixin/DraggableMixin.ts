@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import type { PixelCoords, ValueCoords, DraggableConfig } from './types.js';
 
-import { UpdatingElement } from 'lit-element';
+import { LitElement } from 'lit';
 import { debounce } from '../../utils/debounce.js';
 import { round, roundPercentage } from '../../utils/numbers.js';
 import {
@@ -18,15 +16,20 @@ type Constructor<T = Record<string, unknown>> = new (...args: any[]) => T;
 
 const resizeObserverSupported = typeof window.ResizeObserver !== 'undefined';
 
+export declare class DraggableMixinInterface {
+  protected draggableElementRegistered: boolean;
+  protected registerDraggableElement(config: DraggableConfig): void;
+  protected deregisterDraggableElement(): void;
+  protected updateDraggableValue(value?: ValueCoords): void;
+}
+
 /**
  * Mixin that allows a component to register an element as a draggable element.
  * The draggable can be dragged by the user within the bounds of a specified
  * canvas element.
  */
-export function DraggableMixin<T extends Constructor<UpdatingElement>>(
-  Base: T
-) {
-  return class extends Base {
+export function DraggableMixin<T extends Constructor<LitElement>>(Base: T) {
+  class DraggableMixinClass extends Base {
     protected draggableElementRegistered = false;
 
     private __registered = false;
@@ -45,6 +48,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
 
     private __resizeObserver?: ResizeObserver;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
       super();
       this.__startDrag = this.__startDrag.bind(this);
@@ -70,7 +74,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
       }
       this.draggableElementRegistered = true;
       this.__registered = true;
-      this.__initialize(config);
+      this.__init(config);
       this.__manageEventListeners(true);
       this.__observeCanvasResizes();
     }
@@ -146,7 +150,7 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
      * Initialize the draggable element by setting its initial value and by
      * setting up its configuration.
      */
-    private __initialize(config: DraggableConfig) {
+    private __init(config: DraggableConfig) {
       this.__config = config;
       this.updateDraggableValue(this.__config.initial);
     }
@@ -276,5 +280,9 @@ export function DraggableMixin<T extends Constructor<UpdatingElement>>(
     private __onContextMenu() {
       this.__stopDrag();
     }
-  };
+  }
+
+  // TODO: avoid casting to unknown (done to be able to include protected fields)
+  return DraggableMixinClass as unknown as Constructor<DraggableMixinInterface> &
+    T;
 }

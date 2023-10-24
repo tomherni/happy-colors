@@ -1,14 +1,9 @@
-import type { TemplateResult, PropertyValues } from 'lit-element';
+import type { TemplateResult, PropertyValues } from 'lit';
 import type { ValueCoords } from '../../mixins/DraggableMixin/types.js';
 import type { Hue } from '../../types.js';
 
-import {
-  LitElement,
-  html,
-  css,
-  internalProperty,
-  customElement,
-} from 'lit-element';
+import { LitElement, html, css } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import { hsvToRgb, rgbToCssString, validateHue } from '../../utils/colors.js';
 import { roundPercentage } from '../../utils/numbers.js';
@@ -24,7 +19,7 @@ export class ColorSlider extends DraggableMixin(LitElement) {
     this._setHue(hue);
   }
 
-  @internalProperty()
+  @state()
   private _hue: Hue = 0;
 
   private _handleElement?: HTMLDivElement;

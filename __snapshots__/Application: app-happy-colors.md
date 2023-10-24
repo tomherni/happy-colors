@@ -4,7 +4,7 @@
 
 ```html
 <main>
-  <top-header active-theme="null">
+  <top-header active-theme="">
   </top-header>
   <div class="color-management">
     <h2>

@@ -1,13 +1,8 @@
-import type { TemplateResult, PropertyValues } from 'lit-element';
+import type { TemplateResult, PropertyValues } from 'lit';
 import type { Hue, Hsv, Colors } from '../../types.js';
 
-import {
-  LitElement,
-  html,
-  css,
-  internalProperty,
-  customElement,
-} from 'lit-element';
+import { LitElement, html, css } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import {
   hasColorChanged,
   hsvToHsl,
@@ -29,7 +24,7 @@ export class ColorPicker extends LitElement {
     this._setHsv(hsv);
   }
 
-  @internalProperty()
+  @state()
   private _hsv!: Hsv;
 
   private _colors?: Colors;

@@ -1,16 +1,10 @@
-import type { TemplateResult, PropertyValues } from 'lit-element';
+import type { TemplateResult, PropertyValues } from 'lit';
 import type { Hsv, Colors } from '../../types.js';
 
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  internalProperty,
-  customElement,
-} from 'lit-element';
+import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 import { hasColorChanged, rgbToCssString } from '../../utils/colors.js';
-import { when } from '../../utils/lit-html.js';
 import { round as roundUtil } from '../../utils/numbers.js';
 import '../color-picker/color-picker.js';
 
@@ -22,7 +16,7 @@ export class ColorOverview extends LitElement {
   @property({ type: Array, hasChanged: hasColorChanged })
   hsv: Hsv = [360, 100, 100];
 
-  @internalProperty()
+  @state()
   private _colors?: Colors;
 
   static styles = css`

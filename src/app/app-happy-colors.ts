@@ -1,20 +1,14 @@
-import type { TemplateResult } from 'lit-element';
+import type { TemplateResult } from 'lit';
 import type { Theme } from '../utils/theme.js';
 import type { Hsv, SavedScheme, SavedSchemeValue } from '../types.js';
 
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  internalProperty,
-  customElement,
-} from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map.js';
-import { ifDefined } from 'lit-html/directives/if-defined.js';
+import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
+import { when } from 'lit/directives/when.js';
 import { hasColorChanged, hsvToHex, validateHsv } from '../utils/colors.js';
 import { debounce } from '../utils/debounce.js';
-import { when } from '../utils/lit-html.js';
 import { hsvStorage, colorSchemeStorage } from '../utils/storage.js';
 import {
   observeThemeChanges,
@@ -43,15 +37,15 @@ export class AppHappyColors extends LitElement {
   hsv: Hsv = [279, 82, 90];
 
   /** The user's saved color scheme. */
-  @internalProperty()
+  @state()
   private _savedScheme: SavedScheme;
 
   /** The color scheme based on user preference. */
-  @internalProperty()
+  @state()
   private _theme: Theme = getTheme();
 
   /** Whether the page is in a scrolled position. */
-  @internalProperty()
+  @state()
   private _scrolled = false;
 
   static styles = css`

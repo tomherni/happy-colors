@@ -1,5 +1,5 @@
-import { LitElement, html, css } from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat.js';
+import { LitElement, html, css } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
 
 export class PickerHandle extends LitElement {
   static get properties() {

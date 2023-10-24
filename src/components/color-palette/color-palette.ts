@@ -1,14 +1,9 @@
-import type { TemplateResult, PropertyValues } from 'lit-element';
+import type { TemplateResult, PropertyValues } from 'lit';
 import type { ValueCoords } from '../../mixins/DraggableMixin/types.js';
 import type { Hsv } from '../../types.js';
 
-import {
-  LitElement,
-  html,
-  css,
-  internalProperty,
-  customElement,
-} from 'lit-element';
+import { LitElement, html, css } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { DraggableMixin } from '../../mixins/DraggableMixin/DraggableMixin.js';
 import {
   hasColorChanged,
@@ -29,7 +24,7 @@ export class ColorPalette extends DraggableMixin(LitElement) {
     this._setHsv(hsv);
   }
 
-  @internalProperty()
+  @state()
   private _hsv: Hsv = [360, 100, 100];
 
   private _canvasElement?: HTMLDivElement;

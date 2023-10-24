@@ -1,8 +1,8 @@
 // @ts-nocheck
 
 import { expect, fixture } from '@open-wc/testing';
+import { html } from 'lit';
 import { spy } from 'sinon';
-import { html } from 'lit-element';
 import { simulateMouseEvent } from './simulate-mouse-event.js';
 import './draggable-test.js';
 

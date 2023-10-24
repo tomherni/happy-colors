@@ -1,20 +1,14 @@
-import type { TemplateResult, PropertyValues } from 'lit-element';
+import type { TemplateResult, PropertyValues } from 'lit';
 import type { Hsv } from '../../types.js';
 import type {
   ColorScheme as ColorSchemeType,
   ColorSchemeMono,
 } from './types.js';
 
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  internalProperty,
-  customElement,
-} from 'lit-element';
+import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 import { hsvToRgb, hsvToHex, rgbToCssString } from '../../utils/colors.js';
-import { when } from '../../utils/lit-html.js';
 import { getColorScheme } from './schemes.js';
 
 @customElement('color-scheme')
@@ -31,7 +25,7 @@ export class ColorScheme extends LitElement {
   @property({ type: Boolean, attribute: 'show-hex' })
   showHex = false;
 
-  @internalProperty()
+  @state()
   private _colors?: ColorSchemeType | ColorSchemeMono;
 
   static styles = css`

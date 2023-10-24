@@ -1,7 +1,8 @@
-import type { TemplateResult } from 'lit-element';
+import type { TemplateResult } from 'lit';
 import type { Theme } from '../../utils/theme.js';
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 import '../theme-switch/theme-switch.js';
 
 @customElement('top-header')

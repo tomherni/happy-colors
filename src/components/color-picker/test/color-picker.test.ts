@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit-element';
+import { html } from 'lit';
 import { simulateMouseEvent } from '../../../mixins/DraggableMixin/test/simulate-mouse-event.js';
 import '../color-picker.js';
 
